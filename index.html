@@ -20,10 +20,9 @@
         .cal-day { padding: 8px 0; border-radius: 8px; font-size: 13px; cursor: pointer; position: relative; }
         .cal-day.has-record::after { content: '•'; position: absolute; bottom: 1px; left: 50%; transform: translateX(-50%); color: var(--cat-main); font-size: 16px; }
         
-        /* 加大圖示與按鈕的底部導覽列 */
         .nav-bar { position: fixed; bottom: 20px; left: 10px; right: 10px; background: white; border: 3px solid var(--cat-dark); box-shadow: 0 6px 0 var(--cat-gray); display: flex; justify-content: space-around; padding: 12px 8px; z-index: 100; border-radius: 25px; }
         .nav-item { border: none; background: none; text-align: center; flex: 1; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-        .nav-icon { font-size: 24px; margin-bottom: 2px; } /* 圖示放大 */
+        .nav-icon { font-size: 24px; margin-bottom: 2px; }
         .nav-text { font-size: 11px; font-weight: bold; color: var(--cat-gray); }
         .nav-item.active .nav-text { color: var(--cat-dark); }
         .nav-item.active .nav-icon { transform: scale(1.1); transition: transform 0.2s; }
@@ -104,7 +103,12 @@
             <h4 style="margin:10px 0 0 0">📊 預算監控 (分類:金額)</h4><textarea id="budget-editor" rows="2"></textarea>
             <button onclick="saveSettings()" class="btn-main" style="background:var(--cat-green)">更新設定</button>
         </div>
-        <div class="cat-card" style="background:#eee; text-align:center;"><button onclick="exportData()" class="btn-main" style="background:var(--cat-blue)">📦 匯出備份</button><button onclick="document.getElementById('importFile').click()" class="btn-main" style="background:#fff; color:#333; margin-top:10px;">📥 匯入還原</button><input type="file" id="importFile" style="display:none" onchange="importData(event)"><button onclick="fullReset()" style="color:red; border:none; background:none; margin-top:20px; font-size:12px;">⚠️ 清空資料</button></div>
+        <div class="cat-card" style="background:#eee; text-align:center;">
+            <button onclick="exportData()" class="btn-main" style="background:var(--cat-blue)">📦 匯出備份</button>
+            <button onclick="document.getElementById('importFile').click()" class="btn-main" style="background:#fff; color:#333; margin-top:10px;">📥 匯入還原</button>
+            <input type="file" id="importFile" style="display:none" onchange="importData(event)">
+            <button onclick="fullReset()" style="color:red; border:none; background:none; margin-top:20px; font-size:12px;">⚠️ 清空資料</button>
+        </div>
     </div>
 </div>
 
@@ -126,9 +130,14 @@
 <script>
     const DB_KEY = 'cat_dream_final_bigicon_v1';
     let store = JSON.parse(localStorage.getItem(DB_KEY)) || {
-        appName: '夢想記帳本', jars: { '買電腦': { goal: 60000, start: '2026-01', end: '2026-12' } },
-        jarBalances: { '買電腦': 0 }, accs: { '現金': 0, '銀行帳戶': 0, '信用卡': 0 },
-        cats: { '飲食':['外食','飲料'], '交通':['加油','捷運'] }, incCats: ['薪水'], budgets: { '飲食': 10000 }, history: []
+        appName: '夢想記帳本', 
+        jars: { '買電腦': { goal: 60000, start: '2026-01', end: '2026-12' } },
+        jarBalances: { '買電腦': 0 }, 
+        accs: { '現金': 0, '銀行帳戶': 0, '信用卡': 0 },
+        cats: { '飲食':['外食','飲料'], '交通':['加油','捷運'] }, 
+        incCats: ['薪水'], 
+        budgets: { '飲食': 10000 }, 
+        history: []
     };
     let selectedDate = new Date();
 
@@ -179,17 +188,51 @@
     }
 
     function renderHome() { updateAppTitles(); renderJars(); renderCalendar(); renderBudgets(); }
+
     function renderJars() {
-        const list = document.getElementById('jarList'); list.innerHTML = ""; const now = new Date();
+        const list = document.getElementById('jarList');
+        list.innerHTML = "";
+        const now = new Date();
+        const curY = now.getFullYear();
+        const curM = now.getMonth();
+
         for(let name in store.jars) {
-            const p = store.jars[name]; const s = new Date(p.start), e = new Date(p.end);
-            const tm = (e.getFullYear() - s.getFullYear()) * 12 + (e.getMonth() - s.getMonth()) || 1;
-            const pm = (now.getFullYear() - s.getFullYear()) * 12 + (now.getMonth() - s.getMonth());
-            const cb = store.jarBalances[name] || 0; const pct = Math.min(Math.round(cb/p.goal*100), 100);
-            const tg = Math.round((p.goal / tm) * Math.max(0, Math.min(pm + 1, tm))); const g = tg - cb;
-            list.innerHTML += `<div class="cat-card" style="padding:10px;"><div style="display:flex; justify-content:space-between; font-size:12px; font-weight:bold;"><span>${name}</span><span>$${cb.toLocaleString()} / $${p.goal.toLocaleString()}</span></div><div class="prog-container"><div class="prog-text">${pct}% (剩 ${Math.max(0, tm-pm)} 月)</div><div class="prog-fill" style="width:${pct}%"></div></div><div style="font-size:10px; color:#888; display:flex; justify-content:space-between;"><span>📍 應存: $${tg.toLocaleString()}</span><span style="color:${g>0?'var(--cat-red)':'var(--cat-green)'}; font-weight:bold;">${g>0?'缺 '+g.toLocaleString():'超前 ✨'}</span></div></div>`;
+            const p = store.jars[name];
+            const s = new Date(p.start);
+            const e = new Date(p.end);
+
+            // 正確計算總月數（含頭尾）
+            const totalMonths = (e.getFullYear() - s.getFullYear()) * 12 + (e.getMonth() - s.getMonth()) + 1;
+            // 正確計算已過月數（含本月）
+            const passedMonths = (curY - s.getFullYear()) * 12 + (curM - s.getMonth()) + 1;
+            
+            const safePassed = Math.max(0, Math.min(passedMonths, totalMonths));
+            const remainingMonths = Math.max(0, totalMonths - safePassed + 1); 
+
+            const cb = store.jarBalances[name] || 0;
+            const pct = Math.min(Math.round(cb / p.goal * 100), 100);
+            const tg = Math.round((p.goal / totalMonths) * safePassed);
+            const g = tg - cb;
+
+            list.innerHTML += `<div class="cat-card" style="padding:10px;">
+                <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:bold;">
+                    <span>${name}</span>
+                    <span>$${cb.toLocaleString()} / $${p.goal.toLocaleString()}</span>
+                </div>
+                <div class="prog-container">
+                    <div class="prog-text">${pct}% (剩 ${remainingMonths} 月)</div>
+                    <div class="prog-fill" style="width:${pct}%"></div>
+                </div>
+                <div style="font-size:10px; color:#888; display:flex; justify-content:space-between;">
+                    <span>📍 本月應存: $${tg.toLocaleString()}</span>
+                    <span style="color:${g>0?'var(--cat-red)':'var(--cat-green)'}; font-weight:bold;">
+                        ${g>0?'缺 '+g.toLocaleString():'超前 ✨'}
+                    </span>
+                </div>
+            </div>`;
         }
     }
+
     function renderCalendar() {
         const grid = document.getElementById('calendar-days'); grid.innerHTML = "";
         const y = selectedDate.getFullYear(), m = selectedDate.getMonth(); document.getElementById('cal-month-title').innerText = `${y}年${m+1}月`;
@@ -245,8 +288,8 @@
     function toggleFields() { const m = document.getElementById('trans-mode').value; document.getElementById('transfer-area').style.display = (m === 'transfer') ? 'block' : 'none'; document.getElementById('jar-area').style.display = (m === 'save') ? 'block' : 'none'; document.getElementById('exp-cat-area').style.display = (m === 'exp') ? 'block' : 'none'; document.getElementById('inc-cat-area').style.display = (m === 'inc') ? 'block' : 'none'; document.getElementById('inst-toggle-area').style.display = (m === 'exp') ? 'block' : 'none'; }
     function toggleInstOptions() { document.getElementById('inst-options').style.display = document.getElementById('is-inst').checked ? 'block' : 'none'; }
     function exportData() { const b = new Blob([JSON.stringify(store)], {type: "application/json"}); const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = `${store.appName}_備份.json`; a.click(); }
-    function importData(e) { const r = new FileReader(); r.onload = (ev) => { store = JSON.parse(ev.target.result); saveToDB(); location.reload(); }; reader.readAsText(e.target.files[0]); }
-    function fullReset() { localStorage.removeItem(DB_KEY); location.reload(); }
+    function importData(e) { const r = new FileReader(); r.onload = (ev) => { store = JSON.parse(ev.target.result); saveToDB(); location.reload(); }; r.readAsText(e.target.files[0]); }
+    function fullReset() { if(confirm('確定要永久清空所有資料嗎？這無法復原喵！')) { localStorage.removeItem(DB_KEY); location.reload(); } }
     window.onload = () => { updateAppTitles(); renderHome(); };
 </script>
 </body>
