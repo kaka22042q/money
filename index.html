@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="夢想記帳本">
-    <title>夢想記帳本</title>
+    <title id="web-title">夢想記帳本</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root { --cat-main: #FFB7B2; --cat-bg: #fffaf0; --cat-dark: #5D4037; --cat-gray: #D7CCC8; --cat-red: #ff7675; --cat-green: #55efc4; --cat-blue: #74b9ff; }
@@ -20,7 +19,6 @@
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; margin-top: 10px; }
         .cal-day { padding: 8px 0; border-radius: 8px; font-size: 13px; cursor: pointer; position: relative; }
         .cal-day.has-record::after { content: '•'; position: absolute; bottom: 1px; left: 50%; transform: translateX(-50%); color: var(--cat-main); font-size: 16px; }
-        .cal-day.selected { border: 2px solid var(--cat-dark); background: #fff5f5; }
         .nav-bar { position: fixed; bottom: 20px; left: 10px; right: 10px; background: white; border: 3px solid var(--cat-dark); box-shadow: 0 6px 0 var(--cat-gray); display: flex; justify-content: space-around; padding: 8px; z-index: 100; border-radius: 25px; }
         .nav-item { border: none; background: none; text-align: center; flex: 1; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
         .nav-text { font-size: 10px; font-weight: bold; color: var(--cat-gray); }
@@ -29,8 +27,6 @@
         label { font-size: 12px; font-weight: bold; display: block; margin-top: 10px; color: var(--cat-dark); }
         .btn-main { background: var(--cat-main); border: 2px solid var(--cat-dark); box-shadow: 0 4px 0 var(--cat-dark); font-weight: bold; color: white; border-radius: 12px; padding: 12px; width: 100%; cursor: pointer; margin-top: 15px; font-size: 16px; }
         .record-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; font-size: 13px; }
-        .tag { background: #f0f0f0; padding: 2px 8px; border-radius: 5px; font-size: 10px; color: var(--cat-blue); border: 1px solid #ddd; }
-        .inst-badge { background: var(--cat-red); color: white; padding: 2px 5px; border-radius: 4px; font-size: 9px; margin-left: 5px; }
         .page { display: none; }
         .page.active { display: block; }
     </style>
@@ -39,7 +35,7 @@
 
 <div class="container">
     <div id="page-home" class="page active">
-        <h2 style="color:var(--cat-red); margin:0 0 10px 0;">🐾 夢想首頁</h2>
+        <h2 id="home-title" style="color:var(--cat-red); margin:0 0 10px 0;">🐾 夢想首頁</h2>
         <div id="jarList"></div>
         <div class="cat-card">
             <h3 class="text-center" id="cal-month-title" style="margin:0; font-size: 16px; text-align: center;"></h3>
@@ -72,25 +68,20 @@
                 <option value="save">存入存錢筒 🐟</option>
                 <option value="transfer">對沖/提取/轉帳 🔄</option>
             </select>
-            
             <div id="source-acc-area"><label>選擇來源帳戶/計畫</label><select id="acc-source"></select></div>
             <div id="transfer-area" style="display:none;"><label>轉入帳戶/計畫</label><select id="acc-to"></select></div>
             <div id="jar-area" style="display:none;"><label>存入哪個目標？</label><select id="jar-target"></select></div>
-            
             <div id="exp-cat-area"><label>分類</label><div style="display:flex; gap:5px;"><select id="mainCat" onchange="renderSubCats()"></select><select id="subCat"></select></div></div>
             <div id="inc-cat-area" style="display:none;"><label>收入項目</label><select id="inc-cat"></select></div>
-            
             <label>金額</label><input type="number" id="amt" placeholder="0" inputmode="decimal">
-            <label>備註 (必填，方便比價搜尋)</label><input type="text" id="note" placeholder="例如：大麥克餐">
+            <label>備註 (必填，比價搜尋用)</label><input type="text" id="note" placeholder="例如：大麥克餐">
             <label>日期</label><input type="date" id="record-date">
-
             <div id="inst-toggle-area">
                 <label style="display:inline;"><input type="checkbox" id="is-inst" onchange="toggleInstOptions()"> 信用卡分期</label>
                 <div id="inst-options" style="display:none; background:#f9f9f9; padding:10px; border-radius:10px; margin-top:5px;">
                     <label>分幾期？</label><input type="number" id="inst-num" value="3" min="2">
                 </div>
             </div>
-            
             <button onclick="saveAll()" class="btn-main">確認存檔</button>
         </div>
     </div>
@@ -98,7 +89,9 @@
     <div id="page-settings" class="page">
         <h2 style="text-align:center;">⚙️ 設定</h2>
         <div class="cat-card">
-            <h4 style="margin:0">💎 存錢筒 (名稱:目標,起,迄)</h4>
+            <label>🏷️ App 名稱自定義</label>
+            <input type="text" id="app-name-input" placeholder="例如：夢想記帳本">
+            <h4 style="margin:15px 0 0 0">💎 存錢筒 (名稱:目標,起,迄)</h4>
             <textarea id="jar-editor" rows="2"></textarea>
             <h4 style="margin:10px 0 0 0">📂 支出分類 (大類:小類1,小類2)</h4>
             <textarea id="cat-editor" rows="3"></textarea>
@@ -123,19 +116,26 @@
 </nav>
 
 <script>
-    const DB_KEY = 'cat_dream_jar_acc_v1';
+    const DB_KEY = 'cat_dream_custom_title_v1';
     let store = JSON.parse(localStorage.getItem(DB_KEY)) || {
+        appName: '夢想記帳本',
         jars: { '買電腦': { goal: 60000, start: '2026-01', end: '2026-12' } },
         jarBalances: { '買電腦': 0 },
         accs: { '現金': 0, '銀行帳戶': 0, '信用卡': 0 },
         cats: { '飲食':['外食','飲料'], '交通':['加油','捷運'] },
-        incCats: ['薪水', '獎金'],
+        incCats: ['薪薪水', '獎金'],
         history: []
     };
     let myChart = null;
     let selectedDate = new Date();
 
     function saveToDB() { localStorage.setItem(DB_KEY, JSON.stringify(store)); }
+
+    function updateAppTitles() {
+        const title = store.appName || '夢想記帳本';
+        document.getElementById('web-title').innerText = title;
+        document.getElementById('home-title').innerText = '🐾 ' + title;
+    }
 
     function showPage(pId, el) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -148,7 +148,7 @@
         if(pId === 'settings') initSettings();
     }
 
-    function renderHome() { renderJars(); renderCalendar(); updateChart(); }
+    function renderHome() { updateAppTitles(); renderJars(); renderCalendar(); updateChart(); }
 
     function renderJars() {
         const list = document.getElementById('jarList'); list.innerHTML = "";
@@ -199,11 +199,9 @@
 
     function initDaily() {
         document.getElementById('record-date').valueAsDate = new Date();
-        // 核心更新：將存錢筒也加入帳戶選單
         const jarOptions = Object.keys(store.jars).map(name => `<option value="JAR:${name}">🐟 存錢筒：${name} ($${store.jarBalances[name].toLocaleString()})</option>`).join('');
         const accOptions = Object.keys(store.accs).map(k => `<option value="ACC:${k}">${k} ($${store.accs[k].toLocaleString()})</option>`).join('');
         const combined = accOptions + jarOptions;
-        
         document.getElementById('acc-source').innerHTML = combined;
         document.getElementById('acc-to').innerHTML = combined;
         document.getElementById('jar-target').innerHTML = Object.keys(store.jars).map(k => `<option value="${k}">${k}</option>`).join('');
@@ -250,15 +248,9 @@
     function deleteRecord(id, fromHome) {
         if(!confirm('確定要刪除？')) return;
         const r = store.history.find(h => h.id === id);
-        if(r.type === 'transfer') {
-            // 這裡需要複雜邏輯恢復，簡化處理：
-            alert('轉帳紀錄刪除後請手動調整設定中的餘額喵！');
-        } else if(r.type === 'save') {
-            store.jarBalances[r.jar] -= r.amt;
-            store.accs[r.acc] += r.amt;
-        } else if(r.type === 'exp') {
-            if(r.acc) store.accs[r.acc] += r.amt;
-        }
+        if(r.type === 'save') { store.jarBalances[r.jar] -= r.amt; store.accs[r.acc] += r.amt; }
+        else if(r.type === 'exp' && r.acc) { store.accs[r.acc] += r.amt; }
+        else if(r.type === 'transfer') { alert('轉帳紀錄刪除後請手動調整餘額喵！'); }
         store.history = store.history.filter(h => h.id !== id);
         saveToDB(); location.reload();
     }
@@ -284,21 +276,29 @@
     }
 
     function renderSubCats() { const main = document.getElementById('mainCat').value; if(store.cats[main]) document.getElementById('subCat').innerHTML = store.cats[main].map(s => `<option value="${s}">${s}</option>`).join(''); }
+    
     function initSettings() {
+        document.getElementById('app-name-input').value = store.appName;
         document.getElementById('jar-editor').value = Object.entries(store.jars).map(([k,v])=>`${k}:${v.goal},${v.start},${v.end}`).join('\n');
         document.getElementById('cat-editor').value = Object.entries(store.cats).map(([k,v])=>`${k}:${v.join(',')}`).join('\n');
         document.getElementById('acc-editor').value = Object.entries(store.accs).map(([k,v])=>`${k}:${v}`).join('\n');
     }
+    
     function saveSettings() {
-        const parse = (id, isCat=false) => { const obj = {}; document.getElementById(id).value.split('\n').forEach(l => { const [k,v] = l.split(':'); if(k && v) obj[k.trim()] = isCat ? v.split(',').map(s=>s.trim()) : Number(v.replace(/,/g,'')); }); return obj; };
+        store.appName = document.getElementById('app-name-input').value;
         const newJars = {}; document.getElementById('jar-editor').value.split('\n').forEach(l => { const [name, data] = l.split(':'); if(name && data) { const [goal, start, end] = data.split(','); newJars[name.trim()] = { goal: Number(goal), start: start.trim(), end: end.trim() }; } });
-        store.jars = newJars; store.cats = parse('cat-editor', true); store.accs = parse('acc-editor');
-        saveToDB(); location.reload();
+        store.jars = newJars; 
+        const parse = (id, isCat=false) => { const obj = {}; document.getElementById(id).value.split('\n').forEach(l => { const [k,v] = l.split(':'); if(k && v) obj[k.trim()] = isCat ? v.split(',').map(s=>s.trim()) : Number(v.replace(/,/g,'')); }); return obj; };
+        store.cats = parse('cat-editor', true); 
+        store.accs = parse('acc-editor');
+        saveToDB(); alert('設定已更新！'); location.reload();
     }
-    function exportData() { const b = new Blob([JSON.stringify(store)], {type: "application/json"}); const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = `夢想備份.json`; a.click(); }
+    
+    function toggleInstOptions() { document.getElementById('inst-options').style.display = document.getElementById('is-inst').checked ? 'block' : 'none'; }
+    function exportData() { const b = new Blob([JSON.stringify(store)], {type: "application/json"}); const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = `${store.appName}_備份.json`; a.click(); }
     function importData(e) { const reader = new FileReader(); reader.onload = (ev) => { store = JSON.parse(ev.target.result); saveToDB(); location.reload(); }; reader.readAsText(e.target.files[0]); }
     function fullReset() { if(confirm("確定重置？")) { localStorage.removeItem(DB_KEY); location.reload(); } }
-    window.onload = () => renderHome();
+    window.onload = () => { updateAppTitles(); renderHome(); };
 </script>
 </body>
 </html>
