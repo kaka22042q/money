@@ -7,46 +7,24 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="夢想記帳本">
     <title>夢想記帳本</title>
-    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEwMCIgZmlsbD0iI2ZmZmFmMCIvPjxwYXRoIGQ9Ik0yNTYgMzkwYzg1IDAgMTI1LTQ1IDEyNS05NXMtNDAtOTUtMTI1LTk1LTEyNSA0NS0xMjUgOTUgNDAgOTUgMTI1IDk1em0tOTAtMTcwYzI1IDAgNDUtMjAgNDUtNDVzLTIwLTQ1LTQ1LTQ1LTQ1IDIwLTQ1IDQ1IDIwIDQ1IDQ1IDQ1em0xODAgMGMyNSAwIDQ1LTIwIDQ1LTQ1cy0yMC00NS00NS00NS00NSAyMC00NSA0NSAyMCA0NSA0NSA0NXptLTkwLTMwYzI1IDAgNDUtMjAgNDUtNDVzLTIwLTQ1LTQ1LTQ1LTQ1IDIwLTQ1IDQ1IDIwIDQ1IDQ1IDQ1em0tNjAtMTBjMjUgMCA0NS0yMCA0NS00NVMxOTAgOTAgMTY1IDkwcy00NSAyMC00NSA0NSAyMCA0NSA0NSA0NXoiIGZpbGw9IiNGRkI3QjIiLz48L3N2Zz4=">
-
     <style>
-        :root { 
-            --cat-main: #FFB7B2; --cat-bg: #fffaf0; --cat-dark: #5D4037; 
-            --cat-gray: #D7CCC8; --cat-red: #ff7675; --cat-green: #55efc4; --cat-blue: #74b9ff; 
-        }
+        :root { --cat-main: #FFB7B2; --cat-bg: #fffaf0; --cat-dark: #5D4037; --cat-gray: #D7CCC8; --cat-red: #ff7675; --cat-green: #55efc4; --cat-blue: #74b9ff; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { 
-            font-family: -apple-system, "Noto Sans TC", sans-serif; 
-            background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 120px; 
-        }
+        body { font-family: -apple-system, sans-serif; background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 120px; }
         .container { max-width: 450px; margin: 0 auto; padding: 15px; }
-        .text-center { text-align: center; }
         .cat-card { background: #fff; border: 3px solid var(--cat-dark); box-shadow: 4px 4px 0 var(--cat-gray); border-radius: 20px; margin-bottom: 15px; padding: 15px; }
-        
-        /* 進度條 */
-        .prog-container { background: #EFEBE9; height: 18px; border-radius: 9px; border: 1.5px solid var(--cat-dark); overflow: hidden; margin: 5px 0; position: relative; }
+        .prog-container { background: #EFEBE9; height: 16px; border-radius: 8px; border: 1.5px solid var(--cat-dark); overflow: hidden; margin: 5px 0; position: relative; }
         .prog-fill { height: 100%; background: var(--cat-main); transition: width 0.5s; }
-        .prog-text { position: absolute; width: 100%; text-align: center; font-size: 10px; font-weight: bold; line-height: 16px; z-index: 5; }
-
-        /* 月曆 */
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; margin-top: 10px; }
+        .prog-text { position: absolute; width: 100%; text-align: center; font-size: 10px; font-weight: bold; line-height: 14px; z-index: 5; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
         .cal-day { padding: 8px 0; border-radius: 8px; font-size: 13px; cursor: pointer; position: relative; }
         .cal-day.has-record::after { content: '•'; position: absolute; bottom: 1px; left: 50%; transform: translateX(-50%); color: var(--cat-main); font-size: 16px; }
         .cal-day.selected { border: 2px solid var(--cat-dark); background: #fff5f5; }
-        .chart-container { position: relative; height: 200px; margin: 10px 0; }
-
-        /* 導航 */
-        .nav-bar { 
-            position: fixed; bottom: 25px; left: 15px; right: 15px; background: white; 
-            border: 3px solid var(--cat-dark); box-shadow: 0 8px 0 var(--cat-gray); 
-            display: flex; justify-content: space-around; padding: 10px; z-index: 100; border-radius: 30px; 
-        }
-        .nav-item { border: none; background: none; text-align: center; cursor: pointer; flex: 1; display: flex; flex-direction: column; align-items: center; }
+        .nav-bar { position: fixed; bottom: 25px; left: 15px; right: 15px; background: white; border: 3px solid var(--cat-dark); box-shadow: 0 8px 0 var(--cat-gray); display: flex; justify-content: space-around; padding: 10px; z-index: 100; border-radius: 30px; }
+        .nav-item { border: none; background: none; text-align: center; flex: 1; display: flex; flex-direction: column; align-items: center; }
         .nav-text { font-size: 10px; font-weight: bold; color: var(--cat-gray); }
         .nav-item.active .nav-text { color: var(--cat-dark); }
-
         input, select, textarea { width: 100%; border: 2px solid var(--cat-gray); border-radius: 10px; padding: 10px; margin-top: 5px; font-size: 16px; outline: none; }
         .btn-main { background: var(--cat-main); border: 2px solid var(--cat-dark); box-shadow: 0 4px 0 var(--cat-dark); font-weight: bold; color: white; border-radius: 12px; padding: 12px; width: 100%; cursor: pointer; margin-top: 10px; }
         .record-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 13px; }
@@ -59,24 +37,18 @@
 <div class="container">
     <div id="page-home" class="page active">
         <h2 class="text-center" style="color:var(--cat-red); margin:0 0 10px 0;">🐾 夢想記帳本</h2>
-        
         <div id="jarList"></div>
-
         <div class="cat-card">
             <h3 class="text-center" id="cal-month-title" style="margin:0"></h3>
             <div class="calendar-grid" id="calendar-days"></div>
             <div id="day-detail-area" style="display:none; margin-top:15px; padding-top:15px; border-top:1px dashed #ccc;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                    <strong id="selected-date-text"></strong>
-                    <button onclick="showPage('daily', document.querySelectorAll('.nav-item')[1])" style="font-size:11px; border:none; background:none; color:var(--cat-blue)">+ 新增紀錄</button>
-                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><strong id="selected-date-text"></strong><button onclick="showPage('daily', document.querySelectorAll('.nav-item')[1])" style="font-size:11px; border:none; background:none; color:var(--cat-blue)">+ 新增</button></div>
                 <div id="day-records"></div>
             </div>
         </div>
-
         <div class="cat-card">
-            <h3 class="text-center" style="margin:0">📊 本月支出分析</h3>
-            <div class="chart-container"><canvas id="expenseChart"></canvas></div>
+            <h3 class="text-center" style="margin:0">📊 本月分析</h3>
+            <div style="height:200px; position:relative;"><canvas id="expenseChart"></canvas></div>
             <div id="budgetBars"></div>
         </div>
     </div>
@@ -89,16 +61,13 @@
                 <option value="exp">支出 💸</option>
                 <option value="inc">收入 💰</option>
                 <option value="save">存入存錢筒 🐟</option>
-                <option value="transfer">對沖/繳卡費/轉帳 🔄</option>
+                <option value="transfer">轉帳對沖 🔄</option>
             </select>
-
             <div id="source-acc-area"><label>選擇帳戶</label><select id="acc-source"></select></div>
-            <div id="target-jar-area" style="display:none;"><label>存入哪個目標？</label><select id="jar-target"></select></div>
-            <div id="transfer-area" style="display:none;"><label>轉出帳戶</label><select id="acc-from"></select><label>轉入帳戶</label><select id="acc-to"></select></div>
+            <div id="target-jar-area" style="display:none;"><label>存入哪個夢想？</label><select id="jar-target"></select></div>
+            <div id="transfer-area" style="display:none;"><label>轉出</label><select id="acc-from"></select><label>轉入</label><select id="acc-to"></select></div>
             <div id="cat-area"><label>分類</label><select id="mainCat" onchange="renderSubCats()"></select><select id="subCat" style="margin-top:8px;"></select></div>
-
-            <label>金額</label>
-            <input type="number" id="amt" placeholder="0" inputmode="decimal">
+            <label>金額</label><input type="number" id="amt" placeholder="0" inputmode="decimal">
             <button onclick="saveAll()" class="btn-main">確認執行</button>
         </div>
     </div>
@@ -106,19 +75,25 @@
     <div id="page-settings" class="page">
         <h2 class="text-center">⚙️ 系統設定</h2>
         <div class="cat-card">
-            <h4 style="margin:0">💎 存錢筒 (名稱:目標額)</h4>
-            <textarea id="jar-editor" rows="3"></textarea>
+            <h4 style="margin:0">📂 分類清單編輯 (大類:小類1,小類2)</h4>
+            <textarea id="cat-editor" rows="5" placeholder="例如：飲食:早餐,午餐,晚餐"></textarea>
+            
+            <h4 style="margin:10px 0 0 0">💎 存錢筒 (名稱:目標)</h4>
+            <textarea id="jar-editor" rows="2"></textarea>
+            
             <h4 style="margin:10px 0 0 0">💳 帳戶 (名稱:餘額)</h4>
-            <textarea id="acc-editor" rows="3"></textarea>
-            <h4 style="margin:10px 0 0 0">📊 預算 (大類 或 大類-子類:金額)</h4>
-            <textarea id="budget-editor" rows="3"></textarea>
+            <textarea id="acc-editor" rows="2"></textarea>
+            
+            <h4 style="margin:10px 0 0 0">📊 預算 (名稱:金額)</h4>
+            <textarea id="budget-editor" rows="2"></textarea>
+            
             <button onclick="saveSettings()" class="btn-main" style="background:var(--cat-green)">更新設定</button>
         </div>
         <div class="cat-card" style="background:#eee">
             <button onclick="exportData()" class="btn-main" style="background:var(--cat-blue)">📦 匯出備份</button>
             <button onclick="document.getElementById('fileInput').click()" class="btn-main" style="background:#fff; color:#333">📥 匯入還原</button>
             <input type="file" id="fileInput" style="display:none" onchange="importData(event)">
-            <button onclick="fullReset()" style="width:100%; background:none; border:none; color:red; font-size:10px; margin-top:15px">⚠️ 徹底清空所有紀錄</button>
+            <button onclick="fullReset()" style="width:100%; background:none; border:none; color:red; font-size:10px; margin-top:15px">⚠️ 徹底清空數據</button>
         </div>
     </div>
 </div>
@@ -130,21 +105,21 @@
 </nav>
 
 <script>
-    const DB_KEY = 'cat_dream_safe_v1';
+    const DB_KEY = 'cat_dream_pro_v3';
     let selectedDate = new Date();
     let myChart = null;
 
     let defaultData = {
-        jars: {'買電腦': 65000, '緊急預備金': 100000},
-        jarBalances: {'買電腦': 0, '緊急預備金': 0},
-        accs: {'現金': 0, '銀行': 0, '信用卡': 0},
-        cats: {'飲食':['外食','飲料','零食'], '交通':['加油','捷運'], '居家':['房租','雜費'], '其他':['雜項']},
+        jars: {'買電腦': 65000}, jarBalances: {'買電腦': 0},
+        accs: {'現金': 0, '銀行': 0},
+        cats: {'飲食':['外食','飲料'], '交通':['加油','捷運'], '居家':['房租']},
         budgets: {'飲食': 10000},
-        history: [],
-        config: { start: '2026-01', end: '2030-12' }
+        history: [], config: { start: '2026-01', end: '2030-12' }
     };
 
     let store = JSON.parse(localStorage.getItem(DB_KEY)) || defaultData;
+
+    function saveToDB() { localStorage.setItem(DB_KEY, JSON.stringify(store)); }
 
     function showPage(pId, el) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -161,17 +136,12 @@
     }
 
     function renderJars() {
-        const list = document.getElementById('jarList');
-        list.innerHTML = "";
-        const now = new Date();
-        const start = new Date(store.config.start);
-        const end = new Date(store.config.end);
+        const list = document.getElementById('jarList'); list.innerHTML = "";
+        const now = new Date(); const start = new Date(store.config.start); const end = new Date(store.config.end);
         const totalM = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) || 1;
         const passedM = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
-        
         for(let name in store.jars) {
-            const cur = store.jarBalances[name] || 0;
-            const goal = store.jars[name];
+            const cur = store.jarBalances[name] || 0; const goal = store.jars[name];
             const pct = Math.min(Math.round(cur/goal*100), 100);
             const targetNow = Math.round((goal/totalM) * (passedM + 1));
             const gap = targetNow - cur;
@@ -180,12 +150,10 @@
     }
 
     function renderCalendar() {
-        const grid = document.getElementById('calendar-days');
-        grid.innerHTML = "";
+        const grid = document.getElementById('calendar-days'); grid.innerHTML = "";
         const y = selectedDate.getFullYear(), m = selectedDate.getMonth();
         document.getElementById('cal-month-title').innerText = `${y}年${m+1}月`;
-        const firstDay = new Date(y, m, 1).getDay();
-        const lastDate = new Date(y, m + 1, 0).getDate();
+        const firstDay = new Date(y, m, 1).getDay(); const lastDate = new Date(y, m + 1, 0).getDate();
         for(let i=0; i<firstDay; i++) grid.innerHTML += `<div></div>`;
         for(let d=1; d<=lastDate; d++) {
             const dateStr = `${y}-${(m+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`;
@@ -205,19 +173,17 @@
 
     function renderDayRecords(dateStr) {
         const recs = store.history.filter(h => h.date === dateStr);
-        document.getElementById('day-records').innerHTML = recs.map(r => `<div class="record-item"><div><strong>${r.type==='save'?'🐟 '+r.jar : (r.sub || r.type)}</strong><br><small style="color:#999">${r.acc || r.from+'→'+r.to}</small></div><div style="text-align:right"><span style="color:${r.type==='inc'?'var(--cat-green)':'var(--cat-red)'}">${r.amt.toLocaleString()}</span><button onclick="deleteRecord(${r.id})" style="border:none; background:none; color:red; padding-left:10px;">🗑️</button></div></div>`).join('') || '本日無紀錄';
+        document.getElementById('day-records').innerHTML = recs.map(r => `<div class="record-item"><div><strong>${r.type==='save'?'🐟 '+r.jar : (r.sub || r.type)}</strong><br><small style="color:#999">${r.acc || r.from+'→'+r.to}</small></div><div style="text-align:right"><span style="color:${r.type==='inc'?'var(--cat-green)':'var(--cat-red)'}">${r.amt.toLocaleString()}</span><button onclick="deleteRecord(${r.id})" style="border:none; background:none; color:red; padding-left:10px;">🗑️</button></div></div>`).join('') || '無紀錄';
     }
 
     function deleteRecord(id) {
-        if(!confirm('確定刪除紀錄？')) return;
-        const idx = store.history.findIndex(h => h.id === id);
-        const r = store.history[idx];
+        if(!confirm('確定刪除？')) return;
+        const idx = store.history.findIndex(h => h.id === id); const r = store.history[idx];
         if(r.type === 'exp') store.accs[r.acc] += r.amt;
         else if(r.type === 'inc') store.accs[r.acc] -= r.amt;
         else if(r.type === 'save') { store.accs[r.acc] += r.amt; store.jarBalances[r.jar] -= r.amt; }
         else if(r.type === 'transfer') { store.accs[r.from] += r.amt; store.accs[r.to] -= r.amt; }
-        store.history.splice(idx, 1);
-        saveToDB(); renderHome(); renderDayRecords(r.date);
+        store.history.splice(idx, 1); saveToDB(); renderHome(); renderDayRecords(r.date);
     }
 
     function toggleFields() {
@@ -226,55 +192,6 @@
         document.getElementById('target-jar-area').style.display = (mode === 'save') ? 'block' : 'none';
         document.getElementById('transfer-area').style.display = (mode === 'transfer') ? 'block' : 'none';
         document.getElementById('cat-area').style.display = (mode === 'exp' || mode === 'inc') ? 'block' : 'none';
-    }
-
-    function saveAll() {
-        const mode = document.getElementById('trans-mode').value;
-        const amt = Number(document.getElementById('amt').value);
-        const dateStr = document.getElementById('selected-date-text').innerText || new Date().toISOString().split('T')[0];
-        if(!amt) return;
-        let record = { id: Date.now(), date: dateStr, amt: amt, type: mode };
-        if(mode === 'save') {
-            const acc = document.getElementById('acc-source').value; const jar = document.getElementById('jar-target').value;
-            store.accs[acc] -= amt; store.jarBalances[jar] = (store.jarBalances[jar] || 0) + amt;
-            record.acc = acc; record.jar = jar;
-        } else if(mode === 'transfer') {
-            const f = document.getElementById('acc-from').value, t = document.getElementById('acc-to').value;
-            store.accs[f] -= amt; store.accs[t] += amt; record.from = f; record.to = t;
-        } else {
-            const acc = document.getElementById('acc-source').value; const main = document.getElementById('mainCat').value, sub = document.getElementById('subCat').value;
-            if(mode === 'exp') store.accs[acc] -= amt; else store.accs[acc] += amt;
-            record.acc = acc; record.main = main; record.sub = sub;
-        }
-        store.history.push(record); saveToDB(); alert('紀錄成功！');
-        showPage('home', document.querySelectorAll('.nav-item')[0]);
-        document.getElementById('amt').value = "";
-    }
-
-    function updateChart() {
-        const curM = `${selectedDate.getFullYear()}-${(selectedDate.getMonth()+1).toString().padStart(2,'0')}`;
-        const dataMap = {};
-        store.history.filter(h => h.date.startsWith(curM) && h.type === 'exp').forEach(h => { dataMap[h.main] = (dataMap[h.main] || 0) + h.amt; });
-        const ctx = document.getElementById('expenseChart').getContext('2d');
-        if(myChart) myChart.destroy();
-        myChart = new Chart(ctx, { type: 'doughnut', data: { labels: Object.keys(dataMap), datasets: [{ data: Object.values(dataMap), backgroundColor: ['#FFB7B2', '#FFDAC1', '#E2F0CB', '#B5EAD7', '#C7CEEA'] }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } } });
-    }
-
-    function renderBudgets() {
-        const curM = `${selectedDate.getFullYear()}-${(selectedDate.getMonth()+1).toString().padStart(2,'0')}`;
-        const area = document.getElementById('budgetBars'); area.innerHTML = "<h3>📊 預算監控</h3>";
-        for(let key in store.budgets) {
-            let spent = 0;
-            if(key.includes('-')) {
-                const [m, s] = key.split('-');
-                spent = store.history.filter(h => h.main === m && h.sub === s && h.date.startsWith(curM) && h.type==='exp').reduce((a,b)=>a+b.amt, 0);
-            } else {
-                spent = store.history.filter(h => h.main === key && h.date.startsWith(curM) && h.type==='exp').reduce((a,b)=>a+b.amt, 0);
-            }
-            const limit = store.budgets[key];
-            const pct = Math.min(Math.round(spent/limit*100), 100);
-            area.innerHTML += `<div class="cat-card" style="margin-bottom:8px; padding:10px; border-width:2px;"><div style="display:flex; justify-content:space-between; font-size:12px; font-weight:bold;"><span>${key}</span><span>$${spent}/$${limit}</span></div><div class="prog-container" style="height:8px;"><div class="prog-fill" style="width:${pct}%; background:${spent>limit?'var(--cat-red)':'var(--cat-green)'}"></div></div></div>`;
-        }
     }
 
     function initDaily() {
@@ -290,45 +207,84 @@
         document.getElementById('subCat').innerHTML = store.cats[main].map(s => `<option value="${s}">${s}</option>`).join('');
     }
 
+    function saveAll() {
+        const mode = document.getElementById('trans-mode').value; const amt = Number(document.getElementById('amt').value);
+        const dateStr = document.getElementById('selected-date-text').innerText || new Date().toISOString().split('T')[0];
+        if(!amt) return;
+        let record = { id: Date.now(), date: dateStr, amt: amt, type: mode };
+        if(mode === 'save') {
+            const acc = document.getElementById('acc-source').value; const jar = document.getElementById('jar-target').value;
+            store.accs[acc] -= amt; store.jarBalances[jar] = (store.jarBalances[jar] || 0) + amt;
+            record.acc = acc; record.jar = jar;
+        } else if(mode === 'transfer') {
+            const f = document.getElementById('acc-from').value, t = document.getElementById('acc-to').value;
+            store.accs[f] -= amt; store.accs[t] += amt; record.from = f; record.to = t;
+        } else {
+            const acc = document.getElementById('acc-source').value; const main = document.getElementById('mainCat').value, sub = document.getElementById('subCat').value;
+            if(mode === 'exp') store.accs[acc] -= amt; else store.accs[acc] += amt;
+            record.acc = acc; record.main = main; record.sub = sub;
+        }
+        store.history.push(record); saveToDB(); alert('OK!');
+        showPage('home', document.querySelectorAll('.nav-item')[0]);
+    }
+
+    function updateChart() {
+        const curM = `${selectedDate.getFullYear()}-${(selectedDate.getMonth()+1).toString().padStart(2,'0')}`;
+        const dataMap = {};
+        store.history.filter(h => h.date.startsWith(curM) && h.type === 'exp').forEach(h => { dataMap[h.main] = (dataMap[h.main] || 0) + h.amt; });
+        const ctx = document.getElementById('expenseChart').getContext('2d');
+        if(myChart) myChart.destroy();
+        myChart = new Chart(ctx, { type: 'doughnut', data: { labels: Object.keys(dataMap), datasets: [{ data: Object.values(dataMap), backgroundColor: ['#FFB7B2', '#FFDAC1', '#E2F0CB', '#B5EAD7', '#C7CEEA'] }] }, options: { responsive: true, maintainAspectRatio: false } });
+    }
+
+    function renderBudgets() {
+        const curM = `${selectedDate.getFullYear()}-${(selectedDate.getMonth()+1).toString().padStart(2,'0')}`;
+        const area = document.getElementById('budgetBars'); area.innerHTML = "";
+        for(let key in store.budgets) {
+            let spent = store.history.filter(h => (h.main === key || (key.includes('-') && h.main === key.split('-')[0] && h.sub === key.split('-')[1])) && h.date.startsWith(curM) && h.type==='exp').reduce((a,b)=>a+b.amt, 0);
+            const pct = Math.min(Math.round(spent/store.budgets[key]*100), 100);
+            area.innerHTML += `<div style="font-size:11px; margin-bottom:5px;"><span>${key} ($${spent}/$${store.budgets[key]})</span><div class="prog-container" style="height:6px;"><div class="prog-fill" style="width:${pct}%; background:${spent>store.budgets[key]?'red':'var(--cat-green)'}"></div></div></div>`;
+        }
+    }
+
     function initSettings() {
+        document.getElementById('cat-editor').value = Object.entries(store.cats).map(([k,v])=>`${k}:${v.join(',')}`).join('\n');
         document.getElementById('jar-editor').value = Object.entries(store.jars).map(([k,v])=>`${k}:${v}`).join('\n');
         document.getElementById('acc-editor').value = Object.entries(store.accs).map(([k,v])=>`${k}:${v}`).join('\n');
         document.getElementById('budget-editor').value = Object.entries(store.budgets).map(([k,v])=>`${k}:${v}`).join('\n');
     }
 
     function saveSettings() {
-        const parse = (id) => { const obj = {}; document.getElementById(id).value.split('\n').forEach(l => { const [k,v] = l.split(':'); if(k && v) obj[k.trim()] = Number(v.replace(/,/g,'')); }); return obj; };
-        store.jars = parse('jar-editor'); store.accs = parse('acc-editor'); store.budgets = parse('budget-editor');
-        saveToDB(); alert('設定已套用！'); location.reload();
+        const parse = (id, isCat=false) => {
+            const obj = {};
+            document.getElementById(id).value.split('\n').forEach(l => {
+                const [k,v] = l.split(':');
+                if(k && v) obj[k.trim()] = isCat ? v.split(',').map(s=>s.trim()) : Number(v.replace(/,/g,''));
+            });
+            return obj;
+        };
+        store.cats = parse('cat-editor', true);
+        store.jars = parse('jar-editor');
+        store.accs = parse('acc-editor');
+        store.budgets = parse('budget-editor');
+        saveToDB(); alert('設定已更新！'); location.reload();
     }
 
-    function saveToDB() { localStorage.setItem(DB_KEY, JSON.stringify(store)); }
-    
     function exportData() {
-        const now = new Date();
-        const fileName = `夢想備份_${now.toISOString().split('T')[0]}.json`;
         const blob = new Blob([JSON.stringify(store)], {type: "application/json"});
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob); a.download = fileName; a.click();
+        const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+        a.download = `夢想備份_${new Date().toISOString().split('T')[0]}.json`; a.click();
     }
 
     function importData(e) {
-        const file = e.target.files[0];
-        if (!file) return;
         const reader = new FileReader();
-        reader.onload = (ev) => {
-            try {
-                const imported = JSON.parse(ev.target.result);
-                if (imported.jars) { store = imported; saveToDB(); location.reload(); }
-            } catch(e) { alert("讀取錯誤"); }
-        };
-        reader.readAsText(file);
+        reader.onload = (ev) => { store = JSON.parse(ev.target.result); saveToDB(); location.reload(); };
+        reader.readAsText(e.target.files[0]);
     }
 
-    function fullReset() { if(confirm("確定重置？這無法復原！")) { localStorage.removeItem(DB_KEY); location.reload(); } }
+    function fullReset() { if(confirm("確定重置？")) { localStorage.removeItem(DB_KEY); location.reload(); } }
 
     window.onload = () => renderHome();
 </script>
 </body>
 </html>
-
