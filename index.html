@@ -10,7 +10,7 @@
     <style>
         :root { --cat-main: #FFB7B2; --cat-bg: #fffaf0; --cat-dark: #5D4037; --cat-gray: #D7CCC8; --cat-red: #ff7675; --cat-green: #55efc4; --cat-blue: #74b9ff; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: -apple-system, "Noto Sans TC", sans-serif; background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 110px; }
+        body { font-family: -apple-system, "Noto Sans TC", sans-serif; background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 120px; }
         .container { max-width: 450px; margin: 0 auto; padding: 15px; }
         .cat-card { background: #fff; border: 3px solid var(--cat-dark); box-shadow: 4px 4px 0 var(--cat-gray); border-radius: 20px; margin-bottom: 15px; padding: 15px; }
         .prog-container { background: #EFEBE9; height: 18px; border-radius: 9px; border: 1.5px solid var(--cat-dark); overflow: hidden; margin: 5px 0; position: relative; }
@@ -19,10 +19,15 @@
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; margin-top: 10px; }
         .cal-day { padding: 8px 0; border-radius: 8px; font-size: 13px; cursor: pointer; position: relative; }
         .cal-day.has-record::after { content: '•'; position: absolute; bottom: 1px; left: 50%; transform: translateX(-50%); color: var(--cat-main); font-size: 16px; }
-        .nav-bar { position: fixed; bottom: 20px; left: 10px; right: 10px; background: white; border: 3px solid var(--cat-dark); box-shadow: 0 6px 0 var(--cat-gray); display: flex; justify-content: space-around; padding: 8px; z-index: 100; border-radius: 25px; }
+        
+        /* 加大圖示與按鈕的底部導覽列 */
+        .nav-bar { position: fixed; bottom: 20px; left: 10px; right: 10px; background: white; border: 3px solid var(--cat-dark); box-shadow: 0 6px 0 var(--cat-gray); display: flex; justify-content: space-around; padding: 12px 8px; z-index: 100; border-radius: 25px; }
         .nav-item { border: none; background: none; text-align: center; flex: 1; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-        .nav-text { font-size: 10px; font-weight: bold; color: var(--cat-gray); }
+        .nav-icon { font-size: 24px; margin-bottom: 2px; } /* 圖示放大 */
+        .nav-text { font-size: 11px; font-weight: bold; color: var(--cat-gray); }
         .nav-item.active .nav-text { color: var(--cat-dark); }
+        .nav-item.active .nav-icon { transform: scale(1.1); transition: transform 0.2s; }
+
         input, select, textarea { width: 100%; border: 2px solid var(--cat-gray); border-radius: 10px; padding: 10px; margin-top: 5px; font-size: 16px; outline: none; background: #fff; }
         label { font-size: 12px; font-weight: bold; display: block; margin-top: 10px; color: var(--cat-dark); }
         .btn-main { background: var(--cat-main); border: 2px solid var(--cat-dark); box-shadow: 0 4px 0 var(--cat-dark); font-weight: bold; color: white; border-radius: 12px; padding: 12px; width: 100%; cursor: pointer; margin-top: 15px; font-size: 16px; }
@@ -39,7 +44,6 @@
     <div id="page-home" class="page active">
         <h2 id="home-title" style="color:var(--cat-red); margin:0 0 10px 0;">🐾 首頁</h2>
         <div id="jarList"></div>
-        
         <div class="cat-card">
             <h3 class="text-center" id="cal-month-title" style="margin:0; font-size: 16px; text-align: center;"></h3>
             <div class="calendar-grid" id="calendar-days"></div>
@@ -48,9 +52,8 @@
                 <div id="day-records"></div>
             </div>
         </div>
-
         <div class="cat-card">
-            <h3 style="margin:0 0 10px 0; font-size:16px;">📊 本月預算進度</h3>
+            <h3 style="margin:0 0 10px 0; font-size:16px;">📊 本月預算</h3>
             <div id="home-budget-list"></div>
         </div>
     </div>
@@ -58,11 +61,11 @@
     <div id="page-assets" class="page">
         <h2 style="color:var(--cat-blue); margin:0 0 10px 0;">🏦 資產與分析</h2>
         <div class="cat-card">
-            <h3 style="margin:0 0 10px 0; font-size:16px;">💳 帳戶餘額</h3>
+            <h3 style="margin:0 0 10px 0; font-size:16px;">💳 餘額總覽</h3>
             <div id="asset-list"></div>
         </div>
         <div class="cat-card">
-            <h3 style="margin:0 0 10px 0; font-size:16px;">🔍 期間統計與搜尋</h3>
+            <h3 style="margin:0 0 10px 0; font-size:16px;">🔍 期間搜尋</h3>
             <div style="display:flex; gap:5px; margin-bottom:10px;"><input type="date" id="stat-start"><input type="date" id="stat-end"></div>
             <input type="text" id="global-search" placeholder="🔍 搜尋關鍵字比價..." oninput="renderAssetsAndHistory()">
             <div id="category-stats" style="margin-top:15px;"></div>
@@ -76,7 +79,7 @@
         <div class="cat-card">
             <label>操作類型</label>
             <select id="trans-mode" onchange="toggleFields()">
-                <option value="exp">支出 💸</option><option value="inc">收入 💰</option><option value="save">存入計畫 🐟</option><option value="transfer">對沖/繳費 🔄</option>
+                <option value="exp">支出 💸</option><option value="inc">收入 💰</option><option value="save">存入計畫 🐟</option><option value="transfer">對沖/轉帳 🔄</option>
             </select>
             <div id="source-acc-area"><label>來源帳戶/計畫</label><select id="acc-source"></select></div>
             <div id="transfer-area" style="display:none;"><label>轉入帳戶/計畫</label><select id="acc-to"></select></div>
@@ -84,7 +87,7 @@
             <div id="exp-cat-area"><label>分類</label><div style="display:flex; gap:5px;"><select id="mainCat" onchange="renderSubCats()"></select><select id="subCat"></select></div></div>
             <div id="inc-cat-area" style="display:none;"><label>收入項目</label><select id="inc-cat"></select></div>
             <label>金額</label><input type="number" id="amt" placeholder="0" inputmode="decimal">
-            <label>備註 (比價用關鍵字)</label><input type="text" id="note" placeholder="例：大麥克">
+            <label>備註 (搜尋關鍵字)</label><input type="text" id="note" placeholder="例如：拿鐵">
             <label>日期</label><input type="date" id="record-date">
             <div id="inst-toggle-area"><label style="display:inline;"><input type="checkbox" id="is-inst" onchange="toggleInstOptions()"> 信用卡分期</label><div id="inst-options" style="display:none; background:#f9f9f9; padding:10px; border-radius:10px; margin-top:5px;"><label>分幾期？</label><input type="number" id="inst-num" value="3" min="2"></div></div>
             <button onclick="saveAll()" class="btn-main">確認存檔</button>
@@ -95,9 +98,9 @@
         <h2 style="text-align:center;">⚙️ 設定</h2>
         <div class="cat-card">
             <label>🏷️ App 名稱</label><input type="text" id="app-name-input">
-            <h4 style="margin:15px 0 0 0">💎 存錢筒 (名稱:額,起,訖)</h4><textarea id="jar-editor" rows="2"></textarea>
+            <h4 style="margin:15px 0 0 0">💎 存錢筒 (名稱:額,起,迄)</h4><textarea id="jar-editor" rows="2"></textarea>
             <h4 style="margin:10px 0 0 0">📂 支出分類 (大類:小1,小2)</h4><textarea id="cat-editor" rows="3"></textarea>
-            <h4 style="margin:10px 0 0 0">💳 帳戶餘額 (名稱:金額)</h4><textarea id="acc-editor" rows="2"></textarea>
+            <h4 style="margin:10px 0 0 0">💳 帳戶資產 (名稱:金額)</h4><textarea id="acc-editor" rows="2"></textarea>
             <h4 style="margin:10px 0 0 0">📊 預算監控 (分類:金額)</h4><textarea id="budget-editor" rows="2"></textarea>
             <button onclick="saveSettings()" class="btn-main" style="background:var(--cat-green)">更新設定</button>
         </div>
@@ -106,14 +109,22 @@
 </div>
 
 <nav class="nav-bar">
-    <button class="nav-item active" onclick="showPage('home', this)">📅<div class="nav-text">首頁</div></button>
-    <button class="nav-item" onclick="showPage('assets', this)">🏦<div class="nav-text">資產</div></button>
-    <button class="nav-item" onclick="showPage('daily', this)">✍️<div class="nav-text">記帳</div></button>
-    <button class="nav-item" onclick="showPage('settings', this)">⚙️<div class="nav-text">設定</div></button>
+    <button class="nav-item active" onclick="showPage('home', this)">
+        <span class="nav-icon">📅</span><div class="nav-text">首頁</div>
+    </button>
+    <button class="nav-item" onclick="showPage('assets', this)">
+        <span class="nav-icon">🏦</span><div class="nav-text">資產</div>
+    </button>
+    <button class="nav-item" onclick="showPage('daily', this)">
+        <span class="nav-icon">✍️</span><div class="nav-text">記帳</div>
+    </button>
+    <button class="nav-item" onclick="showPage('settings', this)">
+        <span class="nav-icon">⚙️</span><div class="nav-text">設定</div>
+    </button>
 </nav>
 
 <script>
-    const DB_KEY = 'cat_dream_ultimate_v1';
+    const DB_KEY = 'cat_dream_final_bigicon_v1';
     let store = JSON.parse(localStorage.getItem(DB_KEY)) || {
         appName: '夢想記帳本', jars: { '買電腦': { goal: 60000, start: '2026-01', end: '2026-12' } },
         jarBalances: { '買電腦': 0 }, accs: { '現金': 0, '銀行帳戶': 0, '信用卡': 0 },
@@ -140,15 +151,12 @@
         if(pId === 'settings') initSettings();
     }
 
-    // --- 預算渲染邏輯 ---
     function renderBudgets() {
         const curM = `${selectedDate.getFullYear()}-${(selectedDate.getMonth()+1).toString().padStart(2,'0')}`;
-        const homeList = document.getElementById('home-budget-list');
-        homeList.innerHTML = "";
+        const homeList = document.getElementById('home-budget-list'); homeList.innerHTML = "";
         for(let cat in store.budgets) {
             const spent = store.history.filter(h => (h.main === cat || (cat.includes('-') && h.main === cat.split('-')[0] && h.sub === cat.split('-')[1])) && h.date.startsWith(curM) && h.type==='exp').reduce((a,b)=>a+b.amt, 0);
-            const limit = store.budgets[cat];
-            const pct = Math.min(Math.round(spent/limit*100), 100);
+            const limit = store.budgets[cat]; const pct = Math.min(Math.round(spent/limit*100), 100);
             homeList.innerHTML += `<div style="font-size:11px; margin-bottom:5px;"><span>${cat} ($${spent.toLocaleString()}/$${limit.toLocaleString()})</span><div class="prog-container" style="height:8px;"><div class="prog-fill" style="width:${pct}%; background:${spent>limit?'red':'var(--cat-green)'}"></div></div></div>`;
         }
     }
@@ -157,15 +165,13 @@
         const assetArea = document.getElementById('asset-list'); assetArea.innerHTML = ""; let net = 0;
         for(let k in store.accs) { net += store.accs[k]; assetArea.innerHTML += `<div class="stat-row"><span>${k}</span><span style="color:${store.accs[k]<0?'red':'black'}">$${store.accs[k].toLocaleString()}</span></div>`; }
         for(let j in store.jarBalances) { net += store.jarBalances[j]; assetArea.innerHTML += `<div class="stat-row"><span>🐟 ${j}</span><span>$${store.jarBalances[j].toLocaleString()}</span></div>`; }
-        assetArea.innerHTML += `<div class="stat-row" style="border-top:2px solid var(--cat-dark); font-weight:bold;"><span>淨資產總計</span><span>$${net.toLocaleString()}</span></div>`;
-
+        assetArea.innerHTML += `<div class="stat-row" style="border-top:2px solid var(--cat-dark); font-weight:bold;"><span>資產淨值</span><span>$${net.toLocaleString()}</span></div>`;
         const start = document.getElementById('stat-start').value, end = document.getElementById('stat-end').value, search = document.getElementById('global-search').value.toLowerCase();
         const filtered = store.history.filter(h => h.date >= start && h.date <= end && (h.note || '').toLowerCase().includes(search));
         const catArea = document.getElementById('category-stats'); const catTotals = {};
         filtered.filter(h => h.type === 'exp').forEach(h => { catTotals[h.main] = (catTotals[h.main] || 0) + h.amt; });
-        catArea.innerHTML = "<h4>期間分析</h4>";
+        catArea.innerHTML = "<h4>期間總計</h4>";
         Object.entries(catTotals).sort((a,b)=>b[1]-a[1]).forEach(([c,a]) => { catArea.innerHTML += `<div class="stat-row"><span>${c}</span><span style="color:var(--cat-red); font-weight:bold;">$${a.toLocaleString()}</span></div>`; });
-
         const listArea = document.getElementById('full-history-list'); listArea.innerHTML = "";
         filtered.sort((a,b)=>new Date(b.date)-new Date(a.date)).forEach(h => {
             listArea.innerHTML += `<div class="record-item"><div><small>${h.date}</small> ${h.isInst?'<span class="inst-badge">分期</span>':''}<br><strong>${h.note || h.sub || h.type}</strong><br><small style="color:gray">${h.acc || h.jar || h.from+'→'+h.to}</small></div><div style="text-align:right"><span style="color:${h.type==='inc'?'green':'red'}">$${h.amt.toLocaleString()}</span><br><button onclick="deleteRecord(${h.id}, false)" style="border:none; background:none; color:#ccc;">🗑️</button></div></div>`;
@@ -181,7 +187,7 @@
             const pm = (now.getFullYear() - s.getFullYear()) * 12 + (now.getMonth() - s.getMonth());
             const cb = store.jarBalances[name] || 0; const pct = Math.min(Math.round(cb/p.goal*100), 100);
             const tg = Math.round((p.goal / tm) * Math.max(0, Math.min(pm + 1, tm))); const g = tg - cb;
-            list.innerHTML += `<div class="cat-card" style="padding:10px;"><div style="display:flex; justify-content:space-between; font-size:12px; font-weight:bold;"><span>${name}</span><span>$${cb.toLocaleString()} / $${p.goal.toLocaleString()}</span></div><div class="prog-container"><div class="prog-text">${pct}% (剩 ${Math.max(0, tm-pm)} 個月)</div><div class="prog-fill" style="width:${pct}%"></div></div><div style="font-size:10px; color:#888; display:flex; justify-content:space-between;"><span>📍 理論進度: $${tg.toLocaleString()}</span><span style="color:${g>0?'var(--cat-red)':'var(--cat-green)'}; font-weight:bold;">${g>0?'還差 '+g.toLocaleString():'已超前 ✨'}</span></div></div>`;
+            list.innerHTML += `<div class="cat-card" style="padding:10px;"><div style="display:flex; justify-content:space-between; font-size:12px; font-weight:bold;"><span>${name}</span><span>$${cb.toLocaleString()} / $${p.goal.toLocaleString()}</span></div><div class="prog-container"><div class="prog-text">${pct}% (剩 ${Math.max(0, tm-pm)} 月)</div><div class="prog-fill" style="width:${pct}%"></div></div><div style="font-size:10px; color:#888; display:flex; justify-content:space-between;"><span>📍 應存: $${tg.toLocaleString()}</span><span style="color:${g>0?'var(--cat-red)':'var(--cat-green)'}; font-weight:bold;">${g>0?'缺 '+g.toLocaleString():'超前 ✨'}</span></div></div>`;
         }
     }
     function renderCalendar() {
@@ -193,27 +199,26 @@
     }
     function selectDate(ds) {
         document.getElementById('day-detail-area').style.display = 'block'; document.getElementById('selected-date-text').innerText = ds;
-        document.getElementById('day-records').innerHTML = store.history.filter(h => h.date === ds).map(r => `<div class="record-item"><div><strong>${r.note || r.sub || r.type}</strong><br><small style="color:gray">${r.acc || r.jar || r.from+'→'+r.to}</small></div><div style="text-align:right"><span style="color:${r.type==='inc'?'green':'red'}">$${r.amt.toLocaleString()}</span><button onclick="deleteRecord(${r.id}, true)" style="border:none; background:none; color:#ccc;">🗑️</button></div></div>`).join('') || '<p style="text-align:center; font-size:12px; color:gray;">無紀錄</p>';
+        document.getElementById('day-records').innerHTML = store.history.filter(h => h.date === ds).map(r => `<div class="record-item"><div><strong>${r.note || r.sub || r.type}</strong><br><small style="color:gray">${r.acc || r.jar || r.from+'→'+r.to}</small></div><div style="text-align:right"><span style="color:${r.type==='inc'?'green':'red'}">$${r.amt.toLocaleString()}</span><button onclick="deleteRecord(${r.id}, true)" style="border:none; background:none; color:#ccc; margin-left:10px;">🗑️</button></div></div>`).join('') || '<p style="text-align:center; font-size:12px; color:gray;">無紀錄</p>';
     }
     function saveAll() {
         const m = document.getElementById('trans-mode').value; const amt = Number(document.getElementById('amt').value);
         const note = document.getElementById('note').value; const date = document.getElementById('record-date').value;
-        const src = document.getElementById('acc-source').value; if(!amt || !date) return alert('請填寫完整資訊');
+        const src = document.getElementById('acc-source').value; if(!amt || !date) return alert('請填寫完整喵！');
         const adj = (r, v) => { const [t, n] = r.split(':'); if(t === 'JAR') store.jarBalances[n] += v; else store.accs[n] += v; return n; };
-        if(m === 'transfer') { const to = document.getElementById('acc-to').value; const s = adj(src, -amt); const t = adj(to, amt); store.history.push({ id: Date.now(), date, amt, type: 'transfer', from: s, to: t, note: note || '對沖' }); }
+        if(m === 'transfer') { const to = document.getElementById('acc-to').value; const s = adj(src, -amt); const t = adj(to, amt); store.history.push({ id: Date.now(), date, amt, type: 'transfer', from: s, to: t, note: note || '轉帳對沖' }); }
         else if(m === 'save') { const jar = document.getElementById('jar-target').value; const s = adj(src, -amt); store.jarBalances[jar] += amt; store.history.push({ id: Date.now(), date, amt, type: 'save', jar, acc: s, note }); }
         else if(m === 'inc') { const s = adj(src, amt); store.history.push({ id: Date.now(), date, amt, type: 'inc', sub: '收入', acc: s, note }); }
         else {
             const s = adj(src, -amt);
             if(document.getElementById('is-inst').checked) {
                 const num = Number(document.getElementById('inst-num').value); const p = Math.round(amt/num);
-                for(let i=1; i<num; i++) { let d = new Date(date); d.setMonth(d.getMonth()+i); store.history.push({ id: Date.now()+i, date: d.toISOString().split('T')[0], amt: p, type: 'exp', main: document.getElementById('mainCat').value, sub: document.getElementById('subCat').value, acc: s, note: `${note} (分期 ${i+1}/${num})`, isInst: true }); store.accs[s] -= p; }
-                store.history.push({ id: Date.now(), date, amt: p, type: 'exp', main: document.getElementById('mainCat').value, sub: document.getElementById('subCat').value, acc: s, note: `${note} (分期 1/${num})`, isInst: true });
+                for(let i=0; i<num; i++) { let d = new Date(date); d.setMonth(d.getMonth()+i); store.history.push({ id: Date.now()+i, date: d.toISOString().split('T')[0], amt: p, type: 'exp', main: document.getElementById('mainCat').value, sub: document.getElementById('subCat').value, acc: s, note: `${note} (分期 ${i+1}/${num})`, isInst: true }); store.accs[s] -= (i===0?0:p); }
             } else { store.history.push({ id: Date.now(), date, amt, type: 'exp', main: document.getElementById('mainCat').value, sub: document.getElementById('subCat').value, acc: s, note }); }
         }
-        saveToDB(); showPage('home', document.querySelectorAll('.nav-item')[0]);
+        saveToDB(); alert('紀錄成功喵！'); showPage('home', document.querySelectorAll('.nav-item')[0]);
     }
-    function deleteRecord(id, home) { if(!confirm('刪除？')) return; const r = store.history.find(h=>h.id===id); if(r.type==='save'){ store.jarBalances[r.jar]-=r.amt; store.accs[r.acc]+=r.amt; } else if(r.acc){ store.accs[r.acc]+=(r.type==='exp'?r.amt:-r.amt); } store.history=store.history.filter(h=>h.id!==id); saveToDB(); location.reload(); }
+    function deleteRecord(id, home) { if(!confirm('要刪除嗎？')) return; const r = store.history.find(h=>h.id===id); if(r.type==='save'){ store.jarBalances[r.jar]-=r.amt; store.accs[r.acc]+=r.amt; } else if(r.acc){ store.accs[r.acc]+=(r.type==='exp'?r.amt:-r.amt); } store.history=store.history.filter(h=>h.id!==id); saveToDB(); location.reload(); }
     function initDaily() {
         document.getElementById('record-date').valueAsDate = new Date();
         const j = Object.keys(store.jars).map(n => `<option value="JAR:${n}">🐟 ${n}</option>`).join(''), a = Object.keys(store.accs).map(k => `<option value="ACC:${k}">${k}</option>`).join('');
@@ -240,7 +245,7 @@
     function toggleFields() { const m = document.getElementById('trans-mode').value; document.getElementById('transfer-area').style.display = (m === 'transfer') ? 'block' : 'none'; document.getElementById('jar-area').style.display = (m === 'save') ? 'block' : 'none'; document.getElementById('exp-cat-area').style.display = (m === 'exp') ? 'block' : 'none'; document.getElementById('inc-cat-area').style.display = (m === 'inc') ? 'block' : 'none'; document.getElementById('inst-toggle-area').style.display = (m === 'exp') ? 'block' : 'none'; }
     function toggleInstOptions() { document.getElementById('inst-options').style.display = document.getElementById('is-inst').checked ? 'block' : 'none'; }
     function exportData() { const b = new Blob([JSON.stringify(store)], {type: "application/json"}); const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = `${store.appName}_備份.json`; a.click(); }
-    function importData(e) { const r = new FileReader(); r.onload = (ev) => { store = JSON.parse(ev.target.result); saveToDB(); location.reload(); }; r.readAsText(e.target.files[0]); }
+    function importData(e) { const r = new FileReader(); r.onload = (ev) => { store = JSON.parse(ev.target.result); saveToDB(); location.reload(); }; reader.readAsText(e.target.files[0]); }
     function fullReset() { localStorage.removeItem(DB_KEY); location.reload(); }
     window.onload = () => { updateAppTitles(); renderHome(); };
 </script>
