@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>🐱 專業級財務導航</title>
+    <style>
+        :root { --cat-main: #FFB7B2; --cat-bg: #fffaf0; --cat-dark: #5D4037; --cat-gray: #D7CCC8; --cat-red: #ff7675; --cat-green: #55efc4; --cat-blue: #74b9ff; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: -apple-system, sans-serif; background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 120px; }
+        .container { max-width: 450px; margin: 0 auto; padding: 15px; }
+        .cat-card { background: #fff; border: 3px solid var(--cat-dark); box-shadow: 6px 6px 0 var(--cat-gray); border-radius: 20px; margin-bottom: 20px; padding: 16px; }
+        .prog-container { background: #EFEBE9; height: 12px; border-radius: 6px; border: 2px solid var(--cat-dark); overflow: hidden; margin: 5px 0; position: relative; }
+        .prog-fill { height: 100%; background: var(--cat-main); transition: width 0.5s; }
+        .input-group { margin-bottom: 12px; }
+        label { font-size: 12px; font-weight: bold; display: block; margin-bottom: 4px; }
+        input, select { width: 100%; border: 2px solid var(--cat-gray); border-radius: 10px; padding: 10px; font-size: 15px; outline: none; }
+        .nav-bar { position: fixed; bottom: 25px; left: 15px; right: 15px; background: white; border: 3px solid var(--cat-dark); box-shadow: 0 8px 0 var(--cat-gray); display: flex; justify-content: space-around; padding: 10px; z-index: 100; border-radius: 30px; }
+        .nav-item { border: none; background: none; text-align: center; cursor: pointer; width: 60px; }
+        .nav-icon { font-size: 20px; margin-bottom: 2px; }
+        .nav-text { font-size: 10px; font-weight: bold; color: var(--cat-gray); }
+        .nav-item.active .nav-text { color: var(--cat-dark); }
+        .page { display: none; }
+        .page.active { display: block; }
+        .btn-main { background: var(--cat-main); border: 2px solid var(--cat-dark); box-shadow: 0 4px 0 var(--cat-dark); font-weight: bold; color: white; border-radius: 12px; padding: 12px; width: 100%; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="page-home" class="page active">
+        <h1 class="text-center" style="color:var(--cat-red)">🐾 財務總覽</h1>
+        <div id="budgetStatusArea"></div> <hr>
+        <div id="jarList"></div>
+    </div>
+
+    <div id="page-daily" class="page">
+        <h2 class="text-center">💸 日常記帳</h2>
+        <div class="cat-card">
+            <div class="input-group">
+                <label>收支大類</label>
+                <select id="mainCat" onchange="updateSubCat()">
+                    <option value="飲食">飲食 🍕</option>
+                    <option value="交通">交通 🚗</option>
+                    <option value="娛樂">娛樂 🎬</option>
+                    <option value="購物">購物 🛍️</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>細項子類</label>
+                <select id="subCat"></select>
+            </div>
+            <div class="input-group"><label>金額</label><input type="number" id="dailyAmt"></div>
+            <div class="input-group">
+                <label>付款方式</label>
+                <select id="payMethod" onchange="toggleInstallment()">
+                    <option value="現金">現金</option>
+                    <option value="信用卡">信用卡 (分期可)</option>
+                </select>
+            </div>
+            <div id="installmentArea" style="display:none; background:#f9f9f9; padding:10px; border-radius:10px;">
+                <label>分期期數</label><input type="number" id="instMonth" value="1">
+                <label>起始月份</label><input type="month" id="instStart">
+            </div>
+            <button onclick="saveDaily()" class="btn-main" style="margin-top:10px">儲存這筆帳目 ✍️</button>
+        </div>
+    </div>
+
+    <div id="page-settings" class="page">
+        <h2 class="text-center">⚙️ 預算與目標設定</h2>
+        <div class="cat-card">
+            <label>每月飲食預算</label>
+            <input type="number" id="budget_飲食" value="8000">
+            <p style="font-size:10px; color:gray">設定後主頁會出現飲食進度條</p>
+            <hr>
+            <button onclick="applySettings()" class="btn-main" style="background:var(--cat-green)">更新設定</button>
+        </div>
+    </div>
+</div>
+
+<nav class="nav-bar">
+    <button class="nav-item active" onclick="showPage('home', this)"><div class="nav-icon">📊</div><div class="nav-text">總覽</div></button>
+    <button class="nav-item" onclick="showPage('daily', this)"><div class="nav-icon">✍️</div><div class="nav-text">記帳</div></button>
+    <button class="nav-item" onclick="showPage('settings', this)"><div class="nav-icon">⚙️</div><div class="nav-text">設定</div></button>
+</nav>
+
+<script>
+    const DB_KEY = 'cat_pro_finance_v1';
+    const CAT_DATA = {
+        '飲食': ['外食', '飲料', '甜點', '零食', '食材'],
+        '交通': ['加油', '公車捷運', '計程車', '停車費'],
+        '娛樂': ['電影', '遊戲', '運動', '訂閱服務'],
+        '購物': ['衣服', '生活用品', '電子產品']
+    };
+
+    let store = JSON.parse(localStorage.getItem(DB_KEY)) || {
+        balances: {}, history: [], budgets: { '飲食': 8000 }, jars: []
+    };
+
+    function updateSubCat() {
+        const main = document.getElementById('mainCat').value;
+        const sub = document.getElementById('subCat');
+        sub.innerHTML = CAT_DATA[main].map(item => `<option value="${item}">${item}</option>`).join('');
+    }
+
+    function toggleInstallment() {
+        const method = document.getElementById('payMethod').value;
+        document.getElementById('installmentArea').style.display = (method === '信用卡') ? 'block' : 'none';
+    }
+
+    function showPage(pId, el) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById('page-' + pId).classList.add('active');
+        el.classList.add('active');
+        if(pId === 'home') updateHomeUI();
+    }
+
+    function saveDaily() {
+        const amt = Number(document.getElementById('dailyAmt').value);
+        const main = document.getElementById('mainCat').value;
+        const sub = document.getElementById('subCat').value;
+        const method = document.getElementById('payMethod').value;
+        const isInst = (method === '信用卡' && Number(document.getElementById('instMonth').value) > 1);
+
+        if(!amt) return;
+
+        if(isInst) {
+            const months = Number(document.getElementById('instMonth').value);
+            const start = new Date(document.getElementById('instStart').value);
+            const partAmt = Math.round(amt / months);
+            for(let i=0; i<months; i++) {
+                let d = new Date(start);
+                d.setMonth(d.getMonth() + i);
+                store.history.push({
+                    id: Date.now() + i,
+                    time: d.toISOString(),
+                    main, sub, amt: partAmt, 
+                    note: `分期(${i+1}/${months})`
+                });
+            }
+        } else {
+            store.history.push({ id: Date.now(), time: new Date().toISOString(), main, sub, amt });
+        }
+        
+        saveToDB(); alert("記帳成功！");
+    }
+
+    function updateHomeUI() {
+        const now = new Date();
+        const curM = now.getFullYear() + "-" + (now.getMonth() + 1);
+        
+        // 預算顯示邏輯
+        const budgetArea = document.getElementById('budgetStatusArea');
+        budgetArea.innerHTML = "<h3>📈 每月預算追蹤</h3>";
+        
+        for (let cat in store.budgets) {
+            let spent = 0;
+            store.history.forEach(h => {
+                const hDate = new Date(h.time);
+                if(h.main === cat && (hDate.getFullYear() + "-" + (hDate.getMonth() + 1)) === curM) {
+                    spent += h.amt;
+                }
+            });
+            const limit = store.budgets[cat];
+            const pct = Math.min((spent / limit) * 100, 100);
+            budgetArea.innerHTML += `
+                <div class="cat-card">
+                    <div style="display:flex; justify-content:space-between; font-size:14px; font-weight:bold;">
+                        <span>${cat}預算</span><span>$${spent} / $${limit}</span>
+                    </div>
+                    <div class="prog-container"><div class="prog-fill" style="width:${pct}%; background:${pct > 90 ? 'var(--cat-red)' : 'var(--cat-green)'}"></div></div>
+                    <small style="color:gray">${pct > 100 ? '⚠️ 已超支！' : '剩餘可花：$' + (limit - spent)}</small>
+                </div>`;
+        }
+    }
+
+    function saveToDB() { localStorage.setItem(DB_KEY, JSON.stringify(store)); }
+    function applySettings() {
+        store.budgets['飲食'] = Number(document.getElementById('budget_飲食').value);
+        saveToDB(); alert("設定已更新"); updateHomeUI();
+    }
+
+    updateSubCat();
+    updateHomeUI();
+</script>
+</body>
+</html>
