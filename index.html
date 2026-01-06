@@ -156,7 +156,7 @@
             document.getElementById('stat-end').value = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
             renderAssetsAndHistory();
         }
-        if(pId === 'daily') initDaily();
+        if(pId === 'daily') initDaily(); // 每次點擊記帳頁，都會跑 initDaily
         if(pId === 'settings') initSettings();
     }
 
@@ -201,9 +201,7 @@
             const s = new Date(p.start);
             const e = new Date(p.end);
 
-            // 正確計算總月數（含頭尾）
             const totalMonths = (e.getFullYear() - s.getFullYear()) * 12 + (e.getMonth() - s.getMonth()) + 1;
-            // 正確計算已過月數（含本月）
             const passedMonths = (curY - s.getFullYear()) * 12 + (curM - s.getMonth()) + 1;
             
             const safePassed = Math.max(0, Math.min(passedMonths, totalMonths));
@@ -262,14 +260,22 @@
         saveToDB(); alert('紀錄成功喵！'); showPage('home', document.querySelectorAll('.nav-item')[0]);
     }
     function deleteRecord(id, home) { if(!confirm('要刪除嗎？')) return; const r = store.history.find(h=>h.id===id); if(r.type==='save'){ store.jarBalances[r.jar]-=r.amt; store.accs[r.acc]+=r.amt; } else if(r.acc){ store.accs[r.acc]+=(r.type==='exp'?r.amt:-r.amt); } store.history=store.history.filter(h=>h.id!==id); saveToDB(); location.reload(); }
+
+    // 修正日期自動偵測邏輯
     function initDaily() {
-        document.getElementById('record-date').valueAsDate = new Date();
+        // 取得本地時間（修正時區偏移問題）
+        const now = new Date();
+        const offset = now.getTimezoneOffset() * 60000;
+        const localISOTime = (new Date(now - offset)).toISOString().split('T')[0];
+        document.getElementById('record-date').value = localISOTime;
+
         const j = Object.keys(store.jars).map(n => `<option value="JAR:${n}">🐟 ${n}</option>`).join(''), a = Object.keys(store.accs).map(k => `<option value="ACC:${k}">${k}</option>`).join('');
         document.getElementById('acc-source').innerHTML = a + j; document.getElementById('acc-to').innerHTML = a + j;
         document.getElementById('jar-target').innerHTML = Object.keys(store.jars).map(k => `<option value="${k}">${k}</option>`).join('');
         document.getElementById('mainCat').innerHTML = Object.keys(store.cats).map(k => `<option value="${k}">${k}</option>`).join('');
         renderSubCats(); toggleFields();
     }
+
     function renderSubCats() { const m = document.getElementById('mainCat').value; if(store.cats[m]) document.getElementById('subCat').innerHTML = store.cats[m].map(s => `<option value="${s}">${s}</option>`).join(''); }
     function initSettings() {
         document.getElementById('app-name-input').value = store.appName;
