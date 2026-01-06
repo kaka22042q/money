@@ -14,21 +14,24 @@
         .prog-container { background: #EFEBE9; height: 18px; border-radius: 9px; border: 1.5px solid var(--cat-dark); overflow: hidden; margin: 5px 0; position: relative; }
         .prog-fill { height: 100%; background: var(--cat-main); transition: width 0.5s; }
         .prog-text { position: absolute; width: 100%; text-align: center; font-size: 10px; font-weight: bold; line-height: 16px; z-index: 5; }
+        
+        /* 月曆樣式控制 */
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
         .cal-day { padding: 8px 0; border-radius: 8px; font-size: 13px; cursor: pointer; position: relative; }
         .cal-day.has-record::after { content: '•'; position: absolute; bottom: 1px; left: 50%; transform: translateX(-50%); color: var(--cat-main); font-size: 16px; }
         .cal-day.selected { border: 2px solid var(--cat-dark); background: #fff5f5; }
+        
         .nav-bar { position: fixed; bottom: 20px; left: 10px; right: 10px; background: white; border: 3px solid var(--cat-dark); box-shadow: 0 6px 0 var(--cat-gray); display: flex; justify-content: space-around; padding: 8px; z-index: 100; border-radius: 25px; }
         .nav-item { border: none; background: none; text-align: center; flex: 1; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
         .nav-text { font-size: 10px; font-weight: bold; color: var(--cat-gray); }
         .nav-item.active .nav-text { color: var(--cat-dark); }
+        
         input, select, textarea { width: 100%; border: 2px solid var(--cat-gray); border-radius: 10px; padding: 10px; margin-top: 5px; font-size: 16px; outline: none; background: #fff; }
         label { font-size: 12px; font-weight: bold; display: block; margin-top: 10px; color: var(--cat-dark); }
         .btn-main { background: var(--cat-main); border: 2px solid var(--cat-dark); box-shadow: 0 4px 0 var(--cat-dark); font-weight: bold; color: white; border-radius: 12px; padding: 12px; width: 100%; cursor: pointer; margin-top: 15px; font-size: 16px; }
         .tag { background: #f0f0f0; padding: 2px 8px; border-radius: 5px; font-size: 10px; cursor: pointer; color: var(--cat-blue); border: 1px solid #ddd; }
         .page { display: none; }
         .page.active { display: block; }
-        .search-box { position: sticky; top: 0; background: var(--cat-bg); padding: 10px 0; z-index: 10; }
         .inst-badge { background: var(--cat-red); color: white; padding: 2px 5px; border-radius: 4px; font-size: 9px; font-weight: bold; }
     </style>
 </head>
@@ -38,6 +41,7 @@
     <div id="page-home" class="page active">
         <h2 class="text-center" style="color:var(--cat-red); margin:0 0 10px 0;">🐾 夢想首頁</h2>
         <div id="jarList"></div>
+        
         <div class="cat-card">
             <h3 class="text-center" id="cal-month-title" style="margin:0"></h3>
             <div class="calendar-grid" id="calendar-days"></div>
@@ -49,8 +53,8 @@
     </div>
 
     <div id="page-list" class="page">
-        <div class="search-box">
-            <input type="text" id="global-search" placeholder="🔍 搜尋備註 (如: 手機, 餐廳)..." oninput="renderList()">
+        <div style="position: sticky; top: 0; background: var(--cat-bg); padding: 10px 0; z-index: 10;">
+            <input type="text" id="global-search" placeholder="🔍 搜尋備註內容 (如: 餐廳, 披薩)..." oninput="renderList()">
         </div>
         <div id="full-history-list"></div>
     </div>
@@ -69,8 +73,8 @@
             <div id="exp-cat-area"><label>分類</label><div style="display:flex; gap:5px;"><select id="mainCat" onchange="renderSubCats()"></select><select id="subCat"></select></div></div>
             <div id="inc-cat-area" style="display:none;"><label>收入項目</label><select id="inc-cat"></select></div>
             
-            <label>金額 (分期請填總額)</label><input type="number" id="amt" placeholder="0" inputmode="decimal">
-            <label>備註 (餐廳、細項、比價用)</label><input type="text" id="note" placeholder="例如：大麥克餐">
+            <label>金額 (分期填總額)</label><input type="number" id="amt" placeholder="0" inputmode="decimal">
+            <label>備註 (比價關鍵字)</label><input type="text" id="note" placeholder="例：麥當勞大薯">
             <label>日期</label><input type="date" id="record-date">
 
             <div id="inst-toggle-area">
@@ -87,7 +91,7 @@
     <div id="page-settings" class="page">
         <h2 class="text-center">⚙️ 設定</h2>
         <div class="cat-card">
-            <h4 style="margin:0">💎 存錢筒設定 (名稱:總額,起月,迄月)</h4>
+            <h4 style="margin:0">💎 存錢筒 (名稱:目標,起,迄)</h4>
             <textarea id="jar-editor" rows="3"></textarea>
             <h4 style="margin:10px 0 0 0">📂 分類 (大類:小類1,小類2)</h4>
             <textarea id="cat-editor" rows="3"></textarea>
@@ -108,7 +112,7 @@
 </nav>
 
 <script>
-    const DB_KEY = 'cat_dream_pro_v8';
+    const DB_KEY = 'cat_dream_pro_final_v1';
     let store = JSON.parse(localStorage.getItem(DB_KEY)) || {
         jars: { '買電腦': { goal: 60000, start: '2026-01', end: '2026-12' } },
         jarBalances: { '買電腦': 0 },
@@ -146,7 +150,7 @@
 
     function renderSubCats() {
         const main = document.getElementById('mainCat').value;
-        document.getElementById('subCat').innerHTML = store.cats[main].map(s => `<option value="${s}">${s}</option>`).join('');
+        if(store.cats[main]) document.getElementById('subCat').innerHTML = store.cats[main].map(s => `<option value="${s}">${s}</option>`).join('');
     }
 
     function toggleFields() {
@@ -169,37 +173,19 @@
         if(mode === 'exp' && isInst) {
             const months = Number(document.getElementById('inst-num').value);
             const partAmt = Math.round(totalAmt / months);
-            const main = document.getElementById('mainCat').value;
-            const sub = document.getElementById('subCat').value;
-
+            const main = document.getElementById('mainCat').value, sub = document.getElementById('subCat').value;
             for(let i=0; i<months; i++) {
                 let d = new Date(baseDate);
                 d.setMonth(d.getMonth() + i);
-                store.history.push({
-                    id: Date.now() + i,
-                    date: d.toISOString().split('T')[0],
-                    amt: partAmt,
-                    type: 'exp',
-                    main, sub,
-                    note: `${note} (分期 ${i+1}/${months})`,
-                    isInst: true
-                });
+                store.history.push({ id: Date.now()+i, date: d.toISOString().split('T')[0], amt: partAmt, type: 'exp', main, sub, note: `${note} (分期 ${i+1}/${months})`, isInst: true });
             }
         } else {
             let record = { id: Date.now(), date: baseDate.toISOString().split('T')[0], amt: totalAmt, type: mode, note };
-            if(mode === 'exp') {
-                record.main = document.getElementById('mainCat').value;
-                record.sub = document.getElementById('subCat').value;
-            } else if(mode === 'inc') {
-                record.main = "收入"; record.sub = document.getElementById('inc-cat').value;
-            } else if(mode === 'save') {
-                const jar = document.getElementById('jar-target').value;
-                store.jarBalances[jar] = (store.jarBalances[jar] || 0) + totalAmt;
-                record.jar = jar;
-            }
+            if(mode === 'exp') { record.main = document.getElementById('mainCat').value; record.sub = document.getElementById('subCat').value; }
+            else if(mode === 'inc') { record.main = "收入"; record.sub = document.getElementById('inc-cat').value; }
+            else if(mode === 'save') { const jar = document.getElementById('jar-target').value; store.jarBalances[jar] = (store.jarBalances[jar] || 0) + totalAmt; record.jar = jar; }
             store.history.push(record);
         }
-
         saveToDB(); alert('紀錄成功！');
         document.getElementById('amt').value = ''; document.getElementById('note').value = '';
         showPage('home', document.querySelectorAll('.nav-item')[0]);
@@ -207,35 +193,13 @@
 
     function renderList(filterTag = '') {
         const search = document.getElementById('global-search').value.toLowerCase();
-        const listArea = document.getElementById('full-history-list');
-        listArea.innerHTML = "";
+        const listArea = document.getElementById('full-history-list'); listArea.innerHTML = "";
         const sorted = [...store.history].sort((a,b) => new Date(b.date) - new Date(a.date));
-        const filtered = sorted.filter(h => {
-            const matchSearch = (h.note || '').toLowerCase().includes(search);
-            const matchTag = filterTag ? (h.sub === filterTag || h.main === filterTag) : true;
-            return matchSearch && matchTag;
-        });
-
-        if(filterTag) listArea.innerHTML = `<div style="padding:10px; color:var(--cat-blue);">篩選：${filterTag} <span onclick="renderList()" style="color:red; cursor:pointer;">[X]</span></div>`;
-
+        const filtered = sorted.filter(h => ((h.note || '').toLowerCase().includes(search)) && (filterTag ? (h.sub === filterTag || h.main === filterTag) : true));
+        if(filterTag) listArea.innerHTML = `<div style="padding:10px; color:var(--cat-blue);">篩選：${filterTag} <span onclick="renderList()" style="color:red; cursor:pointer;">[清空]</span></div>`;
         filtered.forEach(h => {
-            const item = document.createElement('div');
-            item.className = 'cat-card record-item';
-            item.innerHTML = `
-                <div style="display:flex; justify-content:space-between;">
-                    <div>
-                        <small style="color:gray">${h.date}</small> ${h.isInst ? '<span class="inst-badge">分期</span>' : ''}<br>
-                        <strong>${h.type==='save' ? '🐟 '+h.jar : h.note || '(無備註)'}</strong><br>
-                        <span class="tag" onclick="renderList('${h.sub || h.type}')">${h.sub || h.type}</span>
-                    </div>
-                    <div style="text-align:right">
-                        <div style="font-weight:bold; color:${h.type==='inc'?'var(--cat-green)':'var(--cat-red)'}">
-                            ${h.type==='inc'?'+':'-'}$${h.amt.toLocaleString()}
-                        </div>
-                        <button onclick="deleteRecord(${h.id})" style="border:none; background:none; color:#ccc; font-size:10px;">刪除</button>
-                    </div>
-                </div>
-            `;
+            const item = document.createElement('div'); item.className = 'cat-card';
+            item.innerHTML = `<div style="display:flex; justify-content:space-between;"><div><small style="color:gray">${h.date}</small> ${h.isInst ? '<span class="inst-badge">分期</span>' : ''}<br><strong>${h.type==='save' ? '🐟 '+h.jar : h.note || '(無備註)'}</strong><br><span class="tag" onclick="renderList('${h.sub || h.type}')">${h.sub || h.type}</span></div><div style="text-align:right"><div style="font-weight:bold; color:${h.type==='inc'?'var(--cat-green)':'var(--cat-red)'}">${h.type==='inc'?'+':'-'}$${h.amt.toLocaleString()}</div><button onclick="deleteRecord(${h.id})" style="border:none; background:none; color:#ccc; font-size:10px;">刪除</button></div></div>`;
             listArea.appendChild(item);
         });
     }
@@ -243,14 +207,11 @@
     function renderHome() {
         const list = document.getElementById('jarList'); list.innerHTML = "";
         for(let name in store.jars) {
-            const plan = store.jars[name];
-            const start = new Date(plan.start), end = new Date(plan.end), now = new Date();
+            const plan = store.jars[name], start = new Date(plan.start), end = new Date(plan.end), now = new Date();
             const totalM = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) || 1;
             const passM = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
-            const curBal = store.jarBalances[name] || 0;
-            const pct = Math.min(Math.round(curBal/plan.goal*100), 100);
-            const target = Math.round((plan.goal / totalM) * Math.max(0, Math.min(passM + 1, totalM)));
-            const gap = target - curBal;
+            const curBal = store.jarBalances[name] || 0, pct = Math.min(Math.round(curBal/plan.goal*100), 100);
+            const target = Math.round((plan.goal / totalM) * Math.max(0, Math.min(passM + 1, totalM))), gap = target - curBal;
             list.innerHTML += `<div class="cat-card"><div style="display:flex; justify-content:space-between; font-size:12px; font-weight:bold;"><span>${name}</span><span>$${curBal.toLocaleString()} / $${plan.goal.toLocaleString()}</span></div><div class="prog-container"><div class="prog-text">${pct}% (剩 ${Math.max(0, totalM-passM)} 個月)</div><div class="prog-fill" style="width:${pct}%"></div></div><div style="font-size:10px; color:#888; display:flex; justify-content:space-between; margin-top:2px;"><span>📍 理論進度: $${target.toLocaleString()}</span><span style="color:${gap>0?'var(--cat-red)':'var(--cat-green)'}; font-weight:bold;">${gap>0?'還差 '+gap.toLocaleString():'已超前 ✨'}</span></div></div>`;
         }
         renderCalendar();
@@ -260,29 +221,26 @@
         const grid = document.getElementById('calendar-days'); grid.innerHTML = "";
         const y = selectedDate.getFullYear(), m = selectedDate.getMonth();
         document.getElementById('cal-month-title').innerText = `${y}年${m+1}月`;
-        const firstDay = new Date(y, m, 1).getDay(); const lastDate = new Date(y, m + 1, 0).getDate();
+        const firstDay = new Date(y, m, 1).getDay(), lastDate = new Date(y, m + 1, 0).getDate();
         for(let i=0; i<firstDay; i++) grid.innerHTML += `<div></div>`;
         for(let d=1; d<=lastDate; d++) {
             const dateStr = `${y}-${(m+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`;
-            const hasRec = store.history.some(h => h.date === dateStr);
-            grid.innerHTML += `<div class="cal-day ${hasRec?'has-record':''}" onclick="selectDate('${dateStr}')">${d}</div>`;
+            grid.innerHTML += `<div class="cal-day ${store.history.some(h => h.date === dateStr)?'has-record':''}" onclick="selectDate('${dateStr}')">${d}</div>`;
         }
     }
 
     function selectDate(dateStr) {
         document.getElementById('day-detail-area').style.display = 'block';
         document.getElementById('selected-date-text').innerText = dateStr;
-        const recs = store.history.filter(h => h.date === dateStr);
-        document.getElementById('day-records').innerHTML = recs.map(r => `<div style="font-size:12px; padding:5px 0; border-bottom:1px solid #eee;"><b>${r.note || r.sub}</b>: $${r.amt}</div>`).join('') || '無紀錄';
+        document.getElementById('day-records').innerHTML = store.history.filter(h => h.date === dateStr).map(r => `<div style="font-size:12px; padding:5px 0; border-bottom:1px solid #eee;"><b>${r.note || r.sub}</b>: $${r.amt}</div>`).join('') || '無紀錄';
     }
 
     function deleteRecord(id) {
-        if(!confirm('確定刪除？如果是分期紀錄，僅會刪除單月此筆。')) return;
-        const idx = store.history.findIndex(h => h.id === id);
-        const r = store.history[idx];
-        if(r.type === 'save') store.jarBalances[r.jar] -= r.amt;
-        store.history.splice(idx, 1);
-        saveToDB(); renderList();
+        if(!confirm('確定刪除？')) return;
+        const r = store.history.find(h => h.id === id);
+        if(r && r.type === 'save') store.jarBalances[r.jar] -= r.amt;
+        store.history = store.history.filter(h => h.id !== id);
+        saveToDB(); renderList(); renderHome();
     }
 
     function initSettings() {
@@ -292,18 +250,10 @@
 
     function saveSettings() {
         const newJars = {};
-        document.getElementById('jar-editor').value.split('\n').forEach(l => {
-            const [name, data] = l.split(':');
-            if(name && data) {
-                const [goal, start, end] = data.split(',');
-                newJars[name.trim()] = { goal: Number(goal), start: start.trim(), end: end.trim() };
-            }
-        });
+        document.getElementById('jar-editor').value.split('\n').forEach(l => { const [name, data] = l.split(':'); if(name && data) { const [goal, start, end] = data.split(','); newJars[name.trim()] = { goal: Number(goal), start: start.trim(), end: end.trim() }; } });
         store.jars = newJars;
         const newCats = {};
-        document.getElementById('cat-editor').value.split('\n').forEach(l => {
-            const [k,v] = l.split(':'); if(k && v) newCats[k.trim()] = v.split(',').map(s=>s.trim());
-        });
+        document.getElementById('cat-editor').value.split('\n').forEach(l => { const [k,v] = l.split(':'); if(k && v) newCats[k.trim()] = v.split(',').map(s=>s.trim()); });
         store.cats = newCats;
         saveToDB(); alert('設定已更新！'); location.reload();
     }
