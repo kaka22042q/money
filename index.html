@@ -4,186 +4,256 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>🐱 專業級財務導航</title>
+    <title>🐱 專業財務管家</title>
     <style>
         :root { --cat-main: #FFB7B2; --cat-bg: #fffaf0; --cat-dark: #5D4037; --cat-gray: #D7CCC8; --cat-red: #ff7675; --cat-green: #55efc4; --cat-blue: #74b9ff; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: -apple-system, sans-serif; background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 120px; }
+        body { font-family: -apple-system, sans-serif; background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 110px; }
         .container { max-width: 450px; margin: 0 auto; padding: 15px; }
-        .cat-card { background: #fff; border: 3px solid var(--cat-dark); box-shadow: 6px 6px 0 var(--cat-gray); border-radius: 20px; margin-bottom: 20px; padding: 16px; }
-        .prog-container { background: #EFEBE9; height: 12px; border-radius: 6px; border: 2px solid var(--cat-dark); overflow: hidden; margin: 5px 0; position: relative; }
-        .prog-fill { height: 100%; background: var(--cat-main); transition: width 0.5s; }
-        .input-group { margin-bottom: 12px; }
-        label { font-size: 12px; font-weight: bold; display: block; margin-bottom: 4px; }
-        input, select { width: 100%; border: 2px solid var(--cat-gray); border-radius: 10px; padding: 10px; font-size: 15px; outline: none; }
-        .nav-bar { position: fixed; bottom: 25px; left: 15px; right: 15px; background: white; border: 3px solid var(--cat-dark); box-shadow: 0 8px 0 var(--cat-gray); display: flex; justify-content: space-around; padding: 10px; z-index: 100; border-radius: 30px; }
-        .nav-item { border: none; background: none; text-align: center; cursor: pointer; width: 60px; }
-        .nav-icon { font-size: 20px; margin-bottom: 2px; }
+        .cat-card { background: #fff; border: 3px solid var(--cat-dark); box-shadow: 4px 4px 0 var(--cat-gray); border-radius: 20px; margin-bottom: 15px; padding: 15px; }
+        
+        /* 月曆樣式 */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
+        .cal-day { padding: 10px 0; border-radius: 10px; font-size: 14px; position: relative; cursor: pointer; border: 1px solid transparent; }
+        .cal-day.has-record::after { content: '•'; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); color: var(--cat-main); font-size: 18px; }
+        .cal-day.today { background: var(--cat-main); color: white; border: 1px solid var(--cat-dark); }
+        .cal-day.selected { border: 2px solid var(--cat-dark); background: #fff5f5; }
+        .cal-header { font-weight: bold; padding: 10px 0; color: var(--cat-gray); }
+
+        /* 進度條 */
+        .prog-container { background: #EFEBE9; height: 10px; border-radius: 5px; border: 1px solid var(--cat-dark); overflow: hidden; margin: 5px 0; }
+        .prog-fill { height: 100%; background: var(--cat-main); }
+
+        /* 導航 */
+        .nav-bar { position: fixed; bottom: 20px; left: 10px; right: 10px; background: white; border: 3px solid var(--cat-dark); display: flex; justify-content: space-around; padding: 8px; z-index: 100; border-radius: 25px; }
+        .nav-item { border: none; background: none; text-align: center; cursor: pointer; flex: 1; }
         .nav-text { font-size: 10px; font-weight: bold; color: var(--cat-gray); }
         .nav-item.active .nav-text { color: var(--cat-dark); }
+
+        input, select, textarea { width: 100%; border: 2px solid var(--cat-gray); border-radius: 10px; padding: 10px; outline: none; margin-top: 5px; }
+        .btn-main { background: var(--cat-main); border: 2px solid var(--cat-dark); box-shadow: 0 4px 0 var(--cat-dark); font-weight: bold; color: white; border-radius: 12px; padding: 12px; width: 100%; cursor: pointer; }
         .page { display: none; }
         .page.active { display: block; }
-        .btn-main { background: var(--cat-main); border: 2px solid var(--cat-dark); box-shadow: 0 4px 0 var(--cat-dark); font-weight: bold; color: white; border-radius: 12px; padding: 12px; width: 100%; cursor: pointer; }
+        .record-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 13px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div id="page-home" class="page active">
-        <h1 class="text-center" style="color:var(--cat-red)">🐾 財務總覽</h1>
-        <div id="budgetStatusArea"></div> <hr>
-        <div id="jarList"></div>
+        <h2 class="text-center" id="cal-month-title">2026年1月</h2>
+        <div class="cat-card">
+            <div class="calendar-grid cal-header">
+                <div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div>
+            </div>
+            <div class="calendar-grid" id="calendar-days"></div>
+        </div>
+
+        <div id="day-detail-area" class="cat-card" style="display:none;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                <strong id="selected-date-text">選擇日期</strong>
+                <button onclick="openAddRecord()" style="font-size:12px; color:var(--cat-blue)">+ 新增紀錄</button>
+            </div>
+            <div id="day-records"></div>
+        </div>
+
+        <div id="budgetBars"></div>
     </div>
 
     <div id="page-daily" class="page">
-        <h2 class="text-center">💸 日常記帳</h2>
+        <h2 class="text-center">✍️ 記帳與對沖</h2>
         <div class="cat-card">
-            <div class="input-group">
-                <label>收支大類</label>
-                <select id="mainCat" onchange="updateSubCat()">
-                    <option value="飲食">飲食 🍕</option>
-                    <option value="交通">交通 🚗</option>
-                    <option value="娛樂">娛樂 🎬</option>
-                    <option value="購物">購物 🛍️</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <label>細項子類</label>
+            <select id="trans-mode" onchange="toggleTransMode()">
+                <option value="exp">支出 💸</option>
+                <option value="inc">收入 💰</option>
+                <option value="transfer">轉帳/繳卡費 🔄</option>
+            </select>
+            
+            <div id="normal-fields">
+                <label>選擇帳戶</label>
+                <select id="acc-source"></select>
+                <label>分類</label>
+                <select id="mainCat" onchange="renderSubCats()"></select>
                 <select id="subCat"></select>
             </div>
-            <div class="input-group"><label>金額</label><input type="number" id="dailyAmt"></div>
-            <div class="input-group">
-                <label>付款方式</label>
-                <select id="payMethod" onchange="toggleInstallment()">
-                    <option value="現金">現金</option>
-                    <option value="信用卡">信用卡 (分期可)</option>
-                </select>
+
+            <div id="transfer-fields" style="display:none;">
+                <label>從哪個帳戶 (轉出)</label>
+                <select id="acc-from"></select>
+                <label>到哪個帳戶 (轉入/繳卡)</label>
+                <select id="acc-to"></select>
             </div>
-            <div id="installmentArea" style="display:none; background:#f9f9f9; padding:10px; border-radius:10px;">
-                <label>分期期數</label><input type="number" id="instMonth" value="1">
-                <label>起始月份</label><input type="month" id="instStart">
-            </div>
-            <button onclick="saveDaily()" class="btn-main" style="margin-top:10px">儲存這筆帳目 ✍️</button>
+
+            <input type="number" id="amt" placeholder="輸入金額">
+            <button onclick="saveRecord()" class="btn-main" style="margin-top:15px;">確認送出</button>
         </div>
     </div>
 
     <div id="page-settings" class="page">
-        <h2 class="text-center">⚙️ 預算與目標設定</h2>
+        <h2 class="text-center">⚙️ 系統設定</h2>
         <div class="cat-card">
-            <label>每月飲食預算</label>
-            <input type="number" id="budget_飲食" value="8000">
-            <p style="font-size:10px; color:gray">設定後主頁會出現飲食進度條</p>
-            <hr>
-            <button onclick="applySettings()" class="btn-main" style="background:var(--cat-green)">更新設定</button>
+            <h3>💳 帳戶管理 (名稱,餘額)</h3>
+            <textarea id="acc-editor" style="height:80px;"></textarea>
+            <button onclick="updateAccs()" class="btn-main" style="background:var(--cat-blue)">儲存帳戶</button>
+        </div>
+        <div class="cat-card">
+            <h3>📊 預算設定 (大類:金額)</h3>
+            <textarea id="budget-editor" style="height:80px;"></textarea>
+            <button onclick="updateBudgets()" class="btn-main" style="background:var(--cat-green)">儲存預算</button>
         </div>
     </div>
 </div>
 
 <nav class="nav-bar">
-    <button class="nav-item active" onclick="showPage('home', this)"><div class="nav-icon">📊</div><div class="nav-text">總覽</div></button>
-    <button class="nav-item" onclick="showPage('daily', this)"><div class="nav-icon">✍️</div><div class="nav-text">記帳</div></button>
-    <button class="nav-item" onclick="showPage('settings', this)"><div class="nav-icon">⚙️</div><div class="nav-text">設定</div></button>
+    <button class="nav-item active" onclick="showPage('home', this)">📅<div class="nav-text">月曆</div></button>
+    <button class="nav-item" onclick="showPage('daily', this)">✍️<div class="nav-text">記帳</div></button>
+    <button class="nav-item" onclick="showPage('settings', this)">⚙️<div class="nav-text">設定</div></button>
 </nav>
 
 <script>
-    const DB_KEY = 'cat_pro_finance_v1';
-    const CAT_DATA = {
-        '飲食': ['外食', '飲料', '甜點', '零食', '食材'],
-        '交通': ['加油', '公車捷運', '計程車', '停車費'],
-        '娛樂': ['電影', '遊戲', '運動', '訂閱服務'],
-        '購物': ['衣服', '生活用品', '電子產品']
-    };
-
+    const DB_KEY = 'cat_final_pro_v1';
+    let selectedDate = new Date();
+    
     let store = JSON.parse(localStorage.getItem(DB_KEY)) || {
-        balances: {}, history: [], budgets: { '飲食': 8000 }, jars: []
+        accs: {'現金': 1000, '銀行': 50000, '信用卡': -2000},
+        cats: {'飲食':['外食','飲料'], '交通':['加油','捷運']},
+        budgets: {'飲食': 8000, '交通': 2000},
+        history: []
     };
-
-    function updateSubCat() {
-        const main = document.getElementById('mainCat').value;
-        const sub = document.getElementById('subCat');
-        sub.innerHTML = CAT_DATA[main].map(item => `<option value="${item}">${item}</option>`).join('');
-    }
-
-    function toggleInstallment() {
-        const method = document.getElementById('payMethod').value;
-        document.getElementById('installmentArea').style.display = (method === '信用卡') ? 'block' : 'none';
-    }
 
     function showPage(pId, el) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById('page-' + pId).classList.add('active');
         el.classList.add('active');
-        if(pId === 'home') updateHomeUI();
+        if(pId === 'home') renderCalendar();
+        if(pId === 'daily') initDailyPage();
+        if(pId === 'settings') initSettings();
     }
 
-    function saveDaily() {
-        const amt = Number(document.getElementById('dailyAmt').value);
-        const main = document.getElementById('mainCat').value;
-        const sub = document.getElementById('subCat').value;
-        const method = document.getElementById('payMethod').value;
-        const isInst = (method === '信用卡' && Number(document.getElementById('instMonth').value) > 1);
+    // 月曆邏輯
+    function renderCalendar() {
+        const grid = document.getElementById('calendar-days');
+        grid.innerHTML = "";
+        const y = selectedDate.getFullYear(), m = selectedDate.getMonth();
+        document.getElementById('cal-month-title').innerText = `${y}年${m+1}月`;
 
-        if(!amt) return;
+        const firstDay = new Date(y, m, 1).getDay();
+        const lastDate = new Date(y, m + 1, 0).getDate();
 
-        if(isInst) {
-            const months = Number(document.getElementById('instMonth').value);
-            const start = new Date(document.getElementById('instStart').value);
-            const partAmt = Math.round(amt / months);
-            for(let i=0; i<months; i++) {
-                let d = new Date(start);
-                d.setMonth(d.getMonth() + i);
-                store.history.push({
-                    id: Date.now() + i,
-                    time: d.toISOString(),
-                    main, sub, amt: partAmt, 
-                    note: `分期(${i+1}/${months})`
-                });
-            }
-        } else {
-            store.history.push({ id: Date.now(), time: new Date().toISOString(), main, sub, amt });
+        for(let i=0; i<firstDay; i++) grid.innerHTML += `<div></div>`;
+        for(let d=1; d<=lastDate; d++) {
+            const dateStr = `${y}-${(m+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`;
+            const hasRec = store.history.some(h => h.date === dateStr);
+            const isToday = new Date().toDateString() === new Date(y,m,d).toDateString();
+            grid.innerHTML += `<div class="cal-day ${hasRec?'has-record':''} ${isToday?'today':''}" onclick="selectDate(${d})">${d}</div>`;
         }
-        
-        saveToDB(); alert("記帳成功！");
+        renderBudgets();
     }
 
-    function updateHomeUI() {
+    function selectDate(d) {
+        const y = selectedDate.getFullYear(), m = selectedDate.getMonth();
+        const dateStr = `${y}-${(m+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`;
+        document.getElementById('day-detail-area').style.display = 'block';
+        document.getElementById('selected-date-text').innerText = dateStr;
+        const recs = store.history.filter(h => h.date === dateStr);
+        document.getElementById('day-records').innerHTML = recs.map(r => `
+            <div class="record-item">
+                <span>${r.type === 'transfer' ? '🔄 轉帳' : r.sub}</span>
+                <span style="color:${r.type==='inc'?'green':'red'}">${r.amt}</span>
+            </div>
+        `).join('') || '無紀錄';
+    }
+
+    // 記帳與轉帳
+    function toggleTransMode() {
+        const mode = document.getElementById('trans-mode').value;
+        document.getElementById('normal-fields').style.display = mode === 'transfer' ? 'none' : 'block';
+        document.getElementById('transfer-fields').style.display = mode === 'transfer' ? 'block' : 'none';
+    }
+
+    function saveRecord() {
+        const mode = document.getElementById('trans-mode').value;
+        const amt = Number(document.getElementById('amt').value);
+        const dateStr = document.getElementById('selected-date-text').innerText;
+        
+        if(!amt || dateStr === '選擇日期') { alert('請填寫金額並在月曆選擇日期'); return; }
+
+        let record = { id: Date.now(), date: dateStr, amt: amt, type: mode };
+
+        if(mode === 'transfer') {
+            const from = document.getElementById('acc-from').value;
+            const to = document.getElementById('acc-to').value;
+            store.accs[from] -= amt;
+            store.accs[to] += amt;
+            record.from = from; record.to = to;
+        } else {
+            const acc = document.getElementById('acc-source').value;
+            const main = document.getElementById('mainCat').value;
+            const sub = document.getElementById('subCat').value;
+            if(mode === 'exp') store.accs[acc] -= amt; else store.accs[acc] += amt;
+            record.acc = acc; record.main = main; record.sub = sub;
+        }
+
+        store.history.push(record);
+        localStorage.setItem(DB_KEY, JSON.stringify(store));
+        alert('儲存成功');
+        showPage('home', document.querySelectorAll('.nav-item')[0]);
+    }
+
+    function initDailyPage() {
+        const accs = Object.keys(store.accs).map(k => `<option value="${k}">${k}</option>`).join('');
+        document.getElementById('acc-source').innerHTML = accs;
+        document.getElementById('acc-from').innerHTML = accs;
+        document.getElementById('acc-to').innerHTML = accs;
+        document.getElementById('mainCat').innerHTML = Object.keys(store.cats).map(k => `<option value="${k}">${k}</option>`).join('');
+        renderSubCats();
+    }
+
+    function renderSubCats() {
+        const main = document.getElementById('mainCat').value;
+        document.getElementById('subCat').innerHTML = store.cats[main].map(s => `<option value="${s}">${s}</option>`).join('');
+    }
+
+    function renderBudgets() {
         const now = new Date();
-        const curM = now.getFullYear() + "-" + (now.getMonth() + 1);
-        
-        // 預算顯示邏輯
-        const budgetArea = document.getElementById('budgetStatusArea');
-        budgetArea.innerHTML = "<h3>📈 每月預算追蹤</h3>";
-        
-        for (let cat in store.budgets) {
-            let spent = 0;
-            store.history.forEach(h => {
-                const hDate = new Date(h.time);
-                if(h.main === cat && (hDate.getFullYear() + "-" + (hDate.getMonth() + 1)) === curM) {
-                    spent += h.amt;
-                }
-            });
+        const curM = `${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,'0')}`;
+        const area = document.getElementById('budgetBars');
+        area.innerHTML = "<h3>📊 本月預算進度</h3>";
+        for(let cat in store.budgets) {
+            const spent = store.history.filter(h => h.main === cat && h.date.startsWith(curM)).reduce((a, b) => a + b.amt, 0);
             const limit = store.budgets[cat];
-            const pct = Math.min((spent / limit) * 100, 100);
-            budgetArea.innerHTML += `
+            const pct = Math.min(spent/limit*100, 100);
+            area.innerHTML += `
                 <div class="cat-card">
-                    <div style="display:flex; justify-content:space-between; font-size:14px; font-weight:bold;">
-                        <span>${cat}預算</span><span>$${spent} / $${limit}</span>
-                    </div>
-                    <div class="prog-container"><div class="prog-fill" style="width:${pct}%; background:${pct > 90 ? 'var(--cat-red)' : 'var(--cat-green)'}"></div></div>
-                    <small style="color:gray">${pct > 100 ? '⚠️ 已超支！' : '剩餘可花：$' + (limit - spent)}</small>
+                    <div style="display:flex; justify-content:space-between; font-size:12px;"><span>${cat}</span><span>$${spent}/$${limit}</span></div>
+                    <div class="prog-container"><div class="prog-fill" style="width:${pct}%"></div></div>
                 </div>`;
         }
     }
 
-    function saveToDB() { localStorage.setItem(DB_KEY, JSON.stringify(store)); }
-    function applySettings() {
-        store.budgets['飲食'] = Number(document.getElementById('budget_飲食').value);
-        saveToDB(); alert("設定已更新"); updateHomeUI();
+    function initSettings() {
+        document.getElementById('acc-editor').value = Object.entries(store.accs).map(([k,v])=>`${k}:${v}`).join('\n');
+        document.getElementById('budget-editor').value = Object.entries(store.budgets).map(([k,v])=>`${k}:${v}`).join('\n');
     }
 
-    updateSubCat();
-    updateHomeUI();
+    function updateAccs() {
+        const lines = document.getElementById('acc-editor').value.split('\n');
+        store.accs = {};
+        lines.forEach(l => { const [k,v] = l.split(':'); if(k) store.accs[k.trim()] = Number(v); });
+        localStorage.setItem(DB_KEY, JSON.stringify(store)); alert('帳戶更新成功');
+    }
+
+    function updateBudgets() {
+        const lines = document.getElementById('budget-editor').value.split('\n');
+        store.budgets = {};
+        lines.forEach(l => { const [k,v] = l.split(':'); if(k) store.budgets[k.trim()] = Number(v); });
+        localStorage.setItem(DB_KEY, JSON.stringify(store)); alert('預算更新成功');
+    }
+
+    function openAddRecord() { showPage('daily', document.querySelectorAll('.nav-item')[1]); }
+
+    renderCalendar();
 </script>
 </body>
 </html>
