@@ -9,15 +9,9 @@
     <title>夢想記帳本</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { 
-            --cat-main: #FFB7B2; --cat-bg: #fffaf0; --cat-dark: #5D4037; 
-            --cat-gray: #D7CCC8; --cat-red: #ff7675; --cat-green: #55efc4; --cat-blue: #74b9ff; 
-        }
+        :root { --cat-main: #FFB7B2; --cat-bg: #fffaf0; --cat-dark: #5D4037; --cat-gray: #D7CCC8; --cat-red: #ff7675; --cat-green: #55efc4; --cat-blue: #74b9ff; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { 
-            font-family: -apple-system, "Noto Sans TC", sans-serif; 
-            background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 120px; 
-        }
+        body { font-family: -apple-system, "Noto Sans TC", sans-serif; background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 120px; }
         .container { max-width: 450px; margin: 0 auto; padding: 15px; }
         .cat-card { background: #fff; border: 3px solid var(--cat-dark); box-shadow: 4px 4px 0 var(--cat-gray); border-radius: 20px; margin-bottom: 15px; padding: 15px; }
         .prog-container { background: #EFEBE9; height: 18px; border-radius: 9px; border: 1.5px solid var(--cat-dark); overflow: hidden; margin: 5px 0; position: relative; }
@@ -114,7 +108,6 @@
     let selectedDate = new Date();
     let myChart = null;
 
-    // --- 修改後的低調預設資料 ---
     let defaultData = {
         jars: {'買電腦': 65000, '緊急預備金': 100000},
         jarBalances: {'買電腦': 0, '緊急預備金': 0},
@@ -122,7 +115,7 @@
         cats: {'飲食':['外食','飲料','零食'], '交通':['加油','捷運'], '居家':['房租','雜費'], '其他':['雜項']},
         budgets: {'飲食': 10000},
         history: [],
-        config: { start: '2026-01', end: '2030-12' } // 這裡也調短了
+        config: { start: '2026-01', end: '2030-12' }
     };
 
     let store = JSON.parse(localStorage.getItem(DB_KEY)) || defaultData;
@@ -229,6 +222,7 @@
         }
         store.history.push(record); saveToDB(); alert('紀錄成功！');
         showPage('home', document.querySelectorAll('.nav-item')[0]);
+        document.getElementById('amt').value = "";
     }
 
     function updateChart() {
@@ -278,9 +272,42 @@
     }
 
     function saveToDB() { localStorage.setItem(DB_KEY, JSON.stringify(store)); }
-    function exportData() { const blob = new Blob([JSON.stringify(store)], {type: "application/json"}); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "dream_backup.json"; a.click(); }
-    function importData(e) { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = (event) => { try { const imported = JSON.parse(event.target.result); if (imported.jars) { store = imported; saveToDB(); location.reload(); } } catch(e) { alert("出錯了"); } }; reader.readAsText(file); }
-    function fullReset() { if(confirm("確定重置？")) { localStorage.removeItem(DB_KEY); location.reload(); } }
+
+    // --- 優化後的自動檔名備份功能 ---
+    function exportData() {
+        const now = new Date();
+        const dateStr = now.toISOString().split('T')[0];
+        const timeStr = now.getHours().toString().padStart(2, '0') + now.getMinutes().toString().padStart(2, '0');
+        const fileName = `夢想備份_${dateStr}_${timeStr}.json`;
+
+        const blob = new Blob([JSON.stringify(store)], {type: "application/json"});
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = fileName;
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    function importData(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const imported = JSON.parse(event.target.result);
+                if (imported.jars) {
+                    if(confirm("確定還原備份？目前的數據會被覆蓋喔！")) {
+                        store = imported;
+                        saveToDB();
+                        location.reload();
+                    }
+                }
+            } catch(e) { alert("讀取失敗，請確認檔案格式是否正確。"); }
+        };
+        reader.readAsText(file);
+    }
+
+    function fullReset() { if(confirm("確定重置？這無法復原！")) { localStorage.removeItem(DB_KEY); location.reload(); } }
 
     window.onload = () => renderHome();
 </script>
