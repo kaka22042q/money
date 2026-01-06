@@ -11,12 +11,12 @@
     <style>
         :root { --cat-main: #FFB7B2; --cat-bg: #fffaf0; --cat-dark: #5D4037; --cat-gray: #D7CCC8; --cat-red: #ff7675; --cat-green: #55efc4; --cat-blue: #74b9ff; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: -apple-system, sans-serif; background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 110px; }
+        body { font-family: -apple-system, "Noto Sans TC", sans-serif; background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 110px; }
         .container { max-width: 450px; margin: 0 auto; padding: 15px; }
         .cat-card { background: #fff; border: 3px solid var(--cat-dark); box-shadow: 4px 4px 0 var(--cat-gray); border-radius: 20px; margin-bottom: 15px; padding: 15px; }
-        .prog-container { background: #EFEBE9; height: 16px; border-radius: 8px; border: 1.5px solid var(--cat-dark); overflow: hidden; margin: 5px 0; position: relative; }
+        .prog-container { background: #EFEBE9; height: 18px; border-radius: 9px; border: 1.5px solid var(--cat-dark); overflow: hidden; margin: 5px 0; position: relative; }
         .prog-fill { height: 100%; background: var(--cat-main); transition: width 0.5s; }
-        .prog-text { position: absolute; width: 100%; text-align: center; font-size: 10px; font-weight: bold; line-height: 14px; z-index: 5; }
+        .prog-text { position: absolute; width: 100%; text-align: center; font-size: 10px; font-weight: bold; line-height: 16px; z-index: 5; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; margin-top: 10px; }
         .cal-day { padding: 8px 0; border-radius: 8px; font-size: 13px; cursor: pointer; position: relative; }
         .cal-day.has-record::after { content: '•'; position: absolute; bottom: 1px; left: 50%; transform: translateX(-50%); color: var(--cat-main); font-size: 16px; }
@@ -29,7 +29,8 @@
         label { font-size: 12px; font-weight: bold; display: block; margin-top: 10px; color: var(--cat-dark); }
         .btn-main { background: var(--cat-main); border: 2px solid var(--cat-dark); box-shadow: 0 4px 0 var(--cat-dark); font-weight: bold; color: white; border-radius: 12px; padding: 12px; width: 100%; cursor: pointer; margin-top: 15px; font-size: 16px; }
         .record-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; font-size: 13px; }
-        .btn-del { border: none; background: none; color: #ccc; cursor: pointer; font-size: 14px; }
+        .tag { background: #f0f0f0; padding: 2px 8px; border-radius: 5px; font-size: 10px; color: var(--cat-blue); border: 1px solid #ddd; cursor: pointer; }
+        .inst-badge { background: var(--cat-red); color: white; padding: 2px 5px; border-radius: 4px; font-size: 9px; margin-left: 5px; }
         .page { display: none; }
         .page.active { display: block; }
     </style>
@@ -44,39 +45,40 @@
             <h3 class="text-center" id="cal-month-title" style="margin:0; font-size: 16px; text-align: center;"></h3>
             <div class="calendar-grid" id="calendar-days"></div>
             <div id="day-detail-area" style="display:none; margin-top:15px; padding-top:10px; border-top:1.5px dashed var(--cat-gray);">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <strong id="selected-date-text" style="font-size: 14px;"></strong>
-                </div>
+                <div style="display:flex; justify-content:space-between;"><strong id="selected-date-text"></strong></div>
                 <div id="day-records"></div>
             </div>
         </div>
         <div class="cat-card">
-            <h3 class="text-center" style="margin:0; font-size: 16px; text-align: center;">📊 本月支出分析</h3>
+            <h3 class="text-center" style="margin:0; font-size: 16px; text-align: center;">📊 支出結構</h3>
             <div style="height:200px; position:relative;"><canvas id="expenseChart"></canvas></div>
         </div>
     </div>
 
     <div id="page-list" class="page">
         <div style="position: sticky; top: 0; background: var(--cat-bg); padding: 10px 0; z-index: 10;">
-            <input type="text" id="global-search" placeholder="🔍 搜尋備註..." oninput="renderList()">
+            <input type="text" id="global-search" placeholder="🔍 搜尋備註關鍵字..." oninput="renderList()">
         </div>
         <div id="full-history-list"></div>
     </div>
 
     <div id="page-daily" class="page">
-        <h2 style="text-align: center;">✍️ 紀錄帳務</h2>
+        <h2 style="text-align:center;">✍️ 紀錄收支</h2>
         <div class="cat-card">
             <label>操作類型</label>
             <select id="trans-mode" onchange="toggleFields()">
                 <option value="exp">支出 💸</option>
                 <option value="inc">收入 💰</option>
-                <option value="save">存入存錢筒 🐟</option>
+                <option value="save">存入計畫 🐟</option>
+                <option value="transfer">對沖/繳卡費 🔄</option>
             </select>
-            <div id="jar-area" style="display:none;"><label>存入計畫</label><select id="jar-target"></select></div>
+            <div id="source-acc-area"><label>選擇帳戶</label><select id="acc-source"></select></div>
+            <div id="transfer-area" style="display:none;"><label>轉入帳戶</label><select id="acc-to"></select></div>
+            <div id="jar-area" style="display:none;"><label>存入目標</label><select id="jar-target"></select></div>
             <div id="exp-cat-area"><label>分類</label><div style="display:flex; gap:5px;"><select id="mainCat" onchange="renderSubCats()"></select><select id="subCat"></select></div></div>
             <div id="inc-cat-area" style="display:none;"><label>收入項目</label><select id="inc-cat"></select></div>
             <label>金額</label><input type="number" id="amt" placeholder="0" inputmode="decimal">
-            <label>備註</label><input type="text" id="note" placeholder="例如：買咖啡">
+            <label>備註</label><input type="text" id="note" placeholder="例：麥當勞大薯">
             <label>日期</label><input type="date" id="record-date">
             <div id="inst-toggle-area">
                 <label style="display:inline;"><input type="checkbox" id="is-inst" onchange="toggleInstOptions()"> 信用卡分期</label>
@@ -89,41 +91,42 @@
     </div>
 
     <div id="page-settings" class="page">
-        <h2 style="text-align: center;">⚙️ 設定</h2>
+        <h2 style="text-align:center;">⚙️ 設定</h2>
         <div class="cat-card">
             <h4 style="margin:0">💎 存錢筒 (名稱:目標,起,迄)</h4>
-            <textarea id="jar-editor" rows="3"></textarea>
+            <textarea id="jar-editor" rows="2"></textarea>
             <h4 style="margin:10px 0 0 0">📂 分類 (大類:小類1,小類2)</h4>
             <textarea id="cat-editor" rows="3"></textarea>
+            <h4 style="margin:10px 0 0 0">💳 帳戶 (名稱:餘額)</h4>
+            <textarea id="acc-editor" rows="2"></textarea>
             <button onclick="saveSettings()" class="btn-main" style="background:var(--cat-green)">更新設定</button>
         </div>
         <div class="cat-card" style="background:#eee; text-align:center;">
              <button onclick="exportData()" class="btn-main" style="background:var(--cat-blue)">📦 匯出備份</button>
              <button onclick="document.getElementById('importFile').click()" class="btn-main" style="background:#fff; color:#333; margin-top:10px;">📥 匯入還原</button>
              <input type="file" id="importFile" style="display:none" onchange="importData(event)">
-             
              <button onclick="fullReset()" style="color:red; border:none; background:none; margin-top:20px; font-size:12px;">⚠️ 清空所有資料</button>
         </div>
     </div>
 </div>
 
 <nav class="nav-bar">
-    <button class="nav-item active" onclick="showPage('home', this)">📅<div class="nav-text">月曆</div></button>
+    <button class="nav-item active" onclick="showPage('home', this)">📅<div class="nav-text">首頁</div></button>
     <button class="nav-item" onclick="showPage('list', this)">🔍<div class="nav-text">總覽</div></button>
     <button class="nav-item" onclick="showPage('daily', this)">✍️<div class="nav-text">記帳</div></button>
     <button class="nav-item" onclick="showPage('settings', this)">⚙️<div class="nav-text">設定</div></button>
 </nav>
 
 <script>
-    const DB_KEY = 'cat_dream_pro_v11';
+    const DB_KEY = 'cat_dream_unlimited_v1';
     let store = JSON.parse(localStorage.getItem(DB_KEY)) || {
         jars: { '買電腦': { goal: 60000, start: '2026-01', end: '2026-12' } },
         jarBalances: { '買電腦': 0 },
+        accs: { '現金': 0, '銀行帳戶': 0, '信用卡': 0 },
         cats: { '飲食':['外食','飲料'], '交通':['加油','捷運'] },
         incCats: ['薪水', '獎金'],
         history: []
     };
-
     let myChart = null;
     let selectedDate = new Date();
 
@@ -140,7 +143,11 @@
         if(pId === 'settings') initSettings();
     }
 
-    function renderHome() { renderJars(); renderCalendar(); updateChart(); }
+    function renderHome() {
+        renderJars();
+        renderCalendar();
+        updateChart();
+    }
 
     function renderJars() {
         const list = document.getElementById('jarList'); list.innerHTML = "";
@@ -177,42 +184,95 @@
         const recs = store.history.filter(h => h.date === dateStr);
         document.getElementById('day-records').innerHTML = recs.map(r => `
             <div class="record-item">
-                <div><strong>${r.note || r.sub || '存入計畫'}</strong><br><small style="color:gray;">${r.sub || r.jar || ''}</small></div>
-                <div style="text-align:right;">
-                    <span style="color:${r.type==='inc'?'var(--cat-green)':'var(--cat-red)'}; font-weight:bold;">$${r.amt.toLocaleString()}</span>
-                    <button class="btn-del" onclick="deleteRecord(${r.id}, true)">🗑️</button>
+                <div><strong>${r.note || r.sub || r.type}</strong><br><small style="color:gray">${r.acc || r.from + '→' + r.to}</small></div>
+                <div style="text-align:right">
+                    <span style="color:${r.type==='inc'?'green':'red'}">$${r.amt.toLocaleString()}</span>
+                    <button onclick="deleteRecord(${r.id}, true)" style="border:none; background:none; color:#ccc;">🗑️</button>
                 </div>
-            </div>`).join('') || '<p style="font-size:12px; color:gray; text-align:center;">無紀錄</p>';
+            </div>`).join('') || '<p style="text-align:center; font-size:12px; color:gray;">無紀錄</p>';
     }
 
-    function deleteRecord(id, fromHome = false) {
-        if(!confirm('確定刪除？')) return;
+    function toggleFields() {
+        const mode = document.getElementById('trans-mode').value;
+        document.getElementById('transfer-area').style.display = (mode === 'transfer') ? 'block' : 'none';
+        document.getElementById('jar-area').style.display = (mode === 'save') ? 'block' : 'none';
+        document.getElementById('exp-cat-area').style.display = (mode === 'exp') ? 'block' : 'none';
+        document.getElementById('inc-cat-area').style.display = (mode === 'inc') ? 'block' : 'none';
+        document.getElementById('inst-toggle-area').style.display = (mode === 'exp') ? 'block' : 'none';
+    }
+
+    function saveAll() {
+        const mode = document.getElementById('trans-mode').value;
+        const totalAmt = Number(document.getElementById('amt').value);
+        const note = document.getElementById('note').value;
+        const dateStr = document.getElementById('record-date').value;
+        const accSrc = document.getElementById('acc-source').value;
+        if(!totalAmt || !dateStr) return alert('請填寫完整資訊');
+
+        if(mode === 'exp' && document.getElementById('is-inst').checked) {
+            const months = Number(document.getElementById('inst-num').value);
+            const partAmt = Math.round(totalAmt / months);
+            for(let i=0; i<months; i++) {
+                let d = new Date(dateStr); d.setMonth(d.getMonth() + i);
+                store.history.push({ id: Date.now()+i, date: d.toISOString().split('T')[0], amt: partAmt, type: 'exp', main: document.getElementById('mainCat').value, sub: document.getElementById('subCat').value, acc: accSrc, note: `${note} (分期 ${i+1}/${months})`, isInst: true });
+                store.accs[accSrc] -= partAmt;
+            }
+        } else if(mode === 'transfer') {
+            const accTo = document.getElementById('acc-to').value;
+            store.accs[accSrc] -= totalAmt; store.accs[accTo] += totalAmt;
+            store.history.push({ id: Date.now(), date: dateStr, amt: totalAmt, type: 'transfer', from: accSrc, to: accTo, note: note || '對沖繳費' });
+        } else if(mode === 'save') {
+            const jar = document.getElementById('jar-target').value;
+            store.accs[accSrc] -= totalAmt; store.jarBalances[jar] += totalAmt;
+            store.history.push({ id: Date.now(), date: dateStr, amt: totalAmt, type: 'save', jar: jar, acc: accSrc, note: note || '存入計畫' });
+        } else if(mode === 'inc') {
+            store.accs[accSrc] += totalAmt;
+            store.history.push({ id: Date.now(), date: dateStr, amt: totalAmt, type: 'inc', sub: document.getElementById('inc-cat').value, acc: accSrc, note });
+        } else {
+            store.accs[accSrc] -= totalAmt;
+            store.history.push({ id: Date.now(), date: dateStr, amt: totalAmt, type: 'exp', main: document.getElementById('mainCat').value, sub: document.getElementById('subCat').value, acc: accSrc, note });
+        }
+        saveToDB(); alert('存檔成功'); showPage('home', document.querySelectorAll('.nav-item')[0]);
+    }
+
+    function renderList(filterTag = '') {
+        const search = document.getElementById('global-search').value.toLowerCase();
+        const listArea = document.getElementById('full-history-list'); listArea.innerHTML = "";
+        const sorted = [...store.history].sort((a,b) => new Date(b.date) - new Date(a.date));
+        sorted.filter(h => (h.note || '').toLowerCase().includes(search) || (h.sub || '').toLowerCase().includes(search)).forEach(h => {
+            const item = document.createElement('div'); item.className = 'cat-card record-item';
+            item.innerHTML = `<div><small>${h.date}</small> ${h.isInst?'<span class="inst-badge">分期</span>':''}<br><strong>${h.note || h.sub || h.type}</strong><br><span class="tag" onclick="renderList('${h.sub || h.main}')">${h.sub || h.main || h.type}</span></div><div style="text-align:right"><span style="color:${h.type==='inc'?'green':'red'}">$${h.amt.toLocaleString()}</span><br><button onclick="deleteRecord(${h.id}, false)" style="border:none; background:none; color:#ccc; font-size:12px;">🗑️</button></div>`;
+            listArea.appendChild(item);
+        });
+    }
+
+    function deleteRecord(id, fromHome) {
+        if(!confirm('確定要刪除？')) return;
         const r = store.history.find(h => h.id === id);
-        if(r && r.type === 'save') store.jarBalances[r.jar] -= r.amt;
+        if(r.type === 'save') store.jarBalances[r.jar] -= r.amt;
+        if(r.acc) store.accs[r.acc] += (r.type === 'exp' || r.type === 'save' ? r.amt : -r.amt);
+        if(r.type === 'transfer') { store.accs[r.from] += r.amt; store.accs[r.to] -= r.amt; }
         store.history = store.history.filter(h => h.id !== id);
-        saveToDB(); 
-        if(fromHome) { renderHome(); selectDate(document.getElementById('selected-date-text').innerText); } else { renderList(); }
+        saveToDB(); if(fromHome) { renderHome(); selectDate(document.getElementById('selected-date-text').innerText); } else renderList();
     }
 
     function updateChart() {
         const curM = `${selectedDate.getFullYear()}-${(selectedDate.getMonth()+1).toString().padStart(2,'0')}`;
         const dataMap = {};
-        store.history.filter(h => h.date.startsWith(curM) && h.type === 'exp').forEach(h => {
-            dataMap[h.main] = (dataMap[h.main] || 0) + h.amt;
-        });
+        store.history.filter(h => h.date.startsWith(curM) && h.type === 'exp').forEach(h => { dataMap[h.main] = (dataMap[h.main] || 0) + h.amt; });
         const ctx = document.getElementById('expenseChart').getContext('2d');
         if(myChart) myChart.destroy();
-        myChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: { labels: Object.keys(dataMap), datasets: [{ data: Object.values(dataMap), backgroundColor: ['#FFB7B2', '#FFDAC1', '#E2F0CB', '#B5EAD7', '#C7CEEA'] }] },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }
-        });
+        myChart = new Chart(ctx, { type: 'doughnut', data: { labels: Object.keys(dataMap), datasets: [{ data: Object.values(dataMap), backgroundColor: ['#FFB7B2', '#FFDAC1', '#E2F0CB', '#B5EAD7', '#C7CEEA'] }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } } });
     }
 
     function initDaily() {
         document.getElementById('record-date').valueAsDate = new Date();
+        const accs = Object.keys(store.accs).map(k => `<option value="${k}">${k} ($${store.accs[k].toLocaleString()})</option>`).join('');
+        document.getElementById('acc-source').innerHTML = accs;
+        document.getElementById('acc-to').innerHTML = accs;
         document.getElementById('jar-target').innerHTML = Object.keys(store.jars).map(k => `<option value="${k}">${k}</option>`).join('');
         document.getElementById('mainCat').innerHTML = Object.keys(store.cats).map(k => `<option value="${k}">${k}</option>`).join('');
+        document.getElementById('inc-cat').innerHTML = store.incCats.map(k => `<option value="${k}">${k}</option>`).join('');
         renderSubCats(); toggleFields();
     }
 
@@ -221,112 +281,26 @@
         if(store.cats[main]) document.getElementById('subCat').innerHTML = store.cats[main].map(s => `<option value="${s}">${s}</option>`).join('');
     }
 
-    function toggleFields() {
-        const mode = document.getElementById('trans-mode').value;
-        document.getElementById('exp-cat-area').style.display = (mode === 'exp') ? 'block' : 'none';
-        document.getElementById('inc-cat-area').style.display = (mode === 'inc') ? 'block' : 'none';
-        document.getElementById('jar-area').style.display = (mode === 'save') ? 'block' : 'none';
-    }
-
-    function toggleInstOptions() {
-        document.getElementById('inst-options').style.display = document.getElementById('is-inst').checked ? 'block' : 'none';
-    }
-
-    function saveAll() {
-        const mode = document.getElementById('trans-mode').value;
-        const totalAmt = Number(document.getElementById('amt').value);
-        const note = document.getElementById('note').value;
-        const baseDate = new Date(document.getElementById('record-date').value);
-        const isInst = document.getElementById('is-inst').checked;
-        if(!totalAmt) return alert('請填寫金額');
-
-        if(mode === 'exp' && isInst) {
-            const months = Number(document.getElementById('inst-num').value);
-            const partAmt = Math.round(totalAmt / months);
-            for(let i=0; i<months; i++) {
-                let d = new Date(baseDate); d.setMonth(d.getMonth() + i);
-                store.history.push({ id: Date.now()+i, date: d.toISOString().split('T')[0], amt: partAmt, type: 'exp', main: document.getElementById('mainCat').value, sub: document.getElementById('subCat').value, note: `${note} (分期 ${i+1}/${months})` });
-            }
-        } else {
-            let record = { id: Date.now(), date: baseDate.toISOString().split('T')[0], amt: totalAmt, type: mode, note };
-            if(mode === 'save') { 
-                const jar = document.getElementById('jar-target').value;
-                store.jarBalances[jar] = (store.jarBalances[jar] || 0) + totalAmt;
-                record.jar = jar;
-            } else if(mode === 'exp') {
-                record.main = document.getElementById('mainCat').value;
-                record.sub = document.getElementById('subCat').value;
-            }
-            store.history.push(record);
-        }
-        saveToDB(); alert('紀錄成功！');
-        showPage('home', document.querySelectorAll('.nav-item')[0]);
-    }
-
-    function renderList() {
-        const search = document.getElementById('global-search').value.toLowerCase();
-        const listArea = document.getElementById('full-history-list'); listArea.innerHTML = "";
-        const sorted = [...store.history].sort((a,b) => new Date(b.date) - new Date(a.date));
-        sorted.filter(h => (h.note || '').toLowerCase().includes(search) || (h.sub || '').toLowerCase().includes(search)).forEach(h => {
-            const item = document.createElement('div'); item.className = 'cat-card record-item';
-            item.innerHTML = `<div><small>${h.date}</small><br><strong>${h.note || h.sub || '🐟 '+h.jar}</strong></div><div style="text-align:right"><span style="color:${h.type==='inc'?'green':'red'}">$${h.amt.toLocaleString()}</span><br><button onclick="deleteRecord(${h.id}, false)" class="btn-del">🗑️ 刪除</button></div>`;
-            listArea.appendChild(item);
-        });
-    }
-
     function initSettings() {
         document.getElementById('jar-editor').value = Object.entries(store.jars).map(([k,v])=>`${k}:${v.goal},${v.start},${v.end}`).join('\n');
         document.getElementById('cat-editor').value = Object.entries(store.cats).map(([k,v])=>`${k}:${v.join(',')}`).join('\n');
+        document.getElementById('acc-editor').value = Object.entries(store.accs).map(([k,v])=>`${k}:${v}`).join('\n');
     }
 
     function saveSettings() {
-        const newJars = {};
-        document.getElementById('jar-editor').value.split('\n').forEach(l => {
-            const [name, data] = l.split(':');
-            if(name && data) { const [goal, start, end] = data.split(','); newJars[name.trim()] = { goal: Number(goal), start: start.trim(), end: end.trim() }; }
-        });
+        const newJars = {}; document.getElementById('jar-editor').value.split('\n').forEach(l => { const [n, d] = l.split(':'); if(n && d) { const [g, s, e] = d.split(','); newJars[n.trim()] = { goal: Number(g), start: s.trim(), end: e.trim() }; } });
         store.jars = newJars;
-        const newCats = {};
-        document.getElementById('cat-editor').value.split('\n').forEach(l => {
-            const [k,v] = l.split(':'); if(k && v) newCats[k.trim()] = v.split(',').map(s=>s.trim());
-        });
+        const newCats = {}; document.getElementById('cat-editor').value.split('\n').forEach(l => { const [k,v] = l.split(':'); if(k && v) newCats[k.trim()] = v.split(',').map(s=>s.trim()); });
         store.cats = newCats;
+        const newAccs = {}; document.getElementById('acc-editor').value.split('\n').forEach(l => { const [k,v] = l.split(':'); if(k && v) newAccs[k.trim()] = Number(v); });
+        store.accs = newAccs;
         saveToDB(); alert('設定已更新'); location.reload();
     }
 
-    function exportData() {
-        const now = new Date();
-        const fileName = `夢想備份_${now.toISOString().split('T')[0]}_${now.getHours()}${now.getMinutes()}.json`;
-        const blob = new Blob([JSON.stringify(store)], {type: "application/json"});
-        const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = fileName; a.click();
-    }
-
-    // --- 關鍵：匯入還原邏輯 ---
-    function importData(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const importedData = JSON.parse(e.target.result);
-                // 檢查是否為有效的備份格式
-                if (importedData.history && importedData.jars) {
-                    if (confirm("確定要匯入備份嗎？這會覆蓋目前的資料喵！")) {
-                        store = importedData;
-                        saveToDB();
-                        location.reload();
-                    }
-                } else {
-                    alert("檔案格式不正確，請選擇正確的備份檔案。");
-                }
-            } catch (err) {
-                alert("讀取檔案失敗：" + err);
-            }
-        };
-        reader.readAsText(file);
-    }
-
-    function fullReset() { if(confirm("確定重置？資料將無法救回喔！")) { localStorage.removeItem(DB_KEY); location.reload(); } }
+    function toggleInstOptions() { document.getElementById('inst-options').style.display = document.getElementById('is-inst').checked ? 'block' : 'none'; }
+    function exportData() { const blob = new Blob([JSON.stringify(store)], {type: "application/json"}); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `夢想備份_${new Date().toISOString().split('T')[0]}.json`; a.click(); }
+    function importData(e) { const reader = new FileReader(); reader.onload = (ev) => { store = JSON.parse(ev.target.result); saveToDB(); location.reload(); }; reader.readAsText(e.target.files[0]); }
+    function fullReset() { if(confirm("確定重置？")) { localStorage.removeItem(DB_KEY); location.reload(); } }
 
     window.onload = () => renderHome();
 </script>
