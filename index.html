@@ -13,41 +13,51 @@
             --cat-orange: #fab1a0;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, "Noto Sans TC", sans-serif; }
-        body { background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 150px; font-size: 14px; }
+        body { background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 160px; font-size: 14px; }
         .container { max-width: 450px; margin: 0 auto; padding: 12px; }
         
+        /* 分頁邏輯 */
         .page { display: none; }
-        .page.active { display: block; animation: fadeIn 0.3s ease; }
+        .page.active { display: block; animation: fadeIn 0.2s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        .cat-card { background: #fff; border: 2.5px solid var(--cat-dark); box-shadow: 3px 3px 0 var(--cat-gray); border-radius: 18px; margin-bottom: 12px; padding: 15px; position: relative; }
+        .cat-card { background: #fff; border: 2.5px solid var(--cat-dark); box-shadow: 4px 4px 0 var(--cat-gray); border-radius: 18px; margin-bottom: 15px; padding: 15px; position: relative; }
         input, select, textarea { width: 100%; border: 2px solid var(--cat-gray); border-radius: 10px; padding: 10px; margin-top: 5px; font-size: 16px; outline: none; background: #fff; color: var(--cat-dark); }
-        textarea#note { height: 90px; background: #fafafa; line-height: 1.4; resize: none; }
+        textarea#note { height: 90px; background: #fafafa; line-height: 1.5; resize: none; }
         
         label { font-size: 13px; font-weight: bold; display: block; margin-top: 10px; color: var(--cat-dark); border-left: 4px solid var(--cat-main); padding-left: 8px; }
         .hint { font-size: 11px; color: #888; margin-top: 3px; line-height: 1.4; font-weight: normal; }
         
         /* 纖薄 4x4 計算機 */
-        #amt { font-size: 22px; height: 42px; text-align: center; color: var(--cat-red); border: 2.5px solid var(--cat-dark); margin-bottom: 8px; font-weight: bold; }
-        .kb-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 5px; }
-        .kb-btn { height: 35px; border: 1.5px solid var(--cat-dark); border-radius: 8px; background: #fff; font-weight: 900; color: var(--cat-dark); cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+        #amt { font-size: 24px; height: 45px; text-align: center; color: var(--cat-red); border: 2.5px solid var(--cat-dark); margin-bottom: 8px; font-weight: bold; }
+        .kb-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 5px; }
+        .kb-btn { height: 38px; border: 1.5px solid var(--cat-dark); border-radius: 10px; background: #fff; font-weight: 900; color: var(--cat-dark); cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; }
         .kb-btn:active { transform: scale(0.92); background: var(--cat-light-pink); }
         .op-btn { background: var(--cat-bg); }
         .eq-btn { background: var(--cat-main); color: white; }
         .ac-btn { background: #f0f0f0; color: #999; }
 
-        .btn-main { background: var(--cat-main); border: 2.5px solid var(--cat-dark); box-shadow: 0 4px 0 var(--cat-dark); font-weight: bold; color: white; border-radius: 15px; padding: 14px; width: 100%; cursor: pointer; margin-top: 15px; font-size: 16px; letter-spacing: 2px; }
+        .btn-main { background: var(--cat-main); border: 2.5px solid var(--cat-dark); box-shadow: 0 4px 0 var(--cat-dark); font-weight: bold; color: white; border-radius: 15px; padding: 14px; width: 100%; cursor: pointer; margin-top: 15px; font-size: 17px; letter-spacing: 2px; }
         
         /* 導航列 */
-        .nav-bar { position: fixed; bottom: 15px; left: 15px; right: 15px; background: white; border: 2.5px solid var(--cat-dark); box-shadow: 0 5px 0 var(--cat-gray); display: flex; justify-content: space-around; padding: 8px 5px; z-index: 100; border-radius: 25px; height: 85px; align-items: center; }
-        .nav-item { border: none; background: none; text-align: center; flex: 1; cursor: pointer; opacity: 0.35; padding: 0; }
+        .nav-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: white; border: 3px solid var(--cat-dark); box-shadow: 0 6px 0 var(--cat-gray); display: flex; justify-content: space-around; padding: 10px 5px; z-index: 100; border-radius: 30px; height: 85px; align-items: center; }
+        .nav-item { border: none; background: none; text-align: center; flex: 1; cursor: pointer; opacity: 0.3; }
         .nav-item.active { opacity: 1; }
-        .nav-icon { font-size: 28px; display: block; margin-bottom: 2px; }
+        .nav-icon { font-size: 30px; display: block; margin-bottom: 2px; }
         .nav-text { font-size: 11px; font-weight: bold; color: var(--cat-dark); }
+
+        /* 重點修正：信用卡分期區塊 */
+        .inst-toggle-wrapper { display: flex; align-items: center; gap: 10px; margin-top: 15px; width: 100%; }
+        .inst-toggle-label { display: inline-block; font-size: 14px; font-weight: bold; border: none; padding-left: 0; margin-top: 0; }
+        #inst-options { display: none; background: #fff5f5; padding: 15px; border-radius: 15px; border: 1.5px dashed var(--cat-main); margin-top: 10px; text-align: left; }
         
+        /* 進度條與日曆 */
         .prog-container { background: #EFEBE9; height: 16px; border-radius: 8px; border: 1.5px solid var(--cat-dark); overflow: hidden; margin: 5px 0; }
         .prog-fill { height: 100%; transition: width 0.6s; }
-        
+        .prog-safe { background: var(--cat-green); }
+        .prog-warn { background: var(--cat-orange); }
+        .prog-danger { background: var(--cat-red); }
+
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
         .cal-day { padding: 8px 0; border-radius: 6px; font-size: 12px; cursor: pointer; position: relative; }
         .cal-day.today { background: var(--cat-light-pink); font-weight: bold; }
@@ -60,37 +70,63 @@
 </head>
 <body>
 
-<div id="alert-modal" class="modal"><div class="modal-content"><h2>⚠️ 預算提醒</h2><p id="alert-msg"></p><button onclick="document.getElementById('alert-modal').style.display='none'" class="btn-main">知道了</button></div></div>
-<div id="sub-modal" class="modal"><div class="modal-content"><h3>⏰ 定期入帳確認</h3><p id="sub-modal-desc"></p><input type="number" id="sub-modal-amt" style="text-align:center;"><button onclick="processSub(true)" class="btn-main">確認</button><button onclick="processSub(false)" style="background:none; border:none; color:#aaa; margin-top:10px;">跳過</button></div></div>
-<div id="backup-modal" class="modal"><div class="modal-content"><h3>📦 該備份囉</h3><p>超過 7 天沒備份了喵！</p><button onclick="goToSettingsForBackup()" class="btn-main">立即備份</button><button onclick="closeBackupModal()" style="background:none; border:none; color:#aaa; margin-top:10px;">下次</button></div></div>
+<div id="alert-modal" class="modal"><div class="modal-content"><h2 style="color:var(--cat-red); margin-top:0;">⚠️ 預算警報</h2><p id="alert-msg" style="line-height:1.6;"></p><button onclick="document.getElementById('alert-modal').style.display='none'" class="btn-main">知道了喵</button></div></div>
+<div id="manual-modal" class="modal"><div class="modal-content"><h3 style="text-align:center; color:var(--cat-red); margin-top:0;">🐾 使用說明書</h3><div id="manual-display" style="white-space:pre-wrap; text-align:left; line-height:1.6; font-size:13px; color:#555;"></div><button onclick="document.getElementById('manual-modal').style.display='none'" class="btn-main">關閉</button></div></div>
+<div id="sub-modal" class="modal"><div class="modal-content"><h3>⏰ 定期入帳確認</h3><p id="sub-modal-desc"></p><input type="number" id="sub-modal-amt" style="text-align:center;"><button onclick="processSub(true)" class="btn-main">確認入帳</button><button onclick="processSub(false)" style="background:none; border:none; color:#aaa; margin-top:10px;">跳過</button></div></div>
+<div id="backup-modal" class="modal"><div class="modal-content"><h3>📦 該備份囉</h3><p>超過一週沒備份資料了喵！</p><button onclick="goToSettingsForBackup()" class="btn-main">去備份</button><button onclick="closeBackupModal()" style="background:none; border:none; color:#aaa; margin-top:10px;">下次</button></div></div>
 
 <div class="container" id="main-content">
     <div id="page-daily" class="page active">
-        <h2 style="text-align:center;">✍️ 快速記帳</h2>
+        <h2 style="text-align:center; margin:0 0 10px 0; font-size:18px;">✍️ 快速記帳</h2>
         <div class="cat-card">
             <input type="text" id="amt" value="0" readonly>
             <div id="kb-container" class="kb-grid"></div>
+            
             <label>操作類型</label>
-            <select id="trans-mode" onchange="toggleFields()"><option value="exp">💸 支出</option><option value="inc">💰 收入</option><option value="save">🐟 存錢筒</option><option value="transfer">🔄 轉帳對沖</option></select>
+            <select id="trans-mode" onchange="toggleFields()">
+                <option value="exp">💸 支出</option><option value="inc">💰 收入</option><option value="save">💎 存錢筒</option><option value="transfer">🔄 轉帳對沖</option>
+            </select>
+            
             <div id="source-acc-area"><label id="label-source">支付帳戶</label><select id="acc-source"></select></div>
             <div id="transfer-area" style="display:none;"><label>轉入帳戶</label><select id="acc-to"></select></div>
-            <div id="jar-area" style="display:none;"><label>存入存錢筒</label><select id="jar-target"></select></div>
-            <label>項目分類</label><div style="display:flex; gap:5px;"><select id="mainCat" onchange="renderSubCats()"></select><select id="subCat"></select></div>
-            <label>詳細備註</label><textarea id="note" placeholder="備註內容..."></textarea>
+            <div id="jar-area" style="display:none;"><label>選擇存錢筒</label><select id="jar-target"></select></div>
+            
+            <label>項目分類</label>
+            <div style="display:flex; gap:5px;"><select id="mainCat" onchange="renderSubCats()"></select><select id="subCat"></select></div>
+            
+            <label>詳細備註</label>
+            <textarea id="note" placeholder="寫點什麼喵..."></textarea>
+            
             <label>日期</label><input type="date" id="record-date">
-            <div id="inst-toggle-area"><label style="display:flex; align-items:center; gap:8px; font-size:13px; margin-top:10px;"><input type="checkbox" id="is-inst" onchange="toggleInstOptions()"> 信用卡分期</label>
-                <div id="inst-options" style="display:none; background:#fff5f5; padding:10px; border-radius:12px; border:1.5px dashed var(--cat-main); margin-top:8px;">
-                    <label style="margin-top:0;">分幾期？</label><input type="number" id="inst-num" value="3"><label>起始月份</label><input type="month" id="inst-start-month">
+            
+            <div class="inst-toggle-wrapper">
+                <input type="checkbox" id="is-inst" onchange="toggleInstOptions()" style="width:24px; height:24px; margin:0;">
+                <span class="inst-toggle-label">信用卡分期支出</span>
+            </div>
+            
+            <div id="inst-options">
+                <div style="margin-bottom:10px;">
+                    <label style="margin-top:0; border:none; padding:0;">分幾期？</label>
+                    <input type="number" id="inst-num" value="3">
+                </div>
+                <div>
+                    <label style="margin-top:0; border:none; padding:0;">第一期扣款月</label>
+                    <input type="month" id="inst-start-month">
                 </div>
             </div>
+            
             <button onclick="saveAll()" class="btn-main">確認存檔喵！</button>
         </div>
     </div>
 
     <div id="page-home" class="page">
-        <h2 style="text-align:center;">🐾 夢想進度</h2>
+        <h2 style="text-align:center; margin-bottom:10px;">🐾 夢想進度</h2>
         <div id="jarList"></div>
-        <div class="cat-card"><h3 style="font-size:14px; margin-top:0;">📅 預算與帳期</h3><p id="period-info" style="font-size:11px; color:#666; margin-bottom:10px;"></p><div id="home-budget-list"></div></div>
+        <div class="cat-card">
+            <h3 style="font-size:14px; margin-top:0;">📅 預算與帳期</h3>
+            <p id="period-info" style="font-size:11px; color:#666; margin-bottom:8px;"></p>
+            <div id="home-budget-list"></div>
+        </div>
         <div class="cat-card">
             <h3 id="cal-month-title" style="text-align:center; font-size:15px; margin-top:0;"></h3>
             <div class="calendar-grid" id="calendar-days"></div>
@@ -102,34 +138,37 @@
         <h2 style="color:var(--cat-blue); font-size:18px;">🏦 財務分析</h2>
         <div class="cat-card"><div id="asset-list"></div></div>
         <div class="cat-card"><div style="height:170px;"><canvas id="pieChart"></canvas></div></div>
-        <div class="cat-card"><input type="text" id="global-search" placeholder="🔍 搜尋分類、備註..." oninput="renderAssetsAndHistory()"><div id="full-history-list" style="margin-top:10px;"></div></div>
+        <div class="cat-card">
+            <input type="text" id="global-search" placeholder="🔍 搜尋大/小分類、備註..." oninput="renderAssetsAndHistory()">
+            <div id="full-history-list" style="margin-top:10px;"></div>
+        </div>
     </div>
 
     <div id="page-settings" class="page">
-        <h2 style="text-align:center;">⚙️ 設定中心</h2>
+        <h2 style="text-align:center; font-size:18px; margin-top:0;">⚙️ 設定中心</h2>
         <div class="cat-card">
             <button onclick="openManual()" class="btn-main" style="background:var(--cat-blue); margin:0 0 12px 0;">📘 查看說明書</button>
-            <label>📅 預算起算日 (薪資日)</label><div class="hint">10 號領薪就填 10</div><input type="number" id="budget-day-input">
-            <label>🔔 預算提醒門檻 (%)</label><input type="number" id="budget-threshold-input">
+            <label>📅 預算起算日 (薪資日)</label><div class="hint">每個月幾號領薪水？(1~28)</div><input type="number" id="budget-day-input">
+            <label>🔔 預算提醒門檻 (%)</label><div class="hint">用到多少百分比提醒？</div><input type="number" id="budget-threshold-input">
             <label>📊 月預算 (分類:金額)</label><textarea id="budget-editor" rows="2"></textarea>
             <label>⌨️ 鍵盤切換</label><select id="kb-mode-select" onchange="saveToDB(); renderKeyboard();"><option value="calc">🔢 計算機</option><option value="coin">🪙 幣值鍵盤</option></select>
             <label>🏷️ App 名稱</label><input type="text" id="app-name-input">
             <label>📂 支出分類</label><div class="hint">大類:小1,小2</div><textarea id="cat-editor" rows="2"></textarea>
             <label>💰 收入分類</label><textarea id="inc-cat-editor" rows="2"></textarea>
-            <label>💳 帳戶資產</label><div class="hint">帳戶:金額</div><textarea id="acc-editor" rows="2"></textarea>
-            <label>⏰ 定期支出</label><div class="hint">名稱:金額,大類,小類,帳戶,日</div><textarea id="sub-editor" rows="2"></textarea>
-            <label>💎 存錢筒</label><div class="hint">名稱:總額,開始月,結束月</div><textarea id="jar-editor" rows="2"></textarea>
-            <label>📘 說明書編輯</label><textarea id="manual-editor" rows="3"></textarea>
+            <label>💳 帳戶資產</label><div class="hint">帳戶:初始金額</div><textarea id="acc-editor" rows="2"></textarea>
+            <label>⏰ 定期支出</label><div class="hint">名:金,大,小,帳,日</div><textarea id="sub-editor" rows="2"></textarea>
+            <label>💎 存錢筒</label><div class="hint">名:金,起月,迄月</div><textarea id="jar-editor" rows="2"></textarea>
+            <label>📘 說明書內容</label><textarea id="manual-editor" rows="3"></textarea>
             <button onclick="saveSettings()" class="btn-main" style="background:var(--cat-green)">儲存變更</button>
         </div>
         <div class="cat-card" style="text-align:center;">
-            <div style="display:flex; gap:10px;">
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
                 <button onclick="exportCSV()" style="flex:1; padding:10px; border-radius:10px; border:1px solid #333; background:white;">📊 導出 CSV</button>
                 <button onclick="exportData()" style="flex:1; padding:10px; border-radius:10px; border:none; background:var(--cat-blue); color:white;">📦 備份 JSON</button>
             </div>
             <input type="file" id="importFile" style="display:none" onchange="importData(event)">
             <button onclick="document.getElementById('importFile').click()" class="btn-main" style="background:#fff; color:#333; border:2px solid var(--cat-dark);">📥 匯入 JSON 資料</button>
-            <button onclick="fullReset()" style="color:red; border:none; background:none; margin-top:20px; text-decoration:underline;">⚠️ 清空全本記帳數據</button>
+            <button onclick="fullReset()" style="color:red; border:none; background:none; margin-top:20px; text-decoration:underline;">⚠️ 清空所有數據</button>
         </div>
     </div>
 </div>
@@ -142,11 +181,11 @@
 </nav>
 
 <script>
-    const DB_KEY = 'cat_dream_v38';
-    const defaultManual = "【信用卡分期】輸入總價 -> 勾選分期 -> 設定月份。";
+    const DB_KEY = 'cat_dream_final_v40';
+    const defaultManual = "【信用卡分期】輸入總價 -> 勾選分期 -> 設定月數。\n【搜尋】支援全分類與備註搜尋。\n【刪除】在分析頁搜尋結果中點擊垃圾桶。";
     let store = JSON.parse(localStorage.getItem(DB_KEY)) || {
         appName: '夢夢記帳', budgetDay: 10, threshold: 80, kbMode: 'calc', 
-        accs: { '現金': 0, '銀行': 0 }, cats: { '飲食':['外食'] }, incCats: { '工作':['薪水'] },
+        accs: { '現金': 0 }, cats: { '飲食':['外食'] }, incCats: { '薪水':['月薪'] },
         budgets: { '飲食': 5000 }, history: [], subs: {}, subLog: [], manualContent: defaultManual,
         jarBalances: {}, jars: {}, lastBackup: Date.now()
     };
@@ -158,74 +197,138 @@
         updateAppTitles(); checkBackupAlert(); checkSubscriptions(); initDaily(); renderKeyboard();
     };
 
-    function saveToDB() { localStorage.setItem(DB_KEY, JSON.stringify(store)); }
-    
-    // 全本歸零邏輯
-    function fullReset() {
-        if(confirm("❗ 確定要清空所有記帳紀錄嗎？這無法還原喔喵！")) {
-            if(confirm("最後確認：真的要清空嗎？（帳戶初始金額會保留）")) {
-                store.history = [];
-                store.jarBalances = {};
-                store.subLog = [];
-                saveToDB();
-                alert("數據已大掃除完畢喵！🧹");
-                location.reload();
+    function showPage(pId, el) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page-' + pId).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        el.classList.add('active');
+        if(pId === 'home') renderHome(); if(pId === 'assets') renderAssetsAndHistory(); if(pId === 'settings') initSettings();
+    }
+
+    function renderKeyboard() {
+        const c = document.getElementById('kb-container'); c.innerHTML = "";
+        if (store.kbMode === 'coin') {
+            [1, 5, 10, 50, 100, 500, 1000].forEach(v => { c.innerHTML += `<button class="kb-btn" onclick="pressCoin(${v})">+${v}</button>`; });
+            c.innerHTML += `<button class="kb-btn ac-btn" onclick="clearAmt()">AC</button>`;
+        } else {
+            const keys = ['7','8','9','/', '4','5','6','*', '1','2','3','-', '0','AC','=','+'];
+            keys.forEach(k => {
+                let cls = "kb-btn" + (['/','*','-','+'].includes(k)?" op-btn":(k==='='?" eq-btn":(k==='AC'?" ac-btn":"")));
+                c.innerHTML += `<button class="${cls}" onclick="pressCalc('${k}')">${k==='*'?'×':k==='/'?'÷':k}</button>`;
+            });
+        }
+    }
+    function pressCoin(v) { const el = document.getElementById('amt'); el.value = (Number(el.value) || 0) + v; calcBuffer = el.value; }
+    function clearAmt() { document.getElementById('amt').value = "0"; calcBuffer = ""; }
+    function pressCalc(val) {
+        const el = document.getElementById('amt');
+        if (val === 'AC') clearAmt();
+        else if (val === '=') { try { const res = eval(calcBuffer.replace(/[^0-9+\-*/.]/g, '')); el.value = Math.round(res*100)/100 || 0; calcBuffer = String(el.value); } catch { el.value = "錯誤"; calcBuffer = ""; } }
+        else { if (calcBuffer === "0" || el.value === "0") { if (!['+','-','*','/'].includes(val)) calcBuffer = ""; } calcBuffer += val; el.value = calcBuffer; }
+    }
+
+    function saveAll() {
+        const m = document.getElementById('trans-mode').value, amt = Number(document.getElementById('amt').value);
+        const note = document.getElementById('note').value, date = document.getElementById('record-date').value, srcRaw = document.getElementById('acc-source').value;
+        if(!amt || !date) return alert('填完整喵！');
+        const adj = (r, v) => { const n = r.split(':')[1]; store.accs[n] = (store.accs[n]||0) + v; return n; };
+
+        if(m==='transfer'){const toRaw=document.getElementById('acc-to').value; adj(srcRaw,-amt); adj(toRaw,amt); store.history.push({id:Date.now(), date, amt, type:m, fromRaw:srcRaw, toRaw, note});}
+        else if(m==='save'){const jar=document.getElementById('jar-target').value; adj(srcRaw,-amt); store.jarBalances[jar]=(store.jarBalances[jar]||0)+amt; store.history.push({id:Date.now(), date, amt, type:m, jar, srcRaw, note});}
+        else if(m==='inc'){adj(srcRaw,amt); store.history.push({id:Date.now(), date, amt, type:m, main:document.getElementById('mainCat').value, sub:document.getElementById('subCat').value, srcRaw, note});}
+        else {
+            adj(srcRaw,-amt);
+            if(document.getElementById('is-inst').checked){
+                const num=Number(document.getElementById('inst-num').value), startM=document.getElementById('inst-start-month').value, per=Math.round(amt/num);
+                let [yy,mm]=startM.split('-').map(Number);
+                for(let i=0;i<num;i++){let d=new Date(yy,mm-1+i,1); store.history.push({id:Date.now()+i, date:d.toISOString().slice(0,10), amt:per, type:'exp', main:document.getElementById('mainCat').value, sub:document.getElementById('subCat').value, srcRaw, note:`${note} [${i+1}/${num}]`});}
+            } else {store.history.push({id:Date.now(), date, amt, type:m, main:document.getElementById('mainCat').value, sub:document.getElementById('subCat').value, srcRaw, note});}
+            const main = document.getElementById('mainCat').value;
+            if(store.budgets[main]){ 
+                const range = getBudgetDateRange(); 
+                const spent = store.history.filter(h => h.type==='exp' && h.main===main && new Date(h.date)>=range.start && new Date(h.date)<=range.end).reduce((a,b)=>a+b.amt,0);
+                const pct = (spent / store.budgets[main]) * 100;
+                if(pct >= (store.threshold || 80)){ document.getElementById('alert-msg').innerText = `【${main}】已支出 $${spent} (${Math.round(pct)}%)`; document.getElementById('alert-modal').style.display='flex'; }
             }
+        }
+        saveToDB(); alert('存好囉！'); clearAmt(); showPage('home', document.querySelectorAll('.nav-item')[1]);
+    }
+
+    function getBudgetDateRange() {
+        const now = new Date(); let y = now.getFullYear(), m = now.getMonth(), d = store.budgetDay || 10;
+        let start, end;
+        if (now.getDate() >= d) { start = new Date(y, m, d); end = new Date(y, m + 1, d - 1, 23, 59, 59); }
+        else { start = new Date(y, m - 1, d); end = new Date(y, m, d - 1, 23, 59, 59); }
+        return { start, end };
+    }
+
+    function renderHome() {
+        const range = getBudgetDateRange(); document.getElementById('period-info').innerText = `目前帳期：${range.start.toLocaleDateString()} ~ ${range.end.toLocaleDateString()}`;
+        renderCalendar(); const list = document.getElementById('jarList'); list.innerHTML = "";
+        for(let n in store.jars){const p=store.jars[n],cb=store.jarBalances[n]||0,pct=Math.min(Math.round(cb/p.goal*100),100); list.innerHTML += `<div class="cat-card" style="padding:12px; margin-bottom:8px;"><b>💎 ${n}</b> <small>$${cb}/$${p.goal}</small><div class="prog-container"><div class="prog-fill" style="width:${pct}%; background:var(--cat-green)"></div></div></div>`;}
+        const homeB = document.getElementById('home-budget-list'); homeB.innerHTML = "";
+        for(let b in store.budgets){
+            const spent = store.history.filter(h => h.type==='exp' && h.main===b && new Date(h.date)>=range.start && new Date(h.date)<=range.end).reduce((a,b)=>a+b.amt, 0);
+            const pct = Math.min(Math.round(spent/store.budgets[b]*100), 100);
+            let color = pct>=100 ? 'prog-danger' : (pct>=80 ? 'prog-warn' : 'prog-safe');
+            homeB.innerHTML += `<div style="font-size:11px; margin-top:5px;">${b} ($${spent}/$${store.budgets[b]})<div class="prog-container"><div class="prog-fill ${color}" style="width:${pct}%;"></div></div></div>`;
         }
     }
 
-    function deleteRecord(id) {
-        if(!confirm("確定要刪除這筆紀錄並退回金額嗎喵？")) return;
-        const idx = store.history.findIndex(h => h.id === id);
-        if(idx === -1) return;
-        const h = store.history[idx];
-        try {
-            if(h.type==='exp'){const n=h.srcRaw.split(':')[1]; if(store.accs[n]!==undefined) store.accs[n]+=h.amt;}
-            else if(h.type==='inc'){const n=h.srcRaw.split(':')[1]; if(store.accs[n]!==undefined) store.accs[n]-=h.amt;}
-            else if(h.type==='save'){const n=h.srcRaw.split(':')[1]; if(store.accs[n]!==undefined) store.accs[n]+=h.amt; store.jarBalances[h.jar]-=h.amt;}
-            else if(h.type==='transfer'){const f=h.fromRaw.split(':')[1],t=h.toRaw.split(':')[1]; if(store.accs[f]!==undefined) store.accs[f]+=h.amt; if(store.accs[t]!==undefined) store.accs[t]-=h.amt;}
-        } catch(e){}
-        store.history.splice(idx, 1); saveToDB(); renderAssetsAndHistory();
+    function renderCalendar() {
+        const grid = document.getElementById('calendar-days'); grid.innerHTML = "";
+        const now = new Date(); const y = now.getFullYear(), m = now.getMonth();
+        document.getElementById('cal-month-title').innerText = `${y}年${m+1}月`;
+        const first = new Date(y, m, 1).getDay(), last = new Date(y, m + 1, 0).getDate();
+        for(let i=0; i<first; i++) grid.innerHTML += `<div></div>`;
+        for(let d=1; d<=last; d++){
+            const ds = `${y}-${(m+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`;
+            const isToday = (d === now.getDate()) ? 'today' : '';
+            const hasRec = store.history.some(h=>h.date===ds) ? 'has-record' : '';
+            grid.innerHTML += `<div class="cal-day ${isToday} ${hasRec}" onclick="selectDate('${ds}')">${d}</div>`;
+        }
+    }
+    function selectDate(ds) {
+        document.getElementById('day-detail-area').style.display='block';
+        document.getElementById('selected-date-text').innerText = ds + " 明細";
+        const recs = store.history.filter(h=>h.date===ds);
+        document.getElementById('day-records').innerHTML = recs.map(r=>`<div class="record-item"><span>${r.note||r.main||r.sub}</span><span style="color:${r.type==='inc'?'green':'red'}">$${r.amt}</span></div>`).join('') || '無紀錄';
     }
 
     function renderAssetsAndHistory() {
         const area = document.getElementById('asset-list'); area.innerHTML = "";
         let total = 0; for(let k in store.accs) { total += store.accs[k]; area.innerHTML += `<div style="display:flex; justify-content:space-between; padding:4px 0;"><span>${k}</span><span>$${store.accs[k].toLocaleString()}</span></div>`; }
-        area.innerHTML += `<div style="border-top:1.5px solid var(--cat-dark); margin-top:5px; font-weight:bold; display:flex; justify-content:space-between;"><span>總身價</span><span>$${total.toLocaleString()}</span></div>`;
+        area.innerHTML += `<div style="border-top:1.5px solid var(--cat-dark); margin-top:5px; font-weight:bold; display:flex; justify-content:space-between;"><span>總資產</span><span>$${total.toLocaleString()}</span></div>`;
         const search = document.getElementById('global-search').value.toLowerCase();
         const filtered = store.history.filter(h => `${h.main||''} ${h.sub||''} ${h.note||''}`.toLowerCase().includes(search));
         const catTotals = {}, listArea = document.getElementById('full-history-list'); listArea.innerHTML = "";
-        filtered.sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0, 20).forEach(h => {
+        filtered.sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0, 15).forEach(h => {
             if(h.type === 'exp') catTotals[h.main] = (catTotals[h.main] || 0) + h.amt;
-            listArea.innerHTML += `<div class="record-item"><div style="flex:1;"><small>${h.date} [${h.main||'轉帳'}]</small><br><strong>${h.note||h.sub||'無'}</strong></div><div style="text-align:right;"><span style="color:${h.type==='inc'?'green':'red'}; font-weight:bold;">${h.type==='inc'?'+':'-'}$${h.amt}</span><br><button onclick="deleteRecord(${h.id})" style="border:none; background:#eee; padding:2px 8px; border-radius:5px; font-size:12px; color:red; margin-top:3px;">🗑️ 刪除</button></div></div>`;
+            listArea.innerHTML += `<div class="record-item"><div style="flex:1;"><small>${h.date}</small><br><strong>${h.note||h.sub||h.main}</strong></div><div style="text-align:right;"><span style="color:${h.type==='inc'?'green':'red'}; font-weight:bold;">${h.type==='inc'?'+':'-'}$${h.amt}</span><br><button onclick="deleteRecord(${h.id})" style="border:none; background:#eee; padding:2px 8px; border-radius:5px; font-size:12px; color:red; margin-top:3px;">🗑️ 刪除</button></div></div>`;
         });
-        renderPie(catTotals);
+        const ctx = document.getElementById('pieChart').getContext('2d');
+        if(pieChartInstance) pieChartInstance.destroy();
+        pieChartInstance = new Chart(ctx, { type: 'pie', data: { labels: Object.keys(catTotals), datasets: [{ data: Object.values(catTotals), backgroundColor: ['#FFB7B2','#FFDAC1','#E2F0CB','#B5EAD7','#C7CEEA'] }] }, options: { maintainAspectRatio: false } });
     }
 
-    function renderPie(data) { const ctx = document.getElementById('pieChart').getContext('2d'); if(pieChartInstance) pieChartInstance.destroy(); pieChartInstance = new Chart(ctx, { type: 'pie', data: { labels: Object.keys(data), datasets: [{ data: Object.values(data), backgroundColor: ['#FFB7B2','#FFDAC1','#E2F0CB','#B5EAD7','#C7CEEA'] }] }, options: { maintainAspectRatio: false } }); }
-    function renderKeyboard() { const c = document.getElementById('kb-container'); c.innerHTML = ""; if (store.kbMode === 'coin') { [1, 5, 10, 50, 100, 500, 1000].forEach(v => { c.innerHTML += `<button class="kb-btn" onclick="pressCoin(${v})">+${v}</button>`; }); c.innerHTML += `<button class="kb-btn ac-btn" onclick="clearAmt()">AC</button>`; } else { const keys = ['7','8','9','/', '4','5','6','*', '1','2','3','-', '0','AC','=','+']; keys.forEach(k => { let cls = "kb-btn" + (['/','*','-','+'].includes(k)?" op-btn":(k==='='?" eq-btn":(k==='AC'?" ac-btn":""))); c.innerHTML += `<button class="${cls}" onclick="pressCalc('${k}')">${k==='*'?'×':k==='/'?'÷':k}</button>`; }); } }
-    function pressCoin(v) { const el = document.getElementById('amt'); el.value = (Number(el.value) || 0) + v; calcBuffer = el.value; }
-    function clearAmt() { document.getElementById('amt').value = "0"; calcBuffer = ""; }
-    function pressCalc(val) { const el = document.getElementById('amt'); if (val === 'AC') clearAmt(); else if (val === '=') { try { const res = eval(calcBuffer.replace(/[^0-9+\-*/.]/g, '')); el.value = Math.round(res*100)/100 || 0; calcBuffer = String(el.value); } catch { el.value = "錯誤"; calcBuffer = ""; } } else { if (calcBuffer === "0" || el.value === "0") { if (!['+','-','*','/'].includes(val)) calcBuffer = ""; } calcBuffer += val; el.value = calcBuffer; } }
-    function saveAll() {
-        const m = document.getElementById('trans-mode').value, amt = Number(document.getElementById('amt').value), note = document.getElementById('note').value, date = document.getElementById('record-date').value, srcRaw = document.getElementById('acc-source').value;
-        if(!amt || !date) return alert('填完整喵！'); const adj = (r, v) => { const n = r.split(':')[1]; store.accs[n] += v; return n; };
-        if(m==='transfer'){const toRaw=document.getElementById('acc-to').value; adj(srcRaw,-amt); adj(toRaw,amt); store.history.push({id:Date.now(), date, amt, type:m, fromRaw:srcRaw, toRaw, note});}
-        else if(m==='save'){const jar=document.getElementById('jar-target').value; adj(srcRaw,-amt); store.jarBalances[jar]=(store.jarBalances[jar]||0)+amt; store.history.push({id:Date.now(), date, amt, type:m, jar, srcRaw, note});}
-        else if(m==='inc'){adj(srcRaw,amt); store.history.push({id:Date.now(), date, amt, type:m, main:document.getElementById('mainCat').value, sub:document.getElementById('subCat').value, srcRaw, note});}
-        else { adj(srcRaw,-amt); store.history.push({id:Date.now(), date, amt, type:m, main:document.getElementById('mainCat').value, sub:document.getElementById('subCat').value, srcRaw, note}); }
-        saveToDB(); alert('存好囉！'); clearAmt(); showPage('home', document.querySelectorAll('.nav-item')[1]);
+    function deleteRecord(id) {
+        if(!confirm("確定要刪除這筆紀錄嗎？錢會退回去喔喵！")) return;
+        const idx = store.history.findIndex(h => h.id === id); if(idx === -1) return;
+        const h = store.history[idx];
+        const restore = (r, v) => { const n = r.split(':')[1]; if(store.accs[n]!==undefined) store.accs[n] += v; };
+        if(h.type==='exp') restore(h.srcRaw, h.amt);
+        else if(h.type==='inc') restore(h.srcRaw, -h.amt);
+        else if(h.type==='save') { restore(h.srcRaw, h.amt); store.jarBalances[h.jar]-=h.amt; }
+        else if(h.type==='transfer') { const f=h.fromRaw.split(':')[1],t=h.toRaw.split(':')[1]; store.accs[f]+=h.amt; store.accs[t]-=h.amt; }
+        store.history.splice(idx, 1); saveToDB(); renderAssetsAndHistory();
     }
-    function getBudgetDateRange() { const now = new Date(); let y = now.getFullYear(), m = now.getMonth(), d = store.budgetDay || 10; let start, end; if (now.getDate() >= d) { start = new Date(y, m, d); end = new Date(y, m + 1, d - 1, 23, 59, 59); } else { start = new Date(y, m - 1, d); end = new Date(y, m, d - 1, 23, 59, 59); } return { start, end }; }
-    function renderHome() { const range = getBudgetDateRange(); document.getElementById('period-info').innerText = `${range.start.toLocaleDateString()} ~ ${range.end.toLocaleDateString()}`; renderCalendar(); const list = document.getElementById('jarList'); list.innerHTML = ""; for(let n in store.jars){const p=store.jars[n],cb=store.jarBalances[n]||0,pct=Math.min(Math.round(cb/p.goal*100),100); list.innerHTML += `<div class="cat-card" style="padding:10px; margin-bottom:8px;"><b>💎 ${n}</b> <small>$${cb}/$${p.goal}</small><div class="prog-container"><div class="prog-fill" style="width:${pct}%; background:var(--cat-green)"></div></div></div>`;} const homeB = document.getElementById('home-budget-list'); homeB.innerHTML = ""; for(let b in store.budgets){ const spent = store.history.filter(h => h.type==='exp' && h.main===b && new Date(h.date)>=range.start && new Date(h.date)<=range.end).reduce((a,b)=>a+b.amt, 0); const pct = Math.min(Math.round(spent/store.budgets[b]*100), 100); let color = pct>=100 ? 'var(--cat-red)' : (pct>=80 ? 'var(--cat-orange)' : 'var(--cat-green)'); homeB.innerHTML += `<div style="font-size:11px; margin-top:5px;">${b} ($${spent}/$${store.budgets[b]})<div class="prog-container" style="height:8px;"><div class="prog-fill" style="width:${pct}%; background:${color}"></div></div></div>`; } }
-    function renderCalendar() { const grid = document.getElementById('calendar-days'); grid.innerHTML = ""; const now = new Date(), y = now.getFullYear(), m = now.getMonth(); document.getElementById('cal-month-title').innerText = `${y}年${m+1}月`; const first = new Date(y, m, 1).getDay(), last = new Date(y, m + 1, 0).getDate(); for(let i=0; i<first; i++) grid.innerHTML += `<div></div>`; for(let d=1; d<=last; d++){ const ds = `${y}-${(m+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`, isToday = (d === now.getDate()) ? 'today' : '', hasRec = store.history.some(h=>h.date===ds) ? 'has-record' : ''; grid.innerHTML += `<div class="cal-day ${isToday} ${hasRec}" onclick="selectDate('${ds}')">${d}</div>`; } }
-    function selectDate(ds) { document.getElementById('day-detail-area').style.display='block'; const recs = store.history.filter(h=>h.date===ds); document.getElementById('day-records').innerHTML = recs.map(r=>`<div class="record-item"><span>${r.note||r.main}</span><span style="color:${r.type==='inc'?'green':'red'}">$${r.amt}</span></div>`).join('') || '無紀錄'; }
+
+    function fullReset() { if(confirm("確定要清空所有紀錄嗎？")) { if(confirm("真的真的要清空嗎？")) { store.history=[]; store.jarBalances={}; store.subLog=[]; saveToDB(); location.reload(); } } }
     function initDaily() { renderMainCats(); const a = Object.keys(store.accs).map(k => `<option value="ACC:${k}">${k}</option>`).join(''); document.getElementById('acc-source').innerHTML = a; document.getElementById('acc-to').innerHTML = a; document.getElementById('jar-target').innerHTML = Object.keys(store.jars).map(k => `<option value="${k}">${k}</option>`).join(''); }
     function renderMainCats() { const m = document.getElementById('trans-mode').value, target = (m === 'inc' ? store.incCats : store.cats); document.getElementById('mainCat').innerHTML = Object.keys(target).map(k => `<option value="${k}">${k}</option>`).join(''); renderSubCats(); }
     function renderSubCats() { const m = document.getElementById('trans-mode').value, main = document.getElementById('mainCat').value, target = (m === 'inc' ? store.incCats : store.cats); if(target[main]) document.getElementById('subCat').innerHTML = target[main].map(s => `<option value="${s}">${s}</option>`).join(''); }
     function toggleFields() { const m = document.getElementById('trans-mode').value; document.getElementById('transfer-area').style.display = (m === 'transfer' ? 'block' : 'none'); document.getElementById('jar-area').style.display = (m === 'save' ? 'block' : 'none'); document.getElementById('inst-toggle-area').style.display = (m === 'exp' ? 'block' : 'none'); renderMainCats(); }
     function toggleInstOptions() { document.getElementById('inst-options').style.display = document.getElementById('is-inst').checked ? 'block' : 'none'; }
-    function showPage(pId, el) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById('page-' + pId).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); if(pId === 'home') renderHome(); if(pId === 'assets') renderAssetsAndHistory(); if(pId === 'settings') initSettings(); }
     function initSettings() {
         document.getElementById('budget-day-input').value = store.budgetDay; document.getElementById('budget-threshold-input').value = store.threshold;
         document.getElementById('budget-editor').value = Object.entries(store.budgets).map(([k,v])=>`${k}:${v}`).join('\n');
@@ -245,14 +348,15 @@
         const j = {}; document.getElementById('jar-editor').value.split('\n').forEach(l => { const [n,d] = l.split(':'); if(n && d) { const [g,st,ed] = d.split(','); j[n.trim()] = { goal:Number(g), start:st, end:ed }; } }); store.jars = j;
         saveToDB(); location.reload();
     }
-    function checkBackupAlert() { if(Date.now() - (store.lastBackup || 0) > 7 * 86400000) setTimeout(()=>document.getElementById('backup-modal').style.display='flex', 1000); }
-    function checkSubscriptions() { const curM = new Date().toISOString().slice(0, 7); for(let name in store.subs) { const s = store.subs[name]; if(!store.subLog.includes(`${name}_${curM}`) && new Date().getDate() >= s.day) { document.getElementById('sub-modal-desc').innerText = `入帳 ${name}？`; document.getElementById('sub-modal').style.display = 'flex'; return; } } }
-    function processSub(confirm) { /* 定期逻辑保持 */ }
-    function openManual() { document.getElementById('manual-display').innerText = store.manualContent; document.getElementById('manual-modal').style.display = 'flex'; }
-    function exportData() { store.lastBackup = Date.now(); saveToDB(); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(store)], {type: "application/json"})); a.download = `備份.json`; a.click(); }
-    function exportCSV() { store.lastBackup = Date.now(); saveToDB(); let csv = "\uFEFF日期,類型,大類,金額,備註\n"; store.history.forEach(h => { csv += `${h.date},${h.type},${h.main||''},${h.amt},${h.note||''}\n`; }); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })); a.download = `報表.csv`; a.click(); }
-    function importData(e) { const r = new FileReader(); r.onload = (ev) => { store = JSON.parse(ev.target.result); saveToDB(); location.reload(); }; r.readAsText(e.target.files[0]); }
+    function saveToDB() { localStorage.setItem(DB_KEY, JSON.stringify(store)); }
     function updateAppTitles() { document.getElementById('web-title').innerText = store.appName; }
+    function checkBackupAlert() { if(Date.now() - (store.lastBackup || 0) > 7 * 86400000) setTimeout(()=>document.getElementById('backup-modal').style.display='flex', 1000); }
+    function checkSubscriptions() { const curM = new Date().toISOString().slice(0, 7); for(let name in store.subs) { const s = store.subs[name]; if(!store.subLog.includes(`${name}_${curM}`) && new Date().getDate() >= s.day) { document.getElementById('sub-modal-desc').innerText = `入帳 ${name} $${s.amt}？`; currentSubTask = { name, ...s, logKey:`${name}_${curM}` }; document.getElementById('sub-modal').style.display='flex'; return; } } }
+    function processSub(confirm) { if(confirm){ store.accs[currentSubTask.acc] -= currentSubTask.amt; store.history.push({id:Date.now(), date:new Date().toISOString().split('T')[0], amt:currentSubTask.amt, type:'exp', main:currentSubTask.main, sub:currentSubTask.sub, srcRaw:`ACC:${currentSubTask.acc}`, note:`[定期] ${currentSubTask.name}`}); } store.subLog.push(currentSubTask.logKey); saveToDB(); document.getElementById('sub-modal').style.display='none'; checkSubscriptions(); }
+    function exportData() { store.lastBackup = Date.now(); saveToDB(); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(store)], {type: "application/json"})); a.download = `夢想備份.json`; a.click(); }
+    function importData(e) { const r = new FileReader(); r.onload = (ev) => { store = JSON.parse(ev.target.result); saveToDB(); location.reload(); }; r.readAsText(e.target.files[0]); }
+    function exportCSV() { store.lastBackup = Date.now(); saveToDB(); let csv = "\uFEFF日期,類型,大類,金額,備註\n"; store.history.forEach(h => { csv += `${h.date},${h.type},${h.main||''},${h.amt},${h.note||''}\n`; }); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })); a.download = `報表.csv`; a.click(); }
+    function openManual() { document.getElementById('manual-display').innerText = store.manualContent; document.getElementById('manual-modal').style.display = 'flex'; }
     function goToSettingsForBackup() { document.getElementById('backup-modal').style.display = 'none'; showPage('settings', document.querySelectorAll('.nav-item')[3]); }
     function closeBackupModal() { document.getElementById('backup-modal').style.display = 'none'; }
 </script>
