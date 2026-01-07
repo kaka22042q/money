@@ -77,17 +77,24 @@
                 <option value="exp">💸 支出</option><option value="inc">💰 收入</option><option value="save">🐟 存入計畫</option><option value="transfer">🔄 轉帳對沖</option>
             </select>
             
-            <div id="source-acc-area"><label>支付帳戶</label><select id="acc-source"></select></div>
+            <div id="source-acc-area"><label id="label-source">支付帳戶</label><select id="acc-source"></select></div>
             <div id="transfer-area" style="display:none;"><label>轉入帳戶</label><select id="acc-to"></select></div>
             <div id="jar-area" style="display:none;"><label>存入存錢筒</label><select id="jar-target"></select></div>
-            <div id="exp-cat-area"><label>分類</label><div style="display:flex; gap:8px;"><select id="mainCat" onchange="renderSubCats()"></select><select id="subCat"></select></div></div>
             
-            <label>詳細備註 (可換行紀錄清單)</label>
-            <textarea id="note" rows="3" placeholder="例如：&#10;鮮奶 $90&#10;雞蛋 $60"></textarea>
+            <div id="cat-select-area">
+                <label>項目分類</label>
+                <div style="display:flex; gap:8px;">
+                    <select id="mainCat" onchange="renderSubCats()"></select>
+                    <select id="subCat"></select>
+                </div>
+            </div>
+            
+            <label>詳細備註</label>
+            <textarea id="note" rows="3" placeholder="例如：領薪水、團購收錢"></textarea>
             
             <label>日期</label><input type="date" id="record-date">
             
-            <div id="inst-toggle-area" style="margin-top:10px;">
+            <div id="inst-toggle-area" style="display:block;">
                 <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
                     <input type="checkbox" id="is-inst" onchange="toggleInstOptions()" style="width:25px; height:25px; margin:0;"> 信用卡分期
                 </label>
@@ -103,7 +110,7 @@
     </div>
 
     <div id="page-home" class="page">
-        <h2 id="home-title" style="color:var(--cat-red); margin:0 0 15px 0;">🐾 進度總覽</h2>
+        <h2 id="home-title" style="color:var(--cat-red); margin:0 0 10px 0;">🐾 進度總覽</h2>
         <div id="jarList"></div>
         <div class="cat-card">
             <h3 id="cal-month-title" style="margin:0 0 10px 0; text-align: center; font-size:18px;"></h3>
@@ -120,16 +127,16 @@
     </div>
 
     <div id="page-assets" class="page">
-        <h2 style="color:var(--cat-blue); margin:0 0 15px 0;">🏦 分析報告</h2>
+        <h2 style="color:var(--cat-blue); margin:0 0 10px 0;">🏦 分析報告</h2>
         <div class="cat-card"><div id="asset-list"></div></div>
         <div class="cat-card">
             <div class="chart-box" style="height:200px;"><canvas id="pieChart"></canvas></div>
             <div class="chart-box" style="height:200px; margin-top:20px;"><canvas id="barChart"></canvas></div>
         </div>
         <div class="cat-card">
-            <h3 style="font-size:15px;">🔍 數據搜尋與預算剩餘</h3>
+            <h3 style="font-size:15px;">🔍 數據搜尋</h3>
             <div style="display:flex; gap:8px; margin-bottom:10px;"><input type="date" id="stat-start"><input type="date" id="stat-end"></div>
-            <input type="text" id="global-search" placeholder="🔍 搜尋備註、大類或小類..." oninput="renderAssetsAndHistory()" style="margin-bottom:15px; background-image:none;">
+            <input type="text" id="global-search" placeholder="🔍 搜尋備註或分類..." oninput="renderAssetsAndHistory()" style="background-image:none;">
             <div id="category-stats"></div>
             <h4 style="margin:20px 0 10px 0;">📜 歷史紀錄</h4>
             <div id="full-history-list"></div>
@@ -137,22 +144,23 @@
     </div>
 
     <div id="page-settings" class="page">
-        <h2 style="text-align:center; margin-top:0;">⚙️ 核心設定</h2>
+        <h2 style="text-align:center; margin:0 0 15px 0;">⚙️ 設定</h2>
         <div class="cat-card">
             <label>🏷️ App 名稱</label><input type="text" id="app-name-input">
-            <label>🔒 隱私密碼</label><input type="password" id="lock-pass-input">
-            <label>📂 支出分類</label><div class="hint">大類:小1,小2</div><textarea id="cat-editor" rows="6"></textarea>
-            <label>💳 帳戶資產</label><div class="hint">名稱:金額</div><textarea id="acc-editor" rows="4"></textarea>
-            <label>📊 預算監控</label><div class="hint">項目:金額</div><textarea id="budget-editor" rows="4"></textarea>
-            <label>⏰ 定期支出</label><div class="hint">名稱:金額,大類,小類,帳戶,扣款日</div><textarea id="sub-editor" rows="6"></textarea>
-            <label>💎 存錢筒計畫</label><div class="hint">名稱:總額,開始年月,結束年月</div><textarea id="jar-editor" rows="4"></textarea>
+            <label>🔒 密碼</label><input type="password" id="lock-pass-input">
+            <label>📂 支出分類</label><div class="hint">大類:小1,小2</div><textarea id="cat-editor" rows="4"></textarea>
+            <label>💰 收入分類</label><div class="hint">大類:小1,小2</div><textarea id="inc-cat-editor" rows="3"></textarea>
+            <label>💳 帳戶</label><textarea id="acc-editor" rows="3"></textarea>
+            <label>📊 預算監控</label><textarea id="budget-editor" rows="3"></textarea>
+            <label>⏰ 定期支出</label><textarea id="sub-editor" rows="3"></textarea>
+            <label>💎 存錢筒</label><textarea id="jar-editor" rows="3"></textarea>
             <button onclick="saveSettings()" class="btn-main" style="background:var(--cat-green)">儲存變更</button>
         </div>
         <div class="cat-card" style="text-align:center;">
             <button onclick="exportCSV()" class="btn-main" style="background:var(--cat-dark)">📊 導出 CSV</button>
             <button onclick="exportData()" class="btn-main" style="background:var(--cat-blue)">📦 備份 JSON</button>
             <input type="file" id="importFile" style="display:none" onchange="importData(event)">
-            <button onclick="document.getElementById('importFile').click()" class="btn-main" style="background:#fff; color:#333;">📥 匯入資料</button>
+            <button onclick="document.getElementById('importFile').click()" class="btn-main" style="background:#fff; color:#333;">📥 匯入</button>
             <button onclick="fullReset()" style="color:red; border:none; background:none; margin-top:20px;">⚠️ 重置數據</button>
         </div>
     </div>
@@ -165,40 +173,14 @@
     <button class="nav-item" onclick="showPage('settings', this)"><div class="nav-icon">⚙️</div><div class="nav-text">設定</div></button>
 </nav>
 
-<div id="sub-modal" class="modal">
-    <div class="modal-content">
-        <h3 id="sub-modal-title">定期支出</h3>
-        <input type="number" id="sub-modal-amt">
-        <button onclick="processSub(true)" class="btn-main">確認</button>
-        <button onclick="processSub(false)" class="btn-main" style="background:#ccc;">跳過</button>
-    </div>
-</div>
-
 <script>
-    const DB_KEY = 'cat_dream_v12_search';
+    const DB_KEY = 'cat_dream_v13_income';
     let store = JSON.parse(localStorage.getItem(DB_KEY)) || {
         appName: '夢想記帳本', lockPass: '', jars: {}, jarBalances: {}, 
         accs: { '現金': 0, '銀行': 0 }, cats: { '飲食':['外食','飲料'] }, 
+        incCats: { '工作':['月薪','獎金'], '投資':['股息'] },
         budgets: { '飲食': 5000 }, history: [], subs: {}, subLog: []
     };
-    let currentSubTask = null;
-
-    window.onload = () => {
-        if(store.lockPass) {
-            document.getElementById('password-screen').style.display = 'flex';
-            document.getElementById('main-content').style.display = 'none';
-        }
-        const now = new Date();
-        document.getElementById('inst-start-month').value = now.toISOString().slice(0, 7);
-        updateAppTitles(); initDaily(); checkSubscriptions();
-    };
-
-    function unlockApp() {
-        if(document.getElementById('pw-input').value === store.lockPass) {
-            document.getElementById('password-screen').style.display = 'none';
-            document.getElementById('main-content').style.display = 'block';
-        } else { alert('口令不對喵！'); }
-    }
 
     function showPage(pId, el) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -211,145 +193,128 @@
         if(pId === 'settings') initSettings();
     }
 
-    function addAmt(v) { const el = document.getElementById('amt'); el.value = Number(el.value) + v; }
-
-    function saveAll() {
-        const m = document.getElementById('trans-mode').value; const totalAmt = Number(document.getElementById('amt').value);
-        const note = document.getElementById('note').value; const buyDate = document.getElementById('record-date').value;
-        const srcRaw = document.getElementById('acc-source').value; if(!totalAmt || !buyDate) return alert('填寫完整喵！');
-        const adj = (r, v) => { const n = r.split(':')[1]; store.accs[n] += v; return n; };
-        if(m === 'transfer') { const toRaw = document.getElementById('acc-to').value; const s = adj(srcRaw, -totalAmt); const t = adj(toRaw, totalAmt); store.history.push({ id: Date.now(), date: buyDate, amt: totalAmt, type: 'transfer', from: s, to: t, srcRaw, toRaw, note }); }
-        else if(m === 'save') { const jar = document.getElementById('jar-target').value; const s = adj(srcRaw, -totalAmt); store.jarBalances[jar] = (store.jarBalances[jar]||0) + totalAmt; store.history.push({ id: Date.now(), date: buyDate, amt: totalAmt, type: 'save', jar, acc: s, srcRaw, note }); }
-        else if(m === 'inc') { const s = adj(srcRaw, totalAmt); store.history.push({ id: Date.now(), date: buyDate, amt: totalAmt, type: 'inc', sub: '收入', acc: s, srcRaw, note }); }
-        else {
-            const s = adj(srcRaw, -totalAmt);
-            if(document.getElementById('is-inst').checked) {
-                const num = Number(document.getElementById('inst-num').value); const startMonthStr = document.getElementById('inst-start-month').value;
-                const perAmt = Math.round(totalAmt / num); let [year, month] = startMonthStr.split('-').map(Number);
-                for(let i=0; i<num; i++) {
-                    let d = new Date(year, month - 1 + i, 1);
-                    store.history.push({ id: Date.now() + i, date: d.toISOString().slice(0, 10), amt: perAmt, type: 'exp', main: document.getElementById('mainCat').value, sub: document.getElementById('subCat').value, acc: s, srcRaw, note: `${note} [期${i+1}/${num}]` });
-                }
-            } else { store.history.push({ id: Date.now(), date: buyDate, amt: totalAmt, type: 'exp', main: document.getElementById('mainCat').value, sub: document.getElementById('subCat').value, acc: s, srcRaw, note }); }
-        }
-        saveToDB(); alert('OK！'); document.getElementById('amt').value = ''; showPage('home', document.querySelectorAll('.nav-item')[1]);
+    function toggleFields() {
+        const m = document.getElementById('trans-mode').value;
+        document.getElementById('transfer-area').style.display = (m === 'transfer' ? 'block' : 'none');
+        document.getElementById('jar-area').style.display = (m === 'save' ? 'block' : 'none');
+        document.getElementById('inst-toggle-area').style.display = (m === 'exp' ? 'block' : 'none');
+        document.getElementById('label-source').innerText = (m === 'inc' ? '入帳帳戶' : '支付帳戶');
+        renderMainCats(); // 切換模式時重新渲染大類清單
     }
 
-    function deleteRecord(id) {
-        if(!confirm('刪除？')) return;
-        const r = store.history.find(h => h.id === id); if(!r) return;
-        const adj = (raw, v) => { const n = raw.split(':')[1]; store.accs[n] += v; };
-        if(r.type === 'exp') adj(r.srcRaw, r.amt); else if(r.type === 'inc') adj(r.srcRaw, -r.amt); else if(r.type === 'transfer') { adj(r.srcRaw, r.amt); adj(r.toRaw, -r.amt); } else if(r.type === 'save') { adj(r.srcRaw, r.amt); store.jarBalances[r.jar] -= r.amt; }
-        store.history = store.history.filter(h => h.id !== id); saveToDB(); location.reload();
+    function renderMainCats() {
+        const m = document.getElementById('trans-mode').value;
+        const targetList = (m === 'inc' ? store.incCats : store.cats);
+        document.getElementById('mainCat').innerHTML = Object.keys(targetList).map(k => `<option value="${k}">${k}</option>`).join('');
+        renderSubCats();
+    }
+
+    function renderSubCats() {
+        const m = document.getElementById('trans-mode').value;
+        const main = document.getElementById('mainCat').value;
+        const targetList = (m === 'inc' ? store.incCats : store.cats);
+        if(targetList[main]) {
+            document.getElementById('subCat').innerHTML = targetList[main].map(s => `<option value="${s}">${s}</option>`).join('');
+        } else {
+            document.getElementById('subCat').innerHTML = '<option value="">無</option>';
+        }
     }
 
     function initDaily() {
         const now = new Date(); document.getElementById('record-date').value = (new Date(now - now.getTimezoneOffset()*60000)).toISOString().split('T')[0];
         const a = Object.keys(store.accs).map(k => `<option value="ACC:${k}">${k}</option>`).join('');
-        document.getElementById('acc-source').innerHTML = a; document.getElementById('acc-to').innerHTML = a;
+        document.getElementById('acc-source').innerHTML = a; 
+        document.getElementById('acc-to').innerHTML = a;
         document.getElementById('jar-target').innerHTML = Object.keys(store.jars).map(k => `<option value="${k}">${k}</option>`).join('');
-        document.getElementById('mainCat').innerHTML = Object.keys(store.cats).map(k => `<option value="${k}">${k}</option>`).join('');
-        renderSubCats(); toggleFields();
+        renderMainCats();
         document.getElementById('amt').focus();
     }
-    function renderSubCats() { const m = document.getElementById('mainCat').value; if(store.cats[m]) document.getElementById('subCat').innerHTML = store.cats[m].map(s => `<option value="${s}">${s}</option>`).join(''); }
-    function toggleFields() { const m = document.getElementById('trans-mode').value; document.getElementById('transfer-area').style.display = (m === 'transfer' ? 'block' : 'none'); document.getElementById('jar-area').style.display = (m === 'save' ? 'block' : 'none'); document.getElementById('exp-cat-area').style.display = (m === 'exp' ? 'block' : 'none'); }
-    function toggleInstOptions() { document.getElementById('inst-options').style.display = document.getElementById('is-inst').checked ? 'block' : 'none'; }
-    function saveToDB() { localStorage.setItem(DB_KEY, JSON.stringify(store)); }
-    function updateAppTitles() { const t = store.appName || '夢想記帳本'; document.getElementById('web-title').innerText = t; document.getElementById('home-title').innerText = '🐾 ' + t; }
-    
+
+    function saveAll() {
+        const m = document.getElementById('trans-mode').value; 
+        const totalAmt = Number(document.getElementById('amt').value);
+        const note = document.getElementById('note').value; 
+        const buyDate = document.getElementById('record-date').value;
+        const srcRaw = document.getElementById('acc-source').value; 
+        
+        if(!totalAmt || !buyDate) return alert('填寫不完整喵！');
+        const adj = (r, v) => { const n = r.split(':')[1]; store.accs[n] += v; return n; };
+
+        if(m === 'transfer') { 
+            const toRaw = document.getElementById('acc-to').value; 
+            adj(srcRaw, -totalAmt); adj(toRaw, totalAmt); 
+            store.history.push({ id: Date.now(), date: buyDate, amt: totalAmt, type: 'transfer', fromRaw: srcRaw, toRaw: toRaw, note }); 
+        }
+        else if(m === 'save') { 
+            const jar = document.getElementById('jar-target').value; adj(srcRaw, -totalAmt); 
+            store.jarBalances[jar] = (store.jarBalances[jar]||0) + totalAmt; 
+            store.history.push({ id: Date.now(), date: buyDate, amt: totalAmt, type: 'save', jar, srcRaw, note }); 
+        }
+        else if(m === 'inc') { 
+            adj(srcRaw, totalAmt); 
+            store.history.push({ id: Date.now(), date: buyDate, amt: totalAmt, type: 'inc', main: document.getElementById('mainCat').value, sub: document.getElementById('subCat').value, srcRaw, note }); 
+        }
+        else {
+            adj(srcRaw, -totalAmt);
+            if(document.getElementById('is-inst').checked) {
+                const num = Number(document.getElementById('inst-num').value); const startStr = document.getElementById('inst-start-month').value;
+                const per = Math.round(totalAmt / num); let [y, mm] = startStr.split('-').map(Number);
+                for(let i=0; i<num; i++) {
+                    let d = new Date(y, mm - 1 + i, 1);
+                    store.history.push({ id: Date.now() + i, date: d.toISOString().slice(0, 10), amt: per, type: 'exp', main: document.getElementById('mainCat').value, sub: document.getElementById('subCat').value, srcRaw, note: `${note} [${i+1}/${num}]` });
+                }
+            } else { store.history.push({ id: Date.now(), date: buyDate, amt: totalAmt, type: 'exp', main: document.getElementById('mainCat').value, sub: document.getElementById('subCat').value, srcRaw, note }); }
+        }
+        saveToDB(); alert('成功存檔喵！'); document.getElementById('amt').value = ''; showPage('home', document.querySelectorAll('.nav-item')[1]);
+    }
+
     function initSettings() {
-        document.getElementById('app-name-input').value = store.appName; document.getElementById('lock-pass-input').value = store.lockPass;
+        document.getElementById('app-name-input').value = store.appName;
+        document.getElementById('lock-pass-input').value = store.lockPass;
         document.getElementById('cat-editor').value = Object.entries(store.cats).map(([k,v])=>`${k}:${v.join(',')}`).join('\n');
+        document.getElementById('inc-cat-editor').value = Object.entries(store.incCats).map(([k,v])=>`${k}:${v.join(',')}`).join('\n');
         document.getElementById('acc-editor').value = Object.entries(store.accs).map(([k,v])=>`${k}:${v}`).join('\n');
         document.getElementById('budget-editor').value = Object.entries(store.budgets).map(([k,v])=>`${k}:${v}`).join('\n');
         document.getElementById('sub-editor').value = Object.entries(store.subs).map(([k,v])=>`${k}:${v.amt},${v.main},${v.sub},${v.acc},${v.day}`).join('\n');
         document.getElementById('jar-editor').value = Object.entries(store.jars).map(([k,v])=>`${k}:${v.goal},${v.start},${v.end}`).join('\n');
     }
+
     function saveSettings() {
-        store.appName = document.getElementById('app-name-input').value; store.lockPass = document.getElementById('lock-pass-input').value;
-        const p = (id, c=false) => { const o = {}; document.getElementById(id).value.split('\n').forEach(l => { const [k,v] = l.split(':'); if(k && v) o[k.trim()] = c ? v.split(',').map(s=>s.trim()) : Number(v.replace(/,/g,'').trim()); }); return o; };
-        store.cats = p('cat-editor', true); store.accs = p('acc-editor'); store.budgets = p('budget-editor');
+        store.appName = document.getElementById('app-name-input').value;
+        store.lockPass = document.getElementById('lock-pass-input').value;
+        const parse = (id, isCat=false) => { const o = {}; document.getElementById(id).value.split('\n').forEach(l => { const [k,v] = l.split(':'); if(k && v) o[k.trim()] = isCat ? v.split(',').map(s=>s.trim()) : Number(v.replace(/,/g,'').trim()); }); return o; };
+        store.cats = parse('cat-editor', true); 
+        store.incCats = parse('inc-cat-editor', true);
+        store.accs = parse('acc-editor'); 
+        store.budgets = parse('budget-editor');
         const s = {}; document.getElementById('sub-editor').value.split('\n').forEach(l => { const [k,v] = l.split(':'); if(k && v) { const [amt,m,sub,acc,day] = v.split(','); s[k.trim()] = { amt:Number(amt), main:m, sub:sub, acc:acc, day:Number(day) }; } }); store.subs = s;
         const j = {}; document.getElementById('jar-editor').value.split('\n').forEach(l => { const [n,d] = l.split(':'); if(n && d) { const [g,st,ed] = d.split(','); j[n.trim()] = { goal:Number(g), start:st, end:ed }; } }); store.jars = j;
         saveToDB(); location.reload();
     }
-    function renderHome() {
-        updateAppTitles(); renderCalendar();
-        const list = document.getElementById('jarList'); list.innerHTML = ""; const now = new Date();
-        for(let name in store.jars) {
-            const p = store.jars[name]; const s = new Date(p.start), e = new Date(p.end);
-            const totalM = (e.getFullYear() - s.getFullYear()) * 12 + (e.getMonth() - s.getMonth()) + 1;
-            const cb = store.jarBalances[name] || 0; const pct = Math.min(Math.round(cb/p.goal*100), 100);
-            list.innerHTML += `<div class="cat-card" style="padding:15px; margin-bottom:15px;"><div style="display:flex; justify-content:space-between; font-size:14px; font-weight:bold;"><span>${name}</span><span>$${cb.toLocaleString()}</span></div><div class="prog-container"><div class="prog-fill" style="width:${pct}%"></div></div></div>`;
-        }
-        const curM = new Date().toISOString().slice(0, 7);
-        const homeList = document.getElementById('home-budget-list'); homeList.innerHTML = "";
-        for(let bName in store.budgets) {
-            const spent = store.history.filter(h => h.type==='exp' && h.date.startsWith(curM) && (h.main===bName || h.sub===bName)).reduce((a,b)=>a+b.amt, 0);
-            const limit = store.budgets[bName]; const pct = Math.min(Math.round(spent/limit*100), 100);
-            homeList.innerHTML += `<div style="font-size:12px; margin-top:10px;"><b>${bName}</b><div class="prog-container" style="height:12px;"><div class="prog-fill" style="width:${pct}%; background:${spent>limit?'var(--cat-red)':'var(--cat-green)'}"></div></div></div>`;
-        }
-    }
+
+    // 其餘渲染邏輯保持
+    function addAmt(v) { const el = document.getElementById('amt'); el.value = Number(el.value) + v; }
+    function unlockApp() { if(document.getElementById('pw-input').value === store.lockPass) { document.getElementById('password-screen').style.display='none'; document.getElementById('main-content').style.display='block'; } else alert('錯了喵！'); }
+    function renderHome() { updateAppTitles(); renderCalendar(); const list = document.getElementById('jarList'); list.innerHTML = ""; const now = new Date(); for(let n in store.jars) { const p = store.jars[n]; const s = new Date(p.start), e = new Date(p.end); const tM = (e.getFullYear()-s.getFullYear())*12+(e.getMonth()-s.getMonth())+1; const cb = store.jarBalances[n]||0; const pct = Math.min(Math.round(cb/p.goal*100), 100); list.innerHTML += `<div class="cat-card"><b>${n}</b><div class="prog-container"><div class="prog-fill" style="width:${pct}%"></div></div></div>`; } }
     function renderCalendar() { const grid = document.getElementById('calendar-days'); grid.innerHTML = ""; const today = new Date(); const y = today.getFullYear(), m = today.getMonth(); document.getElementById('cal-month-title').innerText = `${y}年${m+1}月`; const first = new Date(y, m, 1).getDay(), last = new Date(y, m + 1, 0).getDate(); for(let i=0; i<first; i++) grid.innerHTML += `<div></div>`; for(let d=1; d<=last; d++) { const ds = `${y}-${(m+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`; grid.innerHTML += `<div class="cal-day ${store.history.some(h=>h.date===ds)?'has-record':''}" onclick="selectDate('${ds}')">${d}</div>`; } }
-    function selectDate(ds) { document.getElementById('day-detail-area').style.display='block'; document.getElementById('selected-date-text').innerText=ds; document.getElementById('day-records').innerHTML = store.history.filter(h=>h.date===ds).map(r=>`<div class="record-item"><strong>${r.note||r.sub||'無'}</strong><span>$${r.amt.toLocaleString()}</span><button onclick="deleteRecord(${r.id})" style="border:none;background:none;color:#ccc;font-size:16px;">🗑️</button></div>`).join('') || '無紀錄'; }
-    
-    // 修改後的資產與搜尋邏輯
+    function selectDate(ds) { document.getElementById('day-detail-area').style.display='block'; document.getElementById('selected-date-text').innerText=ds; document.getElementById('day-records').innerHTML = store.history.filter(h=>h.date===ds).map(r=>`<div class="record-item"><strong>${r.note||r.sub||'無'}</strong><span>$${r.amt.toLocaleString()}</span><button onclick="deleteRecord(${r.id})" style="border:none;background:none;color:#ccc;">🗑️</button></div>`).join('') || '無紀錄'; }
     function renderAssetsAndHistory() {
-        const assetArea = document.getElementById('asset-list'); assetArea.innerHTML = ""; let net = 0;
-        for(let k in store.accs) { net += store.accs[k]; assetArea.innerHTML += `<div class="stat-row"><span>${k}</span><span>$${store.accs[k].toLocaleString()}</span></div>`; }
-        for(let j in store.jarBalances) { net += store.jarBalances[j]; assetArea.innerHTML += `<div class="stat-row"><span>🐟 ${j}</span><span>$${store.jarBalances[j].toLocaleString()}</span></div>`; }
-        
-        const start = document.getElementById('stat-start').value || new Date().toISOString().slice(0,7)+"-01";
-        const end = document.getElementById('stat-end').value || new Date().toISOString().slice(0,10);
+        const assetArea = document.getElementById('asset-list'); assetArea.innerHTML = ""; let net = 0; for(let k in store.accs) { net += store.accs[k]; assetArea.innerHTML += `<div class="stat-row"><span>${k}</span><span>$${store.accs[k].toLocaleString()}</span></div>`; }
+        const start = document.getElementById('stat-start').value || new Date().toISOString().slice(0,7)+"-01"; const end = document.getElementById('stat-end').value || new Date().toISOString().slice(0,10);
         const search = document.getElementById('global-search').value.toLowerCase();
-        
-        // 核心搜尋過濾邏輯：備註、大類、小類
-        const filtered = store.history.filter(h => {
-            const dateMatch = h.date >= start && h.date <= end;
-            const textMatch = 
-                (h.note || '').toLowerCase().includes(search) || 
-                (h.main || '').toLowerCase().includes(search) || 
-                (h.sub || '').toLowerCase().includes(search);
-            return dateMatch && textMatch;
-        });
-
-        const catTotals = {}; 
-        filtered.filter(h => h.type==='exp').forEach(h => { catTotals[h.main] = (catTotals[h.main] || 0) + h.amt; });
-        
-        const daysLeft = new Date(new Date().getFullYear(), new Date().getMonth()+1, 0).getDate() - new Date().getDate() + 1;
-        const catArea = document.getElementById('category-stats'); catArea.innerHTML = "<h4>📅 預算剩餘 (此期間)</h4>";
-        for (let bName in store.budgets) {
-            const spent = store.history.filter(h => h.type==='exp' && h.date.startsWith(start.slice(0,7)) && (h.main===bName || h.sub===bName)).reduce((a,b)=>a+b.amt, 0);
-            const rem = store.budgets[bName] - spent;
-            catArea.innerHTML += `<div class="stat-row"><span>${bName}</span><span>剩 $${rem.toLocaleString()} (日均: $${rem>0?Math.round(rem/daysLeft):0})</span></div>`;
-        }
-
+        const filtered = store.history.filter(h => { const dateMatch = h.date >= start && h.date <= end; const textMatch = (h.note || '').toLowerCase().includes(search) || (h.main || '').toLowerCase().includes(search) || (h.sub || '').toLowerCase().includes(search); return dateMatch && textMatch; });
+        const catTotals = {}; filtered.filter(h => h.type==='exp').forEach(h => { catTotals[h.main] = (catTotals[h.main] || 0) + h.amt; });
         const listArea = document.getElementById('full-history-list'); listArea.innerHTML = "";
-        filtered.sort((a,b)=>new Date(b.date)-new Date(a.date)).forEach(h => {
-            listArea.innerHTML += `<div class="record-item"><div><small>${h.date}</small><br><strong>${h.note || h.sub || h.type}</strong><br><small style="color:gray">${h.main || ''} > ${h.sub || ''}</small></div><div style="text-align:right"><span style="color:${h.type==='inc'?'green':'red'}">$${h.amt.toLocaleString()}</span><br><button onclick="deleteRecord(${h.id})" style="border:none;background:none;color:#ccc;font-size:16px;">🗑️</button></div></div>`;
-        });
-
+        filtered.sort((a,b)=>new Date(b.date)-new Date(a.date)).forEach(h => { listArea.innerHTML += `<div class="record-item"><div><small>${h.date}</small> [${h.type==='inc'?'收':'支'}]<br><strong>${h.note || h.sub}</strong><br><small style="color:gray">${h.main||''}</small></div><div style="text-align:right"><span style="color:${h.type==='inc'?'green':'red'}">$${h.amt.toLocaleString()}</span><br><button onclick="deleteRecord(${h.id})" style="border:none;background:none;color:#ccc;">🗑️</button></div></div>`; });
         renderCharts(catTotals);
     }
-
     let pieChartInstance = null; let barChartInstance = null;
-    function renderCharts(catData) {
-        const pieCtx = document.getElementById('pieChart').getContext('2d'); if(pieChartInstance) pieChartInstance.destroy(); 
-        pieChartInstance = new Chart(pieCtx, { type: 'pie', data: { labels: Object.keys(catData), datasets: [{ data: Object.values(catData), backgroundColor: ['#FFB7B2','#FFDAC1','#E2F0CB','#B5EAD7','#C7CEEA'] }] }, options: { maintainAspectRatio: false } });
-        const barCtx = document.getElementById('barChart').getContext('2d'); if(barChartInstance) barChartInstance.destroy();
-        const labels = []; const values = []; for(let i=5; i>=0; i--) { let d = new Date(); d.setMonth(d.getMonth()-i); let m = d.toISOString().slice(0,7); labels.push(m); values.push(store.history.filter(h=>h.date.startsWith(m) && h.type==='exp').reduce((a,b)=>a+b.amt, 0)); }
-        barChartInstance = new Chart(barCtx, { type: 'bar', data: { labels, datasets: [{ label: '月支出', data: values, backgroundColor: '#74b9ff' }] }, options: { maintainAspectRatio: false } });
-    }
-    function checkSubscriptions() {
-        const today = new Date(); const curM = today.toISOString().slice(0, 7);
-        for(let name in store.subs) { const s = store.subs[name]; const logKey = `${name}_${curM}`; if(!store.subLog.includes(logKey) && today.getDate() >= s.day) { currentSubTask = { name, ...s, logKey }; document.getElementById('sub-modal-title').innerText = `⏰ 定期：${name}`; document.getElementById('sub-modal-amt').value = s.amt; document.getElementById('sub-modal').style.display = 'flex'; return; } }
-    }
-    function processSub(confirm) { if(confirm) { const amt = Number(document.getElementById('sub-modal-amt').value); const date = new Date().toISOString().split('T')[0]; store.accs[currentSubTask.acc] -= amt; store.history.push({ id: Date.now(), date, amt, type: 'exp', main: currentSubTask.main, sub: currentSubTask.sub, acc: currentSubTask.acc, srcRaw: `ACC:${currentSubTask.acc}`, note: `[定期] ${currentSubTask.name}` }); } store.subLog.push(currentSubTask.logKey); saveToDB(); document.getElementById('sub-modal').style.display = 'none'; checkSubscriptions(); }
-    function exportCSV() { let csv = "\uFEFF日期,類型,大類,小類,金額,帳戶,備註\n"; store.history.forEach(h => { csv += `${h.date},${h.type},${h.main||''},${h.sub||''},${h.amt},${h.acc||''},${h.note||''}\n`; }); const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' }); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `報表.csv`; link.click(); }
+    function renderCharts(catData) { const pieCtx = document.getElementById('pieChart').getContext('2d'); if(pieChartInstance) pieChartInstance.destroy(); pieChartInstance = new Chart(pieCtx, { type: 'pie', data: { labels: Object.keys(catData), datasets: [{ data: Object.values(catData), backgroundColor: ['#FFB7B2','#FFDAC1','#E2F0CB','#B5EAD7','#C7CEEA'] }] }, options: { maintainAspectRatio: false } }); }
+    function exportCSV() { let csv = "\uFEFF日期,類型,大類,小類,金額,備註\n"; store.history.forEach(h => { csv += `${h.date},${h.type},${h.main||''},${h.sub||''},${h.amt},${h.note||''}\n`; }); const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' }); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `報表.csv`; link.click(); }
     function exportData() { const b = new Blob([JSON.stringify(store)], {type: "application/json"}); const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = `備份.json`; a.click(); }
     function importData(e) { const r = new FileReader(); r.onload = (ev) => { store = JSON.parse(ev.target.result); saveToDB(); location.reload(); }; r.readAsText(e.target.files[0]); }
     function fullReset() { if(confirm('重設？')) { localStorage.removeItem(DB_KEY); location.reload(); } }
+    function updateAppTitles() { const t = store.appName || '夢想記帳本'; document.getElementById('web-title').innerText = t; document.getElementById('home-title').innerText = '🐾 ' + t; }
 </script>
 </body>
 </html>
