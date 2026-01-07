@@ -35,6 +35,7 @@
         .page.active { display: block; }
         .stat-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #ddd; font-size: 14px; }
         .inst-badge { background: var(--cat-red); color: white; padding: 2px 5px; border-radius: 4px; font-size: 9px; margin-left: 5px; }
+        .chart-box { margin: 20px 0; height: 250px; }
     </style>
 </head>
 <body>
@@ -52,23 +53,30 @@
             </div>
         </div>
         <div class="cat-card">
-            <h3 style="margin:0 0 10px 0; font-size:16px;">📊 本月預算</h3>
+            <h3 style="margin:0 0 10px 0; font-size:16px;">📊 本月預算狀況</h3>
             <div id="home-budget-list"></div>
         </div>
     </div>
 
     <div id="page-assets" class="page">
-        <h2 style="color:var(--cat-blue); margin:0 0 10px 0;">🏦 資產與分析</h2>
+        <h2 style="color:var(--cat-blue); margin:0 0 10px 0;">🏦 資產與分析報告</h2>
         <div class="cat-card">
             <h3 style="margin:0 0 10px 0; font-size:16px;">💳 餘額總覽</h3>
             <div id="asset-list"></div>
         </div>
+        
         <div class="cat-card">
-            <h3 style="margin:0 0 10px 0; font-size:16px;">🔍 期間搜尋</h3>
+            <h3 style="margin:0 0 10px 0; font-size:16px;">📈 消費分析圖表</h3>
+            <div class="chart-box"><canvas id="pieChart"></canvas></div>
+            <div class="chart-box"><canvas id="barChart"></canvas></div>
+        </div>
+
+        <div class="cat-card">
+            <h3 style="margin:0 0 10px 0; font-size:16px;">🔍 詳細清單與搜尋</h3>
             <div style="display:flex; gap:5px; margin-bottom:10px;"><input type="date" id="stat-start"><input type="date" id="stat-end"></div>
-            <input type="text" id="global-search" placeholder="🔍 搜尋關鍵字比價..." oninput="renderAssetsAndHistory()">
+            <input type="text" id="global-search" placeholder="🔍 關鍵字..." oninput="renderAssetsAndHistory()">
             <div id="category-stats" style="margin-top:15px;"></div>
-            <h4 style="margin: 15px 0 5px 0;">📜 歷史紀錄</h4>
+            <h4 style="margin: 20px 0 5px 0;">📜 歷史紀錄</h4>
             <div id="full-history-list"></div>
         </div>
     </div>
@@ -86,7 +94,7 @@
             <div id="exp-cat-area"><label>分類</label><div style="display:flex; gap:5px;"><select id="mainCat" onchange="renderSubCats()"></select><select id="subCat"></select></div></div>
             <div id="inc-cat-area" style="display:none;"><label>收入項目</label><select id="inc-cat"></select></div>
             <label>金額</label><input type="number" id="amt" placeholder="0" inputmode="decimal">
-            <label>備註 (搜尋關鍵字)</label><input type="text" id="note" placeholder="例如：拿鐵">
+            <label>備註 (可輸入團購對象)</label><input type="text" id="note" placeholder="例如：拿鐵">
             <label>日期</label><input type="date" id="record-date">
             <div id="inst-toggle-area"><label style="display:inline;"><input type="checkbox" id="is-inst" onchange="toggleInstOptions()"> 信用卡分期</label><div id="inst-options" style="display:none; background:#f9f9f9; padding:10px; border-radius:10px; margin-top:5px;"><label>分幾期？</label><input type="number" id="inst-num" value="3" min="2"></div></div>
             <button onclick="saveAll()" class="btn-main">確認存檔</button>
@@ -117,7 +125,7 @@
         <span class="nav-icon">📅</span><div class="nav-text">首頁</div>
     </button>
     <button class="nav-item" onclick="showPage('assets', this)">
-        <span class="nav-icon">🏦</span><div class="nav-text">資產</div>
+        <span class="nav-icon">🏦</span><div class="nav-text">分析</div>
     </button>
     <button class="nav-item" onclick="showPage('daily', this)">
         <span class="nav-icon">✍️</span><div class="nav-text">記帳</div>
@@ -128,18 +136,12 @@
 </nav>
 
 <script>
-    const DB_KEY = 'cat_dream_final_bigicon_v1';
+    const DB_KEY = 'cat_dream_final_v3';
     let store = JSON.parse(localStorage.getItem(DB_KEY)) || {
-        appName: '夢想記帳本', 
-        jars: { '買電腦': { goal: 60000, start: '2026-01', end: '2026-12' } },
-        jarBalances: { '買電腦': 0 }, 
-        accs: { '現金': 0, '銀行帳戶': 0, '信用卡': 0 },
-        cats: { '飲食':['外食','飲料'], '交通':['加油','捷運'] }, 
-        incCats: ['薪水'], 
-        budgets: { '飲食': 10000 }, 
-        history: []
+        appName: '夢想記帳本', jars: {}, jarBalances: {}, accs: { '現金': 0 }, cats: { '飲食':['外食'] }, incCats: ['薪水'], budgets: {}, history: []
     };
-    let selectedDate = new Date();
+    let pieChartInstance = null;
+    let barChartInstance = null;
 
     function saveToDB() { localStorage.setItem(DB_KEY, JSON.stringify(store)); }
     function updateAppTitles() { const t = store.appName || '夢想記帳本'; document.getElementById('web-title').innerText = t; document.getElementById('home-title').innerText = '🐾 ' + t; }
@@ -156,18 +158,8 @@
             document.getElementById('stat-end').value = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
             renderAssetsAndHistory();
         }
-        if(pId === 'daily') initDaily(); // 每次點擊記帳頁，都會跑 initDaily
+        if(pId === 'daily') initDaily();
         if(pId === 'settings') initSettings();
-    }
-
-    function renderBudgets() {
-        const curM = `${selectedDate.getFullYear()}-${(selectedDate.getMonth()+1).toString().padStart(2,'0')}`;
-        const homeList = document.getElementById('home-budget-list'); homeList.innerHTML = "";
-        for(let cat in store.budgets) {
-            const spent = store.history.filter(h => (h.main === cat || (cat.includes('-') && h.main === cat.split('-')[0] && h.sub === cat.split('-')[1])) && h.date.startsWith(curM) && h.type==='exp').reduce((a,b)=>a+b.amt, 0);
-            const limit = store.budgets[cat]; const pct = Math.min(Math.round(spent/limit*100), 100);
-            homeList.innerHTML += `<div style="font-size:11px; margin-bottom:5px;"><span>${cat} ($${spent.toLocaleString()}/$${limit.toLocaleString()})</span><div class="prog-container" style="height:8px;"><div class="prog-fill" style="width:${pct}%; background:${spent>limit?'red':'var(--cat-green)'}"></div></div></div>`;
-        }
     }
 
     function renderAssetsAndHistory() {
@@ -175,107 +167,145 @@
         for(let k in store.accs) { net += store.accs[k]; assetArea.innerHTML += `<div class="stat-row"><span>${k}</span><span style="color:${store.accs[k]<0?'red':'black'}">$${store.accs[k].toLocaleString()}</span></div>`; }
         for(let j in store.jarBalances) { net += store.jarBalances[j]; assetArea.innerHTML += `<div class="stat-row"><span>🐟 ${j}</span><span>$${store.jarBalances[j].toLocaleString()}</span></div>`; }
         assetArea.innerHTML += `<div class="stat-row" style="border-top:2px solid var(--cat-dark); font-weight:bold;"><span>資產淨值</span><span>$${net.toLocaleString()}</span></div>`;
+        
         const start = document.getElementById('stat-start').value, end = document.getElementById('stat-end').value, search = document.getElementById('global-search').value.toLowerCase();
         const filtered = store.history.filter(h => h.date >= start && h.date <= end && (h.note || '').toLowerCase().includes(search));
-        const catArea = document.getElementById('category-stats'); const catTotals = {};
+        
+        const catTotals = {};
         filtered.filter(h => h.type === 'exp').forEach(h => { catTotals[h.main] = (catTotals[h.main] || 0) + h.amt; });
-        catArea.innerHTML = "<h4>期間總計</h4>";
-        Object.entries(catTotals).sort((a,b)=>b[1]-a[1]).forEach(([c,a]) => { catArea.innerHTML += `<div class="stat-row"><span>${c}</span><span style="color:var(--cat-red); font-weight:bold;">$${a.toLocaleString()}</span></div>`; });
+        
+        const catArea = document.getElementById('category-stats');
+        catArea.innerHTML = "<h4>期間預算對照</h4>";
+        Object.entries(catTotals).sort((a,b)=>b[1]-a[1]).forEach(([c,a]) => {
+            const limit = store.budgets[c] || 0;
+            const diff = limit - a;
+            catArea.innerHTML += `<div class="stat-row">
+                <span>${c}</span>
+                <span>$${a.toLocaleString()} ${limit ? `<small style="color:${diff<0?'red':'green'}"> (餘:${diff})</small>` : ''}</span>
+            </div>`;
+        });
+
         const listArea = document.getElementById('full-history-list'); listArea.innerHTML = "";
         filtered.sort((a,b)=>new Date(b.date)-new Date(a.date)).forEach(h => {
-            listArea.innerHTML += `<div class="record-item"><div><small>${h.date}</small> ${h.isInst?'<span class="inst-badge">分期</span>':''}<br><strong>${h.note || h.sub || h.type}</strong><br><small style="color:gray">${h.acc || h.jar || h.from+'→'+h.to}</small></div><div style="text-align:right"><span style="color:${h.type==='inc'?'green':'red'}">$${h.amt.toLocaleString()}</span><br><button onclick="deleteRecord(${h.id}, false)" style="border:none; background:none; color:#ccc;">🗑️</button></div></div>`;
+            listArea.innerHTML += `<div class="record-item"><div><small>${h.date}</small><br><strong>${h.note || h.sub || h.type}</strong><br><small style="color:gray">${h.acc || h.from+'→'+h.to || h.jar}</small></div><div style="text-align:right"><span style="color:${h.type==='inc'?'green':'red'}">$${h.amt.toLocaleString()}</span><br><button onclick="deleteRecord(${h.id})" style="border:none; background:none; color:#ccc;">🗑️</button></div></div>`;
+        });
+
+        renderCharts(catTotals);
+    }
+
+    function renderCharts(catData) {
+        // Pie Chart
+        const pieCtx = document.getElementById('pieChart').getContext('2d');
+        if(pieChartInstance) pieChartInstance.destroy();
+        pieChartInstance = new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(catData),
+                datasets: [{ data: Object.values(catData), backgroundColor: ['#FFB7B2', '#FFDAC1', '#E2F0CB', '#B5EAD7', '#C7CEEA', '#F6A6FF'] }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: '當月支出比例' } } }
+        });
+
+        // Bar Chart (Last 6 Months)
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        if(barChartInstance) barChartInstance.destroy();
+        const last6 = []; for(let i=5; i>=0; i--) { 
+            let d = new Date(); d.setMonth(d.getMonth()-i); 
+            last6.push(d.toISOString().slice(0,7)); 
+        }
+        const barData = last6.map(m => store.history.filter(h => h.date.startsWith(m) && h.type==='exp').reduce((a,b)=>a+b.amt, 0));
+        barChartInstance = new Chart(barCtx, {
+            type: 'bar',
+            data: { labels: last6, datasets: [{ label: '總支出', data: barData, backgroundColor: '#74b9ff' }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: '半年支出趨勢' } } }
         });
     }
 
-    function renderHome() { updateAppTitles(); renderJars(); renderCalendar(); renderBudgets(); }
+    function renderHome() { 
+        updateAppTitles(); 
+        renderJars(); 
+        renderCalendar(); 
+        // 首頁預算表
+        const curM = new Date().toISOString().slice(0,7);
+        const homeList = document.getElementById('home-budget-list'); homeList.innerHTML = "";
+        for(let cat in store.budgets) {
+            const spent = store.history.filter(h => h.main === cat && h.date.startsWith(curM) && h.type==='exp').reduce((a,b)=>a+b.amt, 0);
+            const limit = store.budgets[cat]; const pct = Math.min(Math.round(spent/limit*100), 100);
+            homeList.innerHTML += `<div style="font-size:11px; margin-bottom:5px;"><span>${cat} ($${spent}/$${limit})</span><div class="prog-container" style="height:8px;"><div class="prog-fill" style="width:${pct}%; background:${spent>limit?'red':'var(--cat-green)'}"></div></div></div>`;
+        }
+    }
 
     function renderJars() {
-        const list = document.getElementById('jarList');
-        list.innerHTML = "";
-        const now = new Date();
-        const curY = now.getFullYear();
-        const curM = now.getMonth();
-
+        const list = document.getElementById('jarList'); list.innerHTML = ""; const now = new Date();
         for(let name in store.jars) {
-            const p = store.jars[name];
-            const s = new Date(p.start);
-            const e = new Date(p.end);
-
+            const p = store.jars[name]; const s = new Date(p.start), e = new Date(p.end);
             const totalMonths = (e.getFullYear() - s.getFullYear()) * 12 + (e.getMonth() - s.getMonth()) + 1;
-            const passedMonths = (curY - s.getFullYear()) * 12 + (curM - s.getMonth()) + 1;
-            
+            const passedMonths = (now.getFullYear() - s.getFullYear()) * 12 + (now.getMonth() - s.getMonth()) + 1;
             const safePassed = Math.max(0, Math.min(passedMonths, totalMonths));
-            const remainingMonths = Math.max(0, totalMonths - safePassed + 1); 
-
-            const cb = store.jarBalances[name] || 0;
-            const pct = Math.min(Math.round(cb / p.goal * 100), 100);
+            const cb = store.jarBalances[name] || 0; const pct = Math.min(Math.round(cb/p.goal*100), 100);
             const tg = Math.round((p.goal / totalMonths) * safePassed);
-            const g = tg - cb;
-
-            list.innerHTML += `<div class="cat-card" style="padding:10px;">
-                <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:bold;">
-                    <span>${name}</span>
-                    <span>$${cb.toLocaleString()} / $${p.goal.toLocaleString()}</span>
-                </div>
-                <div class="prog-container">
-                    <div class="prog-text">${pct}% (剩 ${remainingMonths} 月)</div>
-                    <div class="prog-fill" style="width:${pct}%"></div>
-                </div>
-                <div style="font-size:10px; color:#888; display:flex; justify-content:space-between;">
-                    <span>📍 本月應存: $${tg.toLocaleString()}</span>
-                    <span style="color:${g>0?'var(--cat-red)':'var(--cat-green)'}; font-weight:bold;">
-                        ${g>0?'缺 '+g.toLocaleString():'超前 ✨'}
-                    </span>
-                </div>
-            </div>`;
+            list.innerHTML += `<div class="cat-card" style="padding:10px;"><div style="display:flex; justify-content:space-between; font-size:12px; font-weight:bold;"><span>${name}</span><span>$${cb.toLocaleString()} / $${p.goal.toLocaleString()}</span></div><div class="prog-container"><div class="prog-text">${pct}% (剩 ${Math.max(0, totalMonths-safePassed)} 月)</div><div class="prog-fill" style="width:${pct}%"></div></div><div style="font-size:10px; color:#888; display:flex; justify-content:space-between;"><span>📍 應存: $${tg.toLocaleString()}</span><span style="color:${(tg-cb)>0?'var(--cat-red)':'var(--cat-green)'}; font-weight:bold;">${(tg-cb)>0?'缺 '+(tg-cb).toLocaleString():'超前'}</span></div></div>`;
         }
     }
 
     function renderCalendar() {
         const grid = document.getElementById('calendar-days'); grid.innerHTML = "";
-        const y = selectedDate.getFullYear(), m = selectedDate.getMonth(); document.getElementById('cal-month-title').innerText = `${y}年${m+1}月`;
+        const y = new Date().getFullYear(), m = new Date().getMonth(); document.getElementById('cal-month-title').innerText = `${y}年${m+1}月`;
         const firstDay = new Date(y, m, 1).getDay(), lastDate = new Date(y, m + 1, 0).getDate();
         for(let i=0; i<firstDay; i++) grid.innerHTML += `<div></div>`;
         for(let d=1; d<=lastDate; d++) { const ds = `${y}-${(m+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`; grid.innerHTML += `<div class="cal-day ${store.history.some(h => h.date === ds)?'has-record':''}" onclick="selectDate('${ds}')">${d}</div>`; }
     }
+
     function selectDate(ds) {
         document.getElementById('day-detail-area').style.display = 'block'; document.getElementById('selected-date-text').innerText = ds;
-        document.getElementById('day-records').innerHTML = store.history.filter(h => h.date === ds).map(r => `<div class="record-item"><div><strong>${r.note || r.sub || r.type}</strong><br><small style="color:gray">${r.acc || r.jar || r.from+'→'+r.to}</small></div><div style="text-align:right"><span style="color:${r.type==='inc'?'green':'red'}">$${r.amt.toLocaleString()}</span><button onclick="deleteRecord(${r.id}, true)" style="border:none; background:none; color:#ccc; margin-left:10px;">🗑️</button></div></div>`).join('') || '<p style="text-align:center; font-size:12px; color:gray;">無紀錄</p>';
+        document.getElementById('day-records').innerHTML = store.history.filter(h => h.date === ds).map(r => `<div class="record-item"><strong>${r.note || r.sub}</strong><span>$${r.amt}</span></div>`).join('') || '無紀錄';
     }
+
     function saveAll() {
         const m = document.getElementById('trans-mode').value; const amt = Number(document.getElementById('amt').value);
         const note = document.getElementById('note').value; const date = document.getElementById('record-date').value;
-        const src = document.getElementById('acc-source').value; if(!amt || !date) return alert('請填寫完整喵！');
+        const srcRaw = document.getElementById('acc-source').value; if(!amt || !date) return alert('未填完喵！');
         const adj = (r, v) => { const [t, n] = r.split(':'); if(t === 'JAR') store.jarBalances[n] += v; else store.accs[n] += v; return n; };
-        if(m === 'transfer') { const to = document.getElementById('acc-to').value; const s = adj(src, -amt); const t = adj(to, amt); store.history.push({ id: Date.now(), date, amt, type: 'transfer', from: s, to: t, note: note || '轉帳對沖' }); }
-        else if(m === 'save') { const jar = document.getElementById('jar-target').value; const s = adj(src, -amt); store.jarBalances[jar] += amt; store.history.push({ id: Date.now(), date, amt, type: 'save', jar, acc: s, note }); }
-        else if(m === 'inc') { const s = adj(src, amt); store.history.push({ id: Date.now(), date, amt, type: 'inc', sub: '收入', acc: s, note }); }
+
+        if(m === 'transfer') { const toRaw = document.getElementById('acc-to').value; const s = adj(srcRaw, -amt); const t = adj(toRaw, amt); store.history.push({ id: Date.now(), date, amt, type: 'transfer', from: s, to: t, srcRaw, toRaw, note }); }
+        else if(m === 'save') { const jar = document.getElementById('jar-target').value; const s = adj(srcRaw, -amt); store.jarBalances[jar]+=amt; store.history.push({ id: Date.now(), date, amt, type: 'save', jar, acc: s, srcRaw, note }); }
+        else if(m === 'inc') { const s = adj(srcRaw, amt); store.history.push({ id: Date.now(), date, amt, type: 'inc', sub: '收入', acc: s, srcRaw, note }); }
         else {
-            const s = adj(src, -amt);
+            const s = adj(srcRaw, -amt);
             if(document.getElementById('is-inst').checked) {
                 const num = Number(document.getElementById('inst-num').value); const p = Math.round(amt/num);
-                for(let i=0; i<num; i++) { let d = new Date(date); d.setMonth(d.getMonth()+i); store.history.push({ id: Date.now()+i, date: d.toISOString().split('T')[0], amt: p, type: 'exp', main: document.getElementById('mainCat').value, sub: document.getElementById('subCat').value, acc: s, note: `${note} (分期 ${i+1}/${num})`, isInst: true }); store.accs[s] -= (i===0?0:p); }
-            } else { store.history.push({ id: Date.now(), date, amt, type: 'exp', main: document.getElementById('mainCat').value, sub: document.getElementById('subCat').value, acc: s, note }); }
+                for(let i=0; i<num; i++) { 
+                    let d = new Date(date); d.setMonth(d.getMonth()+i); 
+                    store.history.push({ id: Date.now()+i, date: d.toISOString().slice(0,10), amt: p, type: 'exp', main: document.getElementById('mainCat').value, sub: document.getElementById('subCat').value, acc: s, srcRaw, note: `${note}(${i+1}/${num})`, isInst: true }); 
+                    if(i>0) store.accs[s] -= p;
+                }
+            } else { store.history.push({ id: Date.now(), date, amt, type: 'exp', main: document.getElementById('mainCat').value, sub: document.getElementById('subCat').value, acc: s, srcRaw, note }); }
         }
-        saveToDB(); alert('紀錄成功喵！'); showPage('home', document.querySelectorAll('.nav-item')[0]);
+        saveToDB(); alert('OK喵！'); showPage('home', document.querySelectorAll('.nav-item')[0]);
     }
-    function deleteRecord(id, home) { if(!confirm('要刪除嗎？')) return; const r = store.history.find(h=>h.id===id); if(r.type==='save'){ store.jarBalances[r.jar]-=r.amt; store.accs[r.acc]+=r.amt; } else if(r.acc){ store.accs[r.acc]+=(r.type==='exp'?r.amt:-r.amt); } store.history=store.history.filter(h=>h.id!==id); saveToDB(); location.reload(); }
 
-    // 修正日期自動偵測邏輯
+    function deleteRecord(id) {
+        if(!confirm('確定刪除並還原金額？')) return;
+        const r = store.history.find(h => h.id === id); if(!r) return;
+        const adj = (raw, v) => { const [t, n] = raw.split(':'); if(t === 'JAR') store.jarBalances[n] += v; else store.accs[n] += v; };
+        if(r.type === 'exp') adj(r.srcRaw, r.amt);
+        else if(r.type === 'inc') adj(r.srcRaw, -r.amt);
+        else if(r.type === 'save') { adj(r.srcRaw, r.amt); store.jarBalances[r.jar] -= r.amt; }
+        else if(r.type === 'transfer') { adj(r.srcRaw, r.amt); adj(r.toRaw, -r.amt); }
+        store.history = store.history.filter(h => h.id !== id);
+        saveToDB(); location.reload();
+    }
+
     function initDaily() {
-        // 取得本地時間（修正時區偏移問題）
-        const now = new Date();
-        const offset = now.getTimezoneOffset() * 60000;
-        const localISOTime = (new Date(now - offset)).toISOString().split('T')[0];
-        document.getElementById('record-date').value = localISOTime;
-
-        const j = Object.keys(store.jars).map(n => `<option value="JAR:${n}">🐟 ${n}</option>`).join(''), a = Object.keys(store.accs).map(k => `<option value="ACC:${k}">${k}</option>`).join('');
+        const now = new Date(); const offset = now.getTimezoneOffset() * 60000;
+        document.getElementById('record-date').value = (new Date(now - offset)).toISOString().split('T')[0];
+        const j = Object.keys(store.jars).map(n => `<option value="JAR:${n}">🐟 ${n}</option>`).join('');
+        const a = Object.keys(store.accs).map(k => `<option value="ACC:${k}">${k}</option>`).join('');
         document.getElementById('acc-source').innerHTML = a + j; document.getElementById('acc-to').innerHTML = a + j;
         document.getElementById('jar-target').innerHTML = Object.keys(store.jars).map(k => `<option value="${k}">${k}</option>`).join('');
         document.getElementById('mainCat').innerHTML = Object.keys(store.cats).map(k => `<option value="${k}">${k}</option>`).join('');
         renderSubCats(); toggleFields();
     }
-
     function renderSubCats() { const m = document.getElementById('mainCat').value; if(store.cats[m]) document.getElementById('subCat').innerHTML = store.cats[m].map(s => `<option value="${s}">${s}</option>`).join(''); }
     function initSettings() {
         document.getElementById('app-name-input').value = store.appName;
@@ -287,15 +317,15 @@
     function saveSettings() {
         store.appName = document.getElementById('app-name-input').value;
         const j = {}; document.getElementById('jar-editor').value.split('\n').forEach(l => { const [n,d] = l.split(':'); if(n && d) { const [g,s,e] = d.split(','); j[n.trim()] = { goal: Number(g), start: s.trim(), end: e.trim() }; } }); store.jars = j;
-        const p = (id, c=false) => { const o = {}; document.getElementById(id).value.split('\n').forEach(l => { const [k,v] = l.split(':'); if(k && v) o[k.trim()] = c ? v.split(',').map(s=>s.trim()) : Number(v.replace(/,/g,'')); }); return o; };
+        const p = (id, c=false) => { const o = {}; document.getElementById(id).value.split('\n').forEach(l => { const [k,v] = l.split(':'); if(k && v) o[k.trim()] = c ? v.split(',').map(s=>s.trim()) : Number(v.replace(/,/g,'').trim()); }); return o; };
         store.cats = p('cat-editor', true); store.accs = p('acc-editor'); store.budgets = p('budget-editor');
         saveToDB(); location.reload();
     }
     function toggleFields() { const m = document.getElementById('trans-mode').value; document.getElementById('transfer-area').style.display = (m === 'transfer') ? 'block' : 'none'; document.getElementById('jar-area').style.display = (m === 'save') ? 'block' : 'none'; document.getElementById('exp-cat-area').style.display = (m === 'exp') ? 'block' : 'none'; document.getElementById('inc-cat-area').style.display = (m === 'inc') ? 'block' : 'none'; document.getElementById('inst-toggle-area').style.display = (m === 'exp') ? 'block' : 'none'; }
     function toggleInstOptions() { document.getElementById('inst-options').style.display = document.getElementById('is-inst').checked ? 'block' : 'none'; }
-    function exportData() { const b = new Blob([JSON.stringify(store)], {type: "application/json"}); const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = `${store.appName}_備份.json`; a.click(); }
+    function exportData() { const b = new Blob([JSON.stringify(store)], {type: "application/json"}); const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = `備份.json`; a.click(); }
     function importData(e) { const r = new FileReader(); r.onload = (ev) => { store = JSON.parse(ev.target.result); saveToDB(); location.reload(); }; r.readAsText(e.target.files[0]); }
-    function fullReset() { if(confirm('確定要永久清空所有資料嗎？這無法復原喵！')) { localStorage.removeItem(DB_KEY); location.reload(); } }
+    function fullReset() { if(confirm('清空？')) { localStorage.removeItem(DB_KEY); location.reload(); } }
     window.onload = () => { updateAppTitles(); renderHome(); };
 </script>
 </body>
