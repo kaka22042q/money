@@ -47,6 +47,7 @@
         .record-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed var(--cat-gray); }
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; backdrop-filter: blur(4px); }
         .modal-content { background: white; width: 88%; max-height: 85vh; overflow-y: auto; padding: 20px; border-radius: 25px; border: 3px solid var(--cat-dark); text-align: center; }
+        .jar-info { font-size: 12px; line-height: 1.6; color: #555; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -115,7 +116,7 @@
             <label>📂 支出分類</label><div class="hint">格式：大類:小1,小2</div><textarea id="cat-editor" rows="2"></textarea>
             <label>💰 收入分類</label><textarea id="inc-cat-editor" rows="2"></textarea>
             <label>💳 帳戶資產</label><div class="hint">格式：帳戶:初始金額</div><textarea id="acc-editor" rows="2"></textarea>
-            <label>💎 存錢筒計畫</label><div class="hint">格式：名稱:總額,開始月,結束月</div><textarea id="jar-editor" rows="2"></textarea>
+            <label>💎 存錢筒計畫</label><div class="hint">格式：名稱:總額,開始月,結束月 (例: 買車:100000,2025-01,2026-01)</div><textarea id="jar-editor" rows="2"></textarea>
             <label>📘 說明書編輯</label><textarea id="manual-editor" rows="3"></textarea>
             <button onclick="saveSettings()" class="btn-main" style="background:var(--cat-green)">儲存變更</button>
         </div>
@@ -214,10 +215,46 @@
         const range = getBudgetDateRange();
         document.getElementById('period-info').innerText = `目前帳期：${range.start.toLocaleDateString()} ~ ${range.end.toLocaleDateString()}`;
         const jl = document.getElementById('jarList'); jl.innerHTML = "";
+        
+        const now = new Date();
         for(let n in store.jars) {
-            const p = store.jars[n], cb = store.jarBalances[n]||0, pct = Math.min(Math.round(cb/p.goal*100), 100);
-            jl.innerHTML += `<div class="cat-card" style="padding:10px; margin-bottom:8px;"><b>💎 ${n}</b> <small>$${cb.toLocaleString()}/$${p.goal.toLocaleString()}</small><div class="prog-container"><div class="prog-fill" style="width:${pct}%; background:var(--cat-blue)"></div></div></div>`;
+            const p = store.jars[n], cb = store.jarBalances[n]||0;
+            const goal = p.goal, start = new Date(p.start), end = new Date(p.end);
+            
+            // 計算剩餘月份
+            let totalMonths = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1;
+            let passedMonths = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth()) + 1;
+            let remainingMonths = Math.max(totalMonths - passedMonths + 1, 1);
+            
+            // 理論應存 (進度檢測)
+            let idealPerMonth = goal / totalMonths;
+            let idealTotalNow = idealPerMonth * passedMonths;
+            let diff = cb - idealTotalNow;
+            let suggestMonthly = Math.max((goal - cb) / remainingMonths, 0);
+            
+            // 本月是否已存
+            const thisMonthStr = now.toISOString().slice(0,7);
+            const hasSavedThisMonth = store.history.some(h => h.type === 'save' && h.jar === n && h.date.startsWith(thisMonthStr));
+
+            const pct = Math.min(Math.round(cb/goal*100), 100);
+            const statusColor = diff >= 0 ? 'var(--cat-green)' : 'var(--cat-red)';
+            const diffText = diff >= 0 ? `超前 $${Math.abs(Math.round(diff)).toLocaleString()}` : `落後 $${Math.abs(Math.round(diff)).toLocaleString()}`;
+
+            jl.innerHTML += `
+                <div class="cat-card" style="padding:12px; margin-bottom:10px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <b>💎 ${n}</b>
+                        <span style="font-size:10px; background:#eee; padding:2px 6px; border-radius:10px;">${hasSavedThisMonth ? '✅ 本月已存' : '⏳ 本月待存'}</span>
+                    </div>
+                    <div class="jar-info">
+                        目標：$${goal.toLocaleString()} (已存 $${cb.toLocaleString()})<br>
+                        建議月存：<b>$${Math.round(suggestMonthly).toLocaleString()}</b> / 月<br>
+                        當前進度：<span style="color:${statusColor}; font-weight:bold;">${diffText}</span>
+                    </div>
+                    <div class="prog-container"><div class="prog-fill" style="width:${pct}%; background:var(--cat-blue)"></div></div>
+                </div>`;
         }
+        
         const hb = document.getElementById('home-budget-list'); hb.innerHTML = "";
         for(let b in store.budgets) {
             const spent = store.history.filter(h=>h.type==='exp' && h.main===b && new Date(h.date)>=range.start && new Date(h.date)<=range.end).reduce((s,x)=>s+x.amt,0);
@@ -252,7 +289,16 @@
     function selectDate(ds) {
         document.getElementById('day-detail-area').style.display='block';
         const recs = store.history.filter(h=>h.date===ds);
-        document.getElementById('day-records').innerHTML = recs.map(r=>`<div class="record-item"><span>${r.note||r.main}</span><span style="color:${r.type==='inc'?'green':'red'}">$${r.amt}</span></div>`).join('') || '無紀錄';
+        document.getElementById('day-records').innerHTML = recs.map(r=>`
+            <div class="record-item">
+                <div style="flex:1;">
+                    <small>[${r.main||'轉帳'}]</small> <strong>${r.note||r.sub||'無備註'}</strong>
+                </div>
+                <div style="text-align:right;">
+                    <span style="color:${r.type==='inc'?'green':'red'}; font-weight:bold;">$${r.amt}</span><br>
+                    <button onclick="deleteRecord(${r.id})" style="border:none; background:#eee; padding:2px 6px; border-radius:5px; font-size:10px; color:red; margin-top:2px;">🗑️ 刪除</button>
+                </div>
+            </div>`).join('') || '無紀錄';
     }
 
     function renderAssetsAndHistory() {
@@ -282,7 +328,9 @@
         if(h.type==='exp') res(h.srcRaw, h.amt); else if(h.type==='inc') res(h.srcRaw,-h.amt);
         else if(h.type==='save'){ res(h.srcRaw, h.amt); store.jarBalances[h.jar]-=h.amt; }
         else if(h.type==='transfer'){ res(h.fromRaw,h.amt); res(h.toRaw,-h.amt); }
-        store.history = store.history.filter(x=>x.id!==id); saveToDB(); renderAssetsAndHistory();
+        store.history = store.history.filter(x=>x.id!==id); saveToDB(); 
+        if(document.getElementById('page-home').classList.contains('active')) renderHome();
+        else renderAssetsAndHistory();
     }
 
     function renderKeyboard() {
