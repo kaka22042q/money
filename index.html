@@ -13,47 +13,44 @@
             --cat-orange: #fab1a0;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, "Noto Sans TC", sans-serif; }
-        body { background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 140px; font-size: 14px; }
+        body { background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 150px; font-size: 14px; }
         .container { max-width: 450px; margin: 0 auto; padding: 12px; }
         
+        /* 分頁切換 */
         .page { display: none; }
-        .page.active { display: block; animation: fadeIn 0.2s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .page.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        .cat-card { background: #fff; border: 2px solid var(--cat-dark); box-shadow: 3px 3px 0 var(--cat-gray); border-radius: 18px; margin-bottom: 12px; padding: 15px; position: relative; }
+        .cat-card { background: #fff; border: 2.5px solid var(--cat-dark); box-shadow: 3px 3px 0 var(--cat-gray); border-radius: 18px; margin-bottom: 12px; padding: 15px; position: relative; }
         input, select, textarea { width: 100%; border: 2px solid var(--cat-gray); border-radius: 10px; padding: 10px; margin-top: 5px; font-size: 15px; outline: none; background: #fff; color: var(--cat-dark); }
         textarea#note { height: 90px; background: #fafafa; line-height: 1.4; resize: none; }
         
-        label { font-size: 12px; font-weight: bold; display: block; margin-top: 8px; color: var(--cat-dark); border-left: 3px solid var(--cat-main); padding-left: 8px; }
-        .hint { font-size: 10px; color: #888; margin-top: 2px; line-height: 1.3; font-weight: normal; }
+        label { font-size: 13px; font-weight: bold; display: block; margin-top: 10px; color: var(--cat-dark); border-left: 4px solid var(--cat-main); padding-left: 8px; }
+        .hint { font-size: 11px; color: #888; margin-top: 3px; line-height: 1.4; font-weight: normal; }
         
-        /* 極致纖薄計算機 */
-        #amt { font-size: 22px; height: 40px; text-align: center; color: var(--cat-red); border: 2px solid var(--cat-dark); margin-bottom: 6px; font-weight: 900; border-radius: 10px; }
-        .kb-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 0px; }
-        .kb-btn { height: 32px; border: 1.5px solid var(--cat-dark); border-radius: 8px; background: #fff; font-weight: 900; color: var(--cat-dark); cursor: pointer; font-size: 13px; transition: 0.1s; display: flex; align-items: center; justify-content: center; }
-        .kb-btn:active { transform: scale(0.95); background: var(--cat-light-pink); }
-        .op-btn { background: var(--cat-bg); border-color: var(--cat-gray); }
+        /* 纖薄 4x4 計算機 */
+        #amt { font-size: 22px; height: 42px; text-align: center; color: var(--cat-red); border: 2.5px solid var(--cat-dark); margin-bottom: 8px; font-weight: bold; }
+        .kb-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 5px; }
+        .kb-btn { height: 35px; border: 1.5px solid var(--cat-dark); border-radius: 8px; background: #fff; font-weight: 900; color: var(--cat-dark); cursor: pointer; font-size: 14px; transition: 0.1s; display: flex; align-items: center; justify-content: center; }
+        .kb-btn:active { transform: scale(0.92); background: var(--cat-light-pink); }
+        .op-btn { background: var(--cat-bg); }
         .eq-btn { background: var(--cat-main); color: white; }
         .ac-btn { background: #f0f0f0; color: #999; }
 
         .btn-main { background: var(--cat-main); border: 2.5px solid var(--cat-dark); box-shadow: 0 4px 0 var(--cat-dark); font-weight: bold; color: white; border-radius: 15px; padding: 14px; width: 100%; cursor: pointer; margin-top: 15px; font-size: 16px; letter-spacing: 2px; }
         
-        /* 導航列圖示 */
-        .nav-bar { position: fixed; bottom: 15px; left: 12px; right: 12px; background: white; border: 2.5px solid var(--cat-dark); box-shadow: 0 5px 0 var(--cat-gray); display: flex; justify-content: space-around; padding: 8px 5px; z-index: 100; border-radius: 25px; height: 80px; align-items: center; }
+        /* 導航列圖示放大 */
+        .nav-bar { position: fixed; bottom: 15px; left: 15px; right: 15px; background: white; border: 2.5px solid var(--cat-dark); box-shadow: 0 5px 0 var(--cat-gray); display: flex; justify-content: space-around; padding: 8px 5px; z-index: 100; border-radius: 25px; height: 85px; align-items: center; }
         .nav-item { border: none; background: none; text-align: center; flex: 1; cursor: pointer; opacity: 0.35; padding: 0; }
         .nav-item.active { opacity: 1; }
-        .nav-icon { font-size: 26px; display: block; margin-bottom: 1px; }
+        .nav-icon { font-size: 28px; display: block; margin-bottom: 2px; }
         .nav-text { font-size: 11px; font-weight: bold; color: var(--cat-dark); }
         
-        .prog-container { background: #EFEBE9; height: 14px; border-radius: 7px; border: 1.5px solid var(--cat-dark); overflow: hidden; margin: 4px 0; }
+        .prog-container { background: #EFEBE9; height: 16px; border-radius: 8px; border: 1.5px solid var(--cat-dark); overflow: hidden; margin: 5px 0; }
         .prog-fill { height: 100%; transition: width 0.6s; }
-        .prog-safe { background: var(--cat-green); }
-        .prog-warn { background: var(--cat-orange); }
-        .prog-danger { background: var(--cat-red); }
-
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
-        .cal-day { padding: 8px 0; border-radius: 6px; font-size: 12px; cursor: pointer; position: relative; }
-        .cal-day.has-record::after { content: '•'; position: absolute; bottom: 1px; left: 50%; transform: translateX(-50%); color: var(--cat-main); font-size: 14px; }
+        .cal-day { padding: 6px 0; border-radius: 6px; font-size: 12px; cursor: pointer; position: relative; }
+        .cal-day.has-record::after { content: '•'; position: absolute; bottom: 0px; left: 50%; transform: translateX(-50%); color: var(--cat-main); font-size: 12px; }
         
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; backdrop-filter: blur(4px); }
         .modal-content { background: white; width: 88%; max-height: 85vh; overflow-y: auto; padding: 20px; border-radius: 25px; border: 3px solid var(--cat-dark); text-align: center; }
@@ -61,38 +58,29 @@
 </head>
 <body>
 
-<div id="alert-modal" class="modal"><div class="modal-content"><h2 style="color:var(--cat-red); margin-top:0;">⚠️ 預算警報！</h2><p id="alert-msg" style="line-height:1.6; font-weight:bold;"></p><button onclick="document.getElementById('alert-modal').style.display='none'" class="btn-main">知道了喵</button></div></div>
+<div id="alert-modal" class="modal"><div class="modal-content"><h2 style="color:var(--cat-red); margin-top:0;">⚠️ 預算警報！</h2><p id="alert-msg"></p><button onclick="document.getElementById('alert-modal').style.display='none'" class="btn-main">知道了喵</button></div></div>
 <div id="manual-modal" class="modal"><div class="modal-content"><h3 style="text-align:center; color:var(--cat-red); margin-top:0;">🐾 使用說明書</h3><div id="manual-display" style="white-space:pre-wrap; text-align:left; line-height:1.5; font-size:13px; color:#555;"></div><button onclick="document.getElementById('manual-modal').style.display='none'" class="btn-main">關閉</button></div></div>
-<div id="sub-modal" class="modal"><div class="modal-content"><h3>⏰ 定期入帳</h3><p id="sub-modal-desc" style="font-size:13px;"></p><input type="number" id="sub-modal-amt" style="text-align:center;"><button onclick="processSub(true)" class="btn-main">確認</button><button onclick="processSub(false)" style="background:none; border:none; color:#aaa; margin-top:10px; font-size:12px;">跳過</button></div></div>
-<div id="backup-modal" class="modal"><div class="modal-content"><h3>📦 該備份囉</h3><button onclick="goToSettingsForBackup()" class="btn-main">去備份</button></div></div>
-
-<div id="password-screen" style="display:none; position:fixed; z-index:9999; top:0; left:0; width:100%; height:100%; background:var(--cat-bg); flex-direction:column; align-items:center; justify-content:center;">
-    <div class="cat-card" style="width:280px; text-align:center;"><h2 style="margin-top:0;">🐾 秘密基地</h2><input type="password" id="pw-input" placeholder="輸入密碼" style="text-align:center;"><button onclick="unlockApp()" class="btn-main">進入</button></div>
-</div>
+<div id="sub-modal" class="modal"><div class="modal-content"><h3>⏰ 定期入帳</h3><p id="sub-modal-desc"></p><input type="number" id="sub-modal-amt" style="text-align:center;"><button onclick="processSub(true)" class="btn-main">確認</button><button onclick="processSub(false)" style="background:none; border:none; color:#aaa; margin-top:10px;">跳過</button></div></div>
+<div id="backup-modal" class="modal"><div class="modal-content"><h3>📦 該備份囉</h3><p style="font-size:13px;">距離上次備份已超過 7 天喵！</p><button onclick="goToSettingsForBackup()" class="btn-main">立即備份</button><button onclick="closeBackupModal()" style="background:none; border:none; color:#aaa; margin-top:10px;">下次</button></div></div>
 
 <div class="container" id="main-content">
     <div id="page-daily" class="page active">
-        <h2 style="text-align:center; margin:0 0 8px 0; font-size:18px;">✍️ 快速記帳</h2>
+        <h2 style="text-align:center; margin:0 0 10px 0; font-size:18px;">✍️ 快速記帳</h2>
         <div class="cat-card">
             <input type="text" id="amt" value="0" readonly>
             <div id="kb-container" class="kb-grid"></div>
-            
             <label>操作類型</label>
-            <select id="trans-mode" onchange="toggleFields()">
-                <option value="exp">💸 支出</option><option value="inc">💰 收入</option><option value="save">🐟 存入計畫</option><option value="transfer">🔄 轉帳對沖</option>
-            </select>
+            <select id="trans-mode" onchange="toggleFields()"><option value="exp">💸 支出</option><option value="inc">💰 收入</option><option value="save">🐟 存入計畫</option><option value="transfer">🔄 轉帳對沖</option></select>
             <div id="source-acc-area"><label id="label-source">支付帳戶</label><select id="acc-source"></select></div>
             <div id="transfer-area" style="display:none;"><label>轉入帳戶</label><select id="acc-to"></select></div>
             <div id="jar-area" style="display:none;"><label>存入存錢筒</label><select id="jar-target"></select></div>
-            <div id="cat-select-area">
-                <label>項目分類</label>
-                <div style="display:flex; gap:5px;"><select id="mainCat" onchange="renderSubCats()"></select><select id="subCat"></select></div>
-            </div>
-            <label>詳細備註</label><textarea id="note" placeholder="備註內容..."></textarea>
+            <label>項目分類</label>
+            <div style="display:flex; gap:5px;"><select id="mainCat" onchange="renderSubCats()"></select><select id="subCat"></select></div>
+            <label>詳細備註</label><textarea id="note" placeholder="例如：早餐、買菜..."></textarea>
             <label>日期</label><input type="date" id="record-date">
-            <div id="inst-toggle-area"><label style="display:flex; align-items:center; gap:8px; font-size:12px; margin-top:8px;"><input type="checkbox" id="is-inst" onchange="toggleInstOptions()" style="width:16px; height:16px;"> 信用卡分期</label>
-                <div id="inst-options" style="display:none; background:#fff5f5; padding:10px; border-radius:12px; border:1.5px dashed var(--cat-main); margin-top:5px;">
-                    <label style="margin-top:0;">分幾期？</label><input type="number" id="inst-num" value="3"><label>扣款月</label><input type="month" id="inst-start-month">
+            <div id="inst-toggle-area"><label style="display:flex; align-items:center; gap:8px; font-size:13px; margin-top:10px;"><input type="checkbox" id="is-inst" onchange="toggleInstOptions()" style="width:18px; height:18px;"> 信用卡分期</label>
+                <div id="inst-options" style="display:none; background:#fff5f5; padding:10px; border-radius:12px; border:1.5px dashed var(--cat-main); margin-top:8px;">
+                    <label style="margin-top:0;">分幾期？</label><input type="number" id="inst-num" value="3"><label>扣款起始月</label><input type="month" id="inst-start-month">
                 </div>
             </div>
             <button onclick="saveAll()" class="btn-main">確認存檔喵！</button>
@@ -102,7 +90,7 @@
     <div id="page-home" class="page">
         <h2 id="home-title" style="margin-bottom:10px; font-size:18px;">🐾 首頁進度</h2>
         <div id="jarList"></div>
-        <div class="cat-card"><h3 style="font-size:14px; margin-top:0;">📅 薪資帳期預算</h3><p id="period-info" style="font-size:11px; color:#666; margin-bottom:10px;"></p><div id="home-budget-list"></div></div>
+        <div class="cat-card"><h3 style="font-size:14px; margin-top:0;">📅 預算與帳期</h3><p id="period-info" style="font-size:11px; color:#666; margin-bottom:10px;"></p><div id="home-budget-list"></div></div>
         <div class="cat-card">
             <h3 id="cal-month-title" style="text-align:center; font-size:15px; margin-top:0;"></h3>
             <div class="calendar-grid" id="calendar-days"></div>
@@ -120,19 +108,28 @@
     <div id="page-settings" class="page">
         <h2 style="text-align:center; font-size:18px; margin-top:0;">⚙️ 設定中心</h2>
         <div class="cat-card">
-            <button onclick="openManual()" class="btn-main" style="background:var(--cat-blue); margin:0 0 12px 0;">📘 說明書</button>
-            <label>📅 預算起算日</label><input type="number" id="budget-day-input" min="1" max="28">
-            <label>🔔 警示門檻 (%)</label><input type="number" id="budget-threshold-input">
-            <label>📊 月預算</label><div class="hint">分類:金額</div><textarea id="budget-editor" rows="2"></textarea>
-            <label>⌨️ 鍵盤切換</label><select id="kb-mode-select"><option value="coin">🪙 幣值</option><option value="calc">🔢 計算機</option></select>
+            <button onclick="openManual()" class="btn-main" style="background:var(--cat-blue); margin:0 0 12px 0;">📘 查看說明書</button>
+            <label>📅 預算起算日 (薪資日)</label><div class="hint">每個月幾號重新計算預算？(1~28)</div><input type="number" id="budget-day-input">
+            <label>🔔 預算提醒門檻 (%)</label><div class="hint">預算用到百分之多少提醒？例如 80</div><input type="number" id="budget-threshold-input">
+            <label>📊 各項月預算</label><div class="hint">格式：分類:金額 (例如 飲食:5000)</div><textarea id="budget-editor" rows="2"></textarea>
+            <label>⌨️ 鍵盤切換</label><select id="kb-mode-select"><option value="coin">🪙 幣值鍵盤</option><option value="calc">🔢 精巧計算機</option></select>
             <label>🏷️ App 名稱</label><input type="text" id="app-name-input">
-            <label>📂 支出分類</label><div class="hint">大類:小1,小2</div><textarea id="cat-editor" rows="2"></textarea>
+            <label>🔒 隱私密碼</label><input type="password" id="lock-pass-input">
+            <label>📂 支出分類</label><div class="hint">格式：大類:小1,小2</div><textarea id="cat-editor" rows="2"></textarea>
             <label>💰 收入分類</label><textarea id="inc-cat-editor" rows="2"></textarea>
-            <label>💳 帳戶資產</label><textarea id="acc-editor" rows="2"></textarea>
-            <label>⏰ 定期支出</label><div class="hint">名:金額,大,小,帳,日</div><textarea id="sub-editor" rows="2"></textarea>
-            <label>💎 存錢筒</label><textarea id="jar-editor" rows="2"></textarea>
+            <label>💳 帳戶資產</label><div class="hint">格式：帳戶:金額</div><textarea id="acc-editor" rows="2"></textarea>
+            <label>⏰ 定期支出</label><div class="hint">格式：名稱:金額,大類,小類,帳戶,扣款日</div><textarea id="sub-editor" rows="2"></textarea>
+            <label>💎 存錢筒</label><div class="hint">格式：名稱:總額,開始月,結束月</div><textarea id="jar-editor" rows="2"></textarea>
             <label>📘 說明書編輯</label><textarea id="manual-editor" rows="3"></textarea>
             <button onclick="saveSettings()" class="btn-main" style="background:var(--cat-green)">儲存變更</button>
+        </div>
+        <div class="cat-card" style="text-align:center;">
+            <div style="display:flex; gap:10px;">
+                <button onclick="exportCSV()" style="flex:1; padding:10px; border-radius:10px; border:1px solid #333; background:white;">📊 導出 CSV</button>
+                <button onclick="exportData()" style="flex:1; padding:10px; border-radius:10px; border:none; background:var(--cat-blue); color:white;">📦 備份 JSON</button>
+            </div>
+            <input type="file" id="importFile" style="display:none" onchange="importData(event)">
+            <button onclick="document.getElementById('importFile').click()" class="btn-main" style="background:#fff; color:#333; border:2px solid var(--cat-dark);">📥 匯入 JSON 資料</button>
         </div>
     </div>
 </div>
@@ -145,11 +142,11 @@
 </nav>
 
 <script>
-    const DB_KEY = 'cat_dream_v33_thin';
-    const defaultManual = "【分期】輸入總價 -> 勾選分期 -> 設定月份。";
+    const DB_KEY = 'cat_dream_v34_final';
+    const defaultManual = "【信用卡分期】輸入總價 -> 勾選分期 -> 設定月份。";
     let store = JSON.parse(localStorage.getItem(DB_KEY)) || {
         appName: '夢夢記帳', budgetDay: 10, threshold: 80, kbMode: 'calc', lockPass: '',
-        accs: { '現金': 0 }, cats: { '飲食':['外食'] }, incCats: { '薪水':['月薪'] },
+        accs: { '現金': 0, '銀行': 0 }, cats: { '飲食':['外食'] }, incCats: { '工作':['月薪'] },
         budgets: { '飲食': 5000 }, history: [], subs: {}, subLog: [], manualContent: defaultManual,
         jarBalances: {}, jars: {}, lastBackup: Date.now()
     };
@@ -158,28 +155,27 @@
     window.onload = () => {
         const now = new Date(); document.getElementById('record-date').value = now.toISOString().split('T')[0];
         document.getElementById('inst-start-month').value = now.toISOString().slice(0, 7);
-        if(store.lockPass) { document.getElementById('password-screen').style.display='flex'; document.getElementById('main-content').style.display='none'; }
         updateAppTitles(); checkBackupAlert(); checkSubscriptions(); initDaily(); renderKeyboard();
     };
 
-    function getBudgetDateRange() {
-        const now = new Date(); let y = now.getFullYear(), m = now.getMonth(), d = store.budgetDay || 1;
-        let start, end;
-        if (now.getDate() >= d) { start = new Date(y, m, d); end = new Date(y, m + 1, d - 1, 23, 59, 59); }
-        else { start = new Date(y, m - 1, d); end = new Date(y, m, d - 1, 23, 59, 59); }
-        return { start, end };
+    function showPage(pId, el) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page-' + pId).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        el.classList.add('active');
+        if(pId === 'home') renderHome(); if(pId === 'assets') renderAssetsAndHistory(); if(pId === 'settings') initSettings();
     }
 
     function renderKeyboard() {
-        const c = document.getElementById('kb-container'); c.innerHTML = "";
+        const container = document.getElementById('kb-container'); container.innerHTML = "";
         if (store.kbMode === 'coin') {
-            [1, 5, 10, 50, 100, 500, 1000].forEach(v => { c.innerHTML += `<button class="kb-btn" onclick="pressCoin(${v})">+${v}</button>`; });
-            c.innerHTML += `<button class="kb-btn ac-btn" onclick="clearAmt()">AC</button>`;
+            [1, 5, 10, 50, 100, 500, 1000].forEach(v => { container.innerHTML += `<button class="kb-btn" onclick="pressCoin(${v})">+${v}</button>`; });
+            container.innerHTML += `<button class="kb-btn ac-btn" onclick="clearAmt()">AC</button>`;
         } else {
             const keys = ['7','8','9','/', '4','5','6','*', '1','2','3','-', '0','AC','=','+'];
             keys.forEach(k => {
                 let cls = "kb-btn" + (['/','*','-','+'].includes(k)?" op-btn":(k==='='?" eq-btn":(k==='AC'?" ac-btn":"")));
-                c.innerHTML += `<button class="${cls}" onclick="pressCalc('${k}')">${k==='*'?'×':k==='/'?'÷':k}</button>`;
+                container.innerHTML += `<button class="${cls}" onclick="pressCalc('${k}')">${k==='*'?'×':k==='/'?'÷':k}</button>`;
             });
         }
     }
@@ -188,92 +184,65 @@
     function clearAmt() { document.getElementById('amt').value = "0"; calcBuffer = ""; }
     function pressCalc(val) {
         const el = document.getElementById('amt');
-        if (val === 'AC') clearAmt();
-        else if (val === '=') { try { const res = eval(calcBuffer.replace(/[^0-9+\-*/.]/g, '')); el.value = Math.round(res*100)/100 || 0; calcBuffer = String(el.value); } catch { el.value = "錯誤"; calcBuffer = ""; } }
-        else { if (calcBuffer === "0" || el.value === "0") { if (!['+','-','*','/'].includes(val)) calcBuffer = ""; } calcBuffer += val; el.value = calcBuffer; }
-    }
-
-    function saveAll() {
-        const m = document.getElementById('trans-mode').value, amt = Number(document.getElementById('amt').value);
-        const note = document.getElementById('note').value, date = document.getElementById('record-date').value, srcRaw = document.getElementById('acc-source').value;
-        if(!amt || !date) return alert('填完整喵！');
-        const adj = (r, v) => { const n = r.split(':')[1]; store.accs[n] += v; return n; };
-
-        if(m==='transfer') { const toRaw=document.getElementById('acc-to').value; adj(srcRaw,-amt); adj(toRaw,amt); store.history.push({id:Date.now(), date, amt, type:m, fromRaw:srcRaw, toRaw, note}); }
-        else if(m==='save') { const jar=document.getElementById('jar-target').value; adj(srcRaw,-amt); store.jarBalances[jar]=(store.jarBalances[jar]||0)+amt; store.history.push({id:Date.now(), date, amt, type:m, jar, srcRaw, note}); }
-        else if(m==='inc') { adj(srcRaw,amt); store.history.push({id:Date.now(), date, amt, type:m, main:document.getElementById('mainCat').value, sub:document.getElementById('subCat').value, srcRaw, note}); }
-        else {
-            adj(srcRaw,-amt);
-            if(document.getElementById('is-inst').checked) {
-                const num=Number(document.getElementById('inst-num').value), startM=document.getElementById('inst-start-month').value, per=Math.round(amt/num);
-                let [yy, mm]=startM.split('-').map(Number);
-                for(let i=0;i<num;i++){ let d=new Date(yy,mm-1+i,1); store.history.push({id:Date.now()+i, date:d.toISOString().slice(0,10), amt:per, type:'exp', main:document.getElementById('mainCat').value, sub:document.getElementById('subCat').value, srcRaw, note:`${note} [${i+1}/${num}]`}); }
-            } else { store.history.push({id:Date.now(), date, amt, type:m, main:document.getElementById('mainCat').value, sub:document.getElementById('subCat').value, srcRaw, note}); }
-            
-            const main = document.getElementById('mainCat').value;
-            if(store.budgets[main]) {
-                const range = getBudgetDateRange();
-                const spent = store.history.filter(h => h.type==='exp' && h.main===main && new Date(h.date)>=range.start && new Date(h.date)<=range.end).reduce((a,b)=>a+b.amt,0);
-                const pct = (spent / store.budgets[main]) * 100;
-                if(pct >= (store.threshold || 80)) { document.getElementById('alert-msg').innerText = `【${main}】預算警報！\n已支出 $${spent} (${Math.round(pct)}%)`; document.getElementById('alert-modal').style.display='flex'; }
-            }
-        }
-        saveToDB(); alert('存好囉！'); clearAmt(); showPage('home', document.querySelectorAll('.nav-item')[1]);
+        if (val === 'AC') { clearAmt(); }
+        else if (val === '=') { try { const res = eval(calcBuffer.replace(/[^0-9+\-*/.]/g, '')); el.value = Math.round(res * 100) / 100 || 0; calcBuffer = String(el.value); } catch { el.value = "錯誤"; calcBuffer = ""; } }
+        else { if (calcBuffer === "0" || el.value === "0") { if (!['+', '-', '*', '/'].includes(val)) calcBuffer = ""; } calcBuffer += val; el.value = calcBuffer; }
     }
 
     function initSettings() {
-        document.getElementById('budget-day-input').value = store.budgetDay; document.getElementById('budget-threshold-input').value = store.threshold;
-        document.getElementById('budget-editor').value = Object.entries(store.budgets).map(([k,v])=>`${k}:${v}`).join('\n');
-        document.getElementById('app-name-input').value = store.appName; document.getElementById('lock-pass-input').value = store.lockPass;
+        document.getElementById('budget-day-input').value = store.budgetDay; 
+        document.getElementById('budget-threshold-input').value = store.threshold;
+        document.getElementById('app-name-input').value = store.appName; 
+        document.getElementById('lock-pass-input').value = store.lockPass || "";
         document.getElementById('cat-editor').value = Object.entries(store.cats).map(([k,v])=>`${k}:${v.join(',')}`).join('\n');
         document.getElementById('inc-cat-editor').value = Object.entries(store.incCats).map(([k,v])=>`${k}:${v.join(',')}`).join('\n');
         document.getElementById('acc-editor').value = Object.entries(store.accs).map(([k,v])=>`${k}:${v}`).join('\n');
+        document.getElementById('budget-editor').value = Object.entries(store.budgets).map(([k,v])=>`${k}:${v}`).join('\n');
         document.getElementById('sub-editor').value = Object.entries(store.subs || {}).map(([k,v])=>`${k}:${v.amt},${v.main},${v.sub},${v.acc},${v.day}`).join('\n');
         document.getElementById('jar-editor').value = Object.entries(store.jars).map(([k,v])=>`${k}:${v.goal},${v.start},${v.end}`).join('\n');
         document.getElementById('manual-editor').value = store.manualContent;
     }
+
     function saveSettings() {
-        store.budgetDay = Number(document.getElementById('budget-day-input').value); store.threshold = Number(document.getElementById('budget-threshold-input').value);
-        store.appName = document.getElementById('app-name-input').value; store.lockPass = document.getElementById('lock-pass-input').value;
-        store.kbMode = document.getElementById('kb-mode-select').value; store.manualContent = document.getElementById('manual-editor').value;
+        store.budgetDay = Number(document.getElementById('budget-day-input').value);
+        store.threshold = Number(document.getElementById('budget-threshold-input').value);
+        store.appName = document.getElementById('app-name-input').value;
+        store.lockPass = document.getElementById('lock-pass-input').value;
+        store.kbMode = document.getElementById('kb-mode-select').value;
+        store.manualContent = document.getElementById('manual-editor').value;
         const parse = (id, isCat=false) => { const o = {}; document.getElementById(id).value.split('\n').forEach(l => { const [k,v] = l.split(':'); if(k && v) o[k.trim()] = isCat ? v.split(',').map(s=>s.trim()) : Number(v.replace(/,/g,'').trim()); }); return o; };
         store.cats = parse('cat-editor', true); store.incCats = parse('inc-cat-editor', true); store.accs = parse('acc-editor'); store.budgets = parse('budget-editor');
         const s = {}; document.getElementById('sub-editor').value.split('\n').forEach(l => { const [k,v] = l.split(':'); if(k && v) { const [amt,m,sub,acc,day] = v.split(','); s[k.trim()] = { amt:Number(amt), main:m, sub:sub, acc:acc, day:Number(day) }; } }); store.subs = s;
         const j = {}; document.getElementById('jar-editor').value.split('\n').forEach(l => { const [n,d] = l.split(':'); if(n && d) { const [g,st,ed] = d.split(','); j[n.trim()] = { goal:Number(g), start:st, end:ed }; } }); store.jars = j;
         saveToDB(); location.reload();
     }
+
+    // --- (核心提醒與備份邏輯) ---
+    function checkBackupAlert() { const diff = Date.now() - (store.lastBackup || 0); if(diff > 7 * 86400000) setTimeout(()=>document.getElementById('backup-modal').style.display='flex', 1000); }
+    function closeBackupModal() { document.getElementById('backup-modal').style.display = 'none'; }
+    function exportData() { store.lastBackup = Date.now(); saveToDB(); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(store)], {type: "application/json"})); a.download = `夢想備份.json`; a.click(); alert("JSON 備份完成喵！已更新備份日。"); }
+    function exportCSV() { store.lastBackup = Date.now(); saveToDB(); let csv = "\uFEFF日期,類型,大類,金額,備註\n"; store.history.forEach(h => { csv += `${h.date},${h.type},${h.main||''},${h.amt},${h.note||''}\n`; }); const b = new Blob([csv], { type: 'text/csv;charset=utf-8;' }); const l = document.createElement("a"); l.href = URL.createObjectURL(b); l.download = `報表.csv`; l.click(); }
+    function importData(e) { const r = new FileReader(); r.onload = (ev) => { store = JSON.parse(ev.target.result); saveToDB(); location.reload(); }; r.readAsText(e.target.files[0]); }
+    
+    // --- (其餘邏輯同 V32) ---
+    function saveAll() { const m = document.getElementById('trans-mode').value, amt = Number(document.getElementById('amt').value); const note = document.getElementById('note').value, date = document.getElementById('record-date').value, srcRaw = document.getElementById('acc-source').value; if(!amt || !date) return alert('填完整喵！'); const adj = (r, v) => { const n = r.split(':')[1]; store.accs[n] += v; return n; }; if(m==='transfer'){const toRaw=document.getElementById('acc-to').value; adj(srcRaw,-amt); adj(toRaw,amt); store.history.push({id:Date.now(), date, amt, type:m, fromRaw:srcRaw, toRaw, note});} else if(m==='save'){const jar=document.getElementById('jar-target').value; adj(srcRaw,-amt); store.jarBalances[jar]=(store.jarBalances[jar]||0)+amt; store.history.push({id:Date.now(), date, amt, type:m, jar, srcRaw, note});} else if(m==='inc'){adj(srcRaw,amt); store.history.push({id:Date.now(), date, amt, type:m, main:document.getElementById('mainCat').value, sub:document.getElementById('subCat').value, srcRaw, note});} else { adj(srcRaw,-amt); if(document.getElementById('is-inst').checked){const num=Number(document.getElementById('inst-num').value), startM=document.getElementById('inst-start-month').value, per=Math.round(amt/num); let [yy,mm]=startM.split('-').map(Number); for(let i=0;i<num;i++){let d=new Date(yy,mm-1+i,1); store.history.push({id:Date.now()+i, date:d.toISOString().slice(0,10), amt:per, type:'exp', main:document.getElementById('mainCat').value, sub:document.getElementById('subCat').value, srcRaw, note:`${note} [${i+1}/${num}]`});}} else {store.history.push({id:Date.now(), date, amt, type:m, main:document.getElementById('mainCat').value, sub:document.getElementById('subCat').value, srcRaw, note});} const main = document.getElementById('mainCat').value; if(store.budgets[main]){ const range = getBudgetDateRange(); const spent = store.history.filter(h => h.type==='exp' && h.main===main && new Date(h.date)>=range.start && new Date(h.date)<=range.end).reduce((a,b)=>a+b.amt,0); const pct = (spent / store.budgets[main]) * 100; if(pct >= (store.threshold || 80)){ document.getElementById('alert-msg').innerText = `【${main}】已花費 $${spent} (${Math.round(pct)}%)`; document.getElementById('alert-modal').style.display='flex'; } } } saveToDB(); alert('存好囉！'); clearAmt(); showPage('home', document.querySelectorAll('.nav-item')[1]); }
+    function renderHome() { const range = getBudgetDateRange(); document.getElementById('period-info').innerText = `帳期：${range.start.toLocaleDateString()} ~ ${range.end.toLocaleDateString()}`; renderCalendar(); const list = document.getElementById('jarList'); list.innerHTML = ""; for(let n in store.jars){const p=store.jars[n],cb=store.jarBalances[n]||0,pct=Math.min(Math.round(cb/p.goal*100),100); list.innerHTML += `<div style="margin-bottom:8px;"><b>${n}</b> <small>$${cb}/$${p.goal}</small><div class="prog-container"><div class="prog-fill" style="width:${pct}%; background:var(--cat-green)"></div></div></div>`;} const homeB = document.getElementById('home-budget-list'); homeB.innerHTML = ""; for(let b in store.budgets){ const spent = store.history.filter(h => h.type==='exp' && h.main===b && new Date(h.date)>=range.start && new Date(h.date)<=range.end).reduce((a,b)=>a+b.amt, 0); const pct = Math.min(Math.round(spent/store.budgets[b]*100), 100); let color = pct>=100 ? 'prog-danger' : (pct>=(store.threshold||80) ? 'prog-warn' : 'prog-safe'); homeB.innerHTML += `<div style="font-size:11px; margin-top:4px;">${b} ($${spent}/$${store.budgets[b]})<div class="prog-container"><div class="prog-fill ${color}" style="width:${pct}%;"></div></div></div>`; } }
+    function renderAssetsAndHistory() { const area = document.getElementById('asset-list'); area.innerHTML = ""; for(let k in store.accs) area.innerHTML += `<div class="stat-row"><span>${k}</span><span>$${store.accs[k].toLocaleString()}</span></div>`; const search = document.getElementById('global-search').value.toLowerCase(); const filtered = store.history.filter(h => (h.note || '').toLowerCase().includes(search) || (h.main || '').toLowerCase().includes(search)); const catTotals = {}; filtered.filter(h => h.type==='exp').forEach(h => { catTotals[h.main] = (catTotals[h.main] || 0) + h.amt; }); const listArea = document.getElementById('full-history-list'); listArea.innerHTML = ""; filtered.sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,10).forEach(h => { listArea.innerHTML += `<div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding:5px 0;"><span><small>${h.date}</small> ${h.note||h.sub}</span><span>$${h.amt}</span></div>`; }); renderCharts(catTotals); }
+    function renderCharts(catData) { const pieCtx = document.getElementById('pieChart').getContext('2d'); if(pieChartInstance) pieChartInstance.destroy(); pieCtx && (pieChartInstance = new Chart(pieCtx, { type: 'pie', data: { labels: Object.keys(catData), datasets: [{ data: Object.values(catData), backgroundColor: ['#FFB7B2','#FFDAC1','#E2F0CB','#B5EAD7','#C7CEEA'] }] }, options: { maintainAspectRatio: false } })); }
     function saveToDB() { localStorage.setItem(DB_KEY, JSON.stringify(store)); }
     function updateAppTitles() { document.getElementById('web-title').innerText = store.appName; document.getElementById('home-title').innerText = '🐾 ' + store.appName; }
-    function showPage(pId, el) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById('page-' + pId).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); if(pId === 'home') renderHome(); if(pId === 'assets') renderAssetsAndHistory(); if(pId === 'settings') initSettings(); }
     function initDaily() { renderMainCats(); const a = Object.keys(store.accs).map(k => `<option value="ACC:${k}">${k}</option>`).join(''); document.getElementById('acc-source').innerHTML = a; }
     function renderMainCats() { const m = document.getElementById('trans-mode').value; const target = (m === 'inc' ? store.incCats : store.cats); document.getElementById('mainCat').innerHTML = Object.keys(target).map(k => `<option value="${k}">${k}</option>`).join(''); renderSubCats(); }
     function renderSubCats() { const m = document.getElementById('trans-mode').value; const main = document.getElementById('mainCat').value; const target = (m === 'inc' ? store.incCats : store.cats); if(target[main]) document.getElementById('subCat').innerHTML = target[main].map(s => `<option value="${s}">${s}</option>`).join(''); }
     function toggleFields() { const m = document.getElementById('trans-mode').value; document.getElementById('transfer-area').style.display = (m === 'transfer' ? 'block' : 'none'); document.getElementById('jar-area').style.display = (m === 'save' ? 'block' : 'none'); document.getElementById('inst-toggle-area').style.display = (m === 'exp' ? 'block' : 'none'); renderMainCats(); }
     function toggleInstOptions() { document.getElementById('inst-options').style.display = document.getElementById('is-inst').checked ? 'block' : 'none'; }
-    function renderHome() {
-        const range = getBudgetDateRange(); document.getElementById('period-info').innerText = `帳期：${range.start.toLocaleDateString()} ~ ${range.end.toLocaleDateString()}`;
-        renderCalendar(); const list = document.getElementById('jarList'); list.innerHTML = "";
-        for(let n in store.jars) { const p=store.jars[n], cb=store.jarBalances[n]||0, pct=Math.min(Math.round(cb/p.goal*100), 100); list.innerHTML += `<div style="margin-bottom:8px;"><b>${n}</b> <small>$${cb}/$${p.goal}</small><div class="prog-container"><div class="prog-fill prog-safe" style="width:${pct}%"></div></div></div>`; }
-        const homeB = document.getElementById('home-budget-list'); homeB.innerHTML = "";
-        for(let b in store.budgets) {
-            const spent = store.history.filter(h => h.type==='exp' && h.main===b && new Date(h.date)>=range.start && new Date(h.date)<=range.end).reduce((a,b)=>a+b.amt, 0);
-            const pct = Math.min(Math.round(spent/store.budgets[b]*100), 100);
-            let color = pct>=100 ? 'prog-danger' : (pct>=(store.threshold||80) ? 'prog-warn' : 'prog-safe');
-            homeB.innerHTML += `<div style="font-size:11px; margin-top:4px;">${b} ($${spent}/$${store.budgets[b]})<div class="prog-container"><div class="prog-fill ${color}" style="width:${pct}%;"></div></div></div>`;
-        }
-    }
-    function renderAssetsAndHistory() { const area = document.getElementById('asset-list'); area.innerHTML = ""; for(let k in store.accs) area.innerHTML += `<div class="stat-row"><span>${k}</span><span>$${store.accs[k].toLocaleString()}</span></div>`; const search = document.getElementById('global-search').value.toLowerCase(); const filtered = store.history.filter(h => (h.note || '').toLowerCase().includes(search) || (h.main || '').toLowerCase().includes(search)); const catTotals = {}; filtered.filter(h => h.type==='exp').forEach(h => { catTotals[h.main] = (catTotals[h.main] || 0) + h.amt; }); const listArea = document.getElementById('full-history-list'); listArea.innerHTML = ""; filtered.sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,10).forEach(h => { listArea.innerHTML += `<div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding:5px 0;"><span><small>${h.date}</small> ${h.note||h.sub}</span><span>$${h.amt}</span></div>`; }); renderCharts(catTotals); }
-    function renderCharts(catData) { const pieCtx = document.getElementById('pieChart').getContext('2d'); if(pieChartInstance) pieChartInstance.destroy(); pieCtx && (pieChartInstance = new Chart(pieCtx, { type: 'pie', data: { labels: Object.keys(catData), datasets: [{ data: Object.values(catData), backgroundColor: ['#FFB7B2','#FFDAC1','#E2F0CB','#B5EAD7','#C7CEEA'] }] }, options: { maintainAspectRatio: false } })); }
-    function checkBackupAlert() { if(Date.now() - (store.lastBackup || 0) > 7 * 86400000) setTimeout(()=>document.getElementById('backup-modal').style.display='flex', 1000); }
+    function renderCalendar() { const grid = document.getElementById('calendar-days'); grid.innerHTML = ""; const today = new Date(); const y = today.getFullYear(), m = today.getMonth(); document.getElementById('cal-month-title').innerText = `${y}年${m+1}月`; const first = new Date(y, m, 1).getDay(), last = new Date(y, m + 1, 0).getDate(); for(let i=0; i<first; i++) grid.innerHTML += `<div></div>`; for(let d=1; d<=last; d++){ const ds = `${y}-${(m+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`; grid.innerHTML += `<div class="cal-day ${store.history.some(h=>h.date===ds)?'has-record':''}" onclick="selectDate('${ds}')">${d}</div>`; } }
+    function selectDate(ds) { document.getElementById('day-detail-area').style.display='block'; document.getElementById('day-records').innerHTML = store.history.filter(h=>h.date===ds).map(r=>`<div style="display:flex; justify-content:space-between;"><span>${r.note||r.sub}</span><span>$${r.amt}</span></div>`).join('') || '無紀錄'; }
     function checkSubscriptions() { const today = new Date(); const curM = today.toISOString().slice(0, 7); for(let name in store.subs) { const s = store.subs[name]; const logKey = `${name}_${curM}`; if(!store.subLog.includes(logKey) && today.getDate() >= s.day) { currentSubTask = { name, ...s, logKey }; document.getElementById('sub-modal').style.display = 'flex'; return; } } }
     function processSub(confirm) { if(confirm) { const amt = Number(document.getElementById('sub-modal-amt').value); store.accs[currentSubTask.acc] -= amt; store.history.push({ id:Date.now(), date:new Date().toISOString().split('T')[0], amt, type:'exp', main:currentSubTask.main, sub:currentSubTask.sub, srcRaw:`ACC:${currentSubTask.acc}`, note:`[定期] ${currentSubTask.name}` }); } store.subLog.push(currentSubTask.logKey); saveToDB(); document.getElementById('sub-modal').style.display = 'none'; checkSubscriptions(); }
-    function unlockApp() { if(document.getElementById('pw-input').value === store.lockPass) { document.getElementById('password-screen').style.display='none'; document.getElementById('main-content').style.display='block'; } else alert('錯了喵！'); }
-    function renderCalendar() { const grid = document.getElementById('calendar-days'); grid.innerHTML = ""; const today = new Date(); const y = today.getFullYear(), m = today.getMonth(); document.getElementById('cal-month-title').innerText = `${y}年${m+1}月`; const first = new Date(y, m, 1).getDay(), last = new Date(y, m + 1, 0).getDate(); for(let i=0; i<first; i++) grid.innerHTML += `<div></div>`; for(let d=1; d<=last; d++) { const ds = `${y}-${(m+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`; grid.innerHTML += `<div class="cal-day ${store.history.some(h=>h.date===ds)?'has-record':''}" onclick="selectDate('${ds}')">${d}</div>`; } }
-    function selectDate(ds) { document.getElementById('day-detail-area').style.display='block'; document.getElementById('day-records').innerHTML = store.history.filter(h=>h.date===ds).map(r=>`<div style="display:flex; justify-content:space-between;"><span>${r.note||r.sub}</span><span>$${r.amt}</span></div>`).join('') || '無紀錄'; }
-    function exportData() { store.lastBackup = Date.now(); saveToDB(); const b = new Blob([JSON.stringify(store)], {type: "application/json"}); const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = `備份.json`; a.click(); }
     function openManual() { document.getElementById('manual-display').innerText = store.manualContent; document.getElementById('manual-modal').style.display = 'flex'; }
-    function goToSettingsForBackup() { closeBackupModal(); showPage('settings', document.querySelectorAll('.nav-item')[2]); }
-    function closeBackupModal() { document.getElementById('backup-modal').style.display = 'none'; }
+    function goToSettingsForBackup() { closeBackupModal(); showPage('settings', document.querySelectorAll('.nav-item')[3]); }
+    function unlockApp() { if(document.getElementById('pw-input').value === store.lockPass) { document.getElementById('password-screen').style.display='none'; document.getElementById('main-content').style.display='block'; } else alert('錯了喵！'); }
 </script>
 </body>
 </html>
