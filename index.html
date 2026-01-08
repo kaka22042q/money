@@ -13,19 +13,19 @@
             --cat-orange: #fab1a0;
         }
 
-        /* 季節主題色調定義 */
-        body.theme-0 { --cat-main: #1A237E; --cat-bg: #E8EAF6; } /* 1月：冰封極光 */
-        body.theme-1 { --cat-main: #B71C1C; --cat-bg: #FFF5F5; } /* 2月：慶典緋紅 */
-        body.theme-2 { --cat-main: #2E7D32; --cat-bg: #F1F8E9; } /* 3月：嫩芽春綠 */
-        body.theme-3 { --cat-main: #6A1B9A; --cat-bg: #F3E5F5; } /* 4月：夢幻紫藤 */
-        body.theme-4 { --cat-main: #F9A825; --cat-bg: #FFF9C4; } /* 5月：金燦初夏 */
-        body.theme-5 { --cat-main: #01579B; --cat-bg: #E1F5FE; } /* 6月：蔚藍深海 */
-        body.theme-6 { --cat-main: #AD1457; --cat-bg: #FCE4EC; } /* 7月：盛夏火鶴 */
-        body.theme-7 { --cat-main: #00838F; --cat-bg: #E0F2F1; } /* 8月：薄荷蘇打 */
-        body.theme-8 { --cat-main: #BF360C; --cat-bg: #FBE9E7; } /* 9月：楓糖暖焦 */
-        body.theme-9 { --cat-main: #37474F; --cat-bg: #ECEFF1; } /* 10月：魅影萬聖 */
-        body.theme-10 { --cat-main: #6D4C41; --cat-bg: #EFEBE9; } /* 11月：拿鐵餘溫 */
-        body.theme-11 { --cat-main: #5C6BC0; --cat-bg: #E8EAF6; } /* 12月：星夜金輝 */
+        /* 調整後的主題：降低飽和度，柔和紫色 */
+        body.theme-0 { --cat-main: #8E97C1; --cat-bg: #F0F2F8; --cat-light-pink: #D0D7EE; } /* 1月：冬日冰原 */
+        body.theme-1 { --cat-main: #D98E8E; --cat-bg: #FFF9F9; --cat-light-pink: #FAD7D7; } /* 2月：莓果慕斯 */
+        body.theme-2 { --cat-main: #9BB39B; --cat-bg: #F4F8F4; --cat-light-pink: #D5E4D5; } /* 3月：初綻春芽 */
+        body.theme-3 { --cat-main: #B4A7D6; --cat-bg: #F8F6FC; --cat-light-pink: #E2DBF0; } /* 4月：微光薰衣草 */
+        body.theme-4 { --cat-main: #E9C46A; --cat-bg: #FFFBF0; --cat-light-pink: #F9EBC5; } /* 5月：初夏晨光 */
+        body.theme-5 { --cat-main: #7FB3D5; --cat-bg: #F1F7FA; --cat-light-pink: #C9E1F0; } /* 6月：晨間晴空 */
+        body.theme-6 { --cat-main: #EDBB99; --cat-bg: #FEF5F0; --cat-light-pink: #F9DEC9; } /* 7月：夕陽沙灘 */
+        body.theme-7 { --cat-main: #A3C9C9; --cat-bg: #F2F9F9; --cat-light-pink: #D5E7E7; } /* 8月：薄荷蘇打 */
+        body.theme-9 { --cat-main: #C08575; --cat-bg: #F9F4F2; --cat-light-pink: #E6C8C1; } /* 9月：乾燥玫瑰 */
+        body.theme-10 { --cat-main: #A594A5; --cat-bg: #F6F4F6; --cat-light-pink: #DED6DE; } /* 10月：午後薄霧 */
+        body.theme-11 { --cat-main: #A1887F; --cat-bg: #F7F5F4; --cat-light-pink: #D7CCC8; } /* 11月：熱拿鐵 */
+        body.theme-12 { --cat-main: #BFC9CA; --cat-bg: #F2F4F4; --cat-light-pink: #DEE5E5; } /* 12月：銀裝素裏 */
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, "Noto Sans TC", sans-serif; }
         body { background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 160px; font-size: 14px; transition: background 0.3s ease; }
@@ -37,15 +37,12 @@
         input, select, textarea { width: 100%; border: 2px solid var(--cat-gray); border-radius: 10px; padding: 10px; margin-top: 5px; font-size: 16px; outline: none; background: #fff; color: var(--cat-dark); }
         label { font-size: 13px; font-weight: bold; display: block; margin-top: 10px; color: var(--cat-dark); border-left: 4px solid var(--cat-main); padding-left: 8px; }
         .hint { font-size: 11px; color: #888; margin-top: 3px; line-height: 1.4; font-weight: normal; }
-        #amt { font-size: 24px; height: 45px; text-align: center; color: var(--cat-red); border: 2.5px solid var(--cat-dark); margin-bottom: 8px; font-weight: bold; }
+        #amt { font-size: 24px; height: 45px; text-align: center; color: var(--cat-red); border: 2.5 solid var(--cat-dark); margin-bottom: 8px; font-weight: bold; }
         .kb-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 5px; }
         .kb-btn { height: 38px; border: 1.5px solid var(--cat-dark); border-radius: 10px; background: #fff; font-weight: 900; color: var(--cat-dark); cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; }
         .kb-btn:active { transform: scale(0.92); background: var(--cat-light-pink); }
         .op-btn { background: var(--cat-bg); }
-        
-        /* 修正：強制所有按鈕跟隨主題變色 */
-        .btn-main { background: var(--cat-main) !important; border: 2.5px solid var(--cat-dark); box-shadow: 0 4px 0 var(--cat-dark); font-weight: bold; color: white; border-radius: 15px; padding: 14px; width: 100%; cursor: pointer; margin-top: 15px; font-size: 17px; letter-spacing: 2px; transition: 0.3s; }
-        
+        .btn-main { background: var(--cat-main) !important; border: 2.5px solid var(--cat-dark); box-shadow: 0 4px 0 var(--cat-dark); font-weight: bold; color: white; border-radius: 15px; padding: 14px; width: 100%; cursor: pointer; margin-top: 15px; font-size: 17px; letter-spacing: 2px; transition: background 0.3s; }
         .nav-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: white; border: 3px solid var(--cat-dark); box-shadow: 0 6px 0 var(--cat-gray); display: flex; justify-content: space-around; padding: 10px 5px; z-index: 100; border-radius: 30px; height: 85px; align-items: center; }
         .nav-item { border: none; background: none; text-align: center; flex: 1; cursor: pointer; opacity: 0.3; }
         .nav-item.active { opacity: 1; }
@@ -99,7 +96,7 @@
         <h2 id="home-title-display" style="text-align:center; margin-bottom:10px;">🐾 首頁</h2>
         <div id="jarList"></div>
         <div class="cat-card">
-            <h3 style="font-size:14px; margin-top:0;">📅 薪資帳期預算</h3>
+            <h3 style="font-size:14px; margin:0;">📅 薪資帳期預算</h3>
             <p id="period-info" style="font-size:11px; color:#666; margin-bottom:10px;"></p>
             <div id="home-budget-list"></div>
         </div>
@@ -134,12 +131,12 @@
             <label>🎨 介面主題風格</label>
             <select id="theme-select" onchange="applyCurrentTheme()">
                 <option value="auto">🌟 隨月份自動變換</option>
-                <option value="0">1月：冰封極光</option><option value="1">2月：慶典緋紅</option>
-                <option value="2">3月：嫩芽春綠</option><option value="3">4月：夢幻紫藤</option>
-                <option value="4">5月：金燦初夏</option><option value="5">6月：蔚藍深海</option>
-                <option value="6">7月：盛夏火鶴</option><option value="7">8月：薄荷蘇打</option>
-                <option value="8">9月：楓糖暖焦</option><option value="9">10月：魅影萬聖</option>
-                <option value="10">11月：拿鐵餘溫</option><option value="11">12月：星夜金輝</option>
+                <option value="0">1月：冬日冰原</option><option value="1">2月：莓果慕斯</option>
+                <option value="2">3月：初綻春芽</option><option value="3">4月：微光薰衣草</option>
+                <option value="4">5月：初夏晨光</option><option value="5">6月：晨間晴空</option>
+                <option value="6">7月：夕陽沙灘</option><option value="7">8月：薄荷蘇打</option>
+                <option value="8">9月：乾燥玫瑰</option><option value="9">10月：午後薄霧</option>
+                <option value="10">11月：熱拿鐵</option><option value="11">12月：銀裝素裏</option>
             </select>
             <label>🐱 貓咪理財金句 (每行一句)</label>
             <textarea id="quote-editor" rows="4"></textarea>
@@ -179,7 +176,8 @@
 </nav>
 
 <script>
-    const DB_KEY = 'cat_dream_ultimate_v49';
+    /* 核心邏輯完全繼承自 v49 */
+    const DB_KEY = 'cat_dream_ultimate_v49_updated';
     let store = JSON.parse(localStorage.getItem(DB_KEY)) || {
         appName: '夢夢記帳', budgetDay: 10, threshold: 80, kbMode: 'calc', 
         theme: 'auto', quotes: ["錢錢沒有不見，只是變成你喜歡的樣子喵！"],
@@ -374,8 +372,8 @@
         store.history.push(rec); saveToDB(); alert('存好囉！'); location.reload();
     }
 
-    function exportData() { store.lastBackup = Date.now(); saveToDB(); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(store)], {type: "application/json"})); a.download = `備份.json`; a.click(); }
-    function exportCSV() { let csv="\uFEFF日期,類型,大類,小類,金額,帳戶,備註\n"; store.history.forEach(h=>{ csv+=`${h.date},${h.type},${h.main||''},${h.sub||''},${h.amt},${h.srcRaw||''},${h.note||''}\n`; }); const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8;'})); a.download=`報表.csv`; a.click(); }
+    function exportData() { store.lastBackup = Date.now(); saveToDB(); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(store)], {type: "application/json"})); a.download = `夢夢記帳_備份.json`; a.click(); }
+    function exportCSV() { let csv="\uFEFF日期,類型,大類,小類,金額,帳戶,備註\n"; store.history.forEach(h=>{ csv+=`${h.date},${h.type},${h.main||''},${h.sub||''},${h.amt},${h.srcRaw||''},${h.note||''}\n`; }); const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8;'})); a.download=`夢夢記帳_報表.csv`; a.click(); }
     function importData(e) { const r = new FileReader(); r.onload=(ev)=>{ store=JSON.parse(ev.target.result); saveToDB(); location.reload(); }; r.readAsText(e.target.files[0]); }
     function fullReset() { if(confirm("⚠️ 確定要清空所有紀錄嗎喵？")) { store.history=[]; store.jarBalances={}; saveToDB(); location.reload(); } }
     function checkBackupAlert() { if(Date.now() - (store.lastBackup || 0) > 7 * 86400000) document.getElementById('backup-modal').style.display='flex'; }
