@@ -13,59 +13,59 @@
             --cat-orange: #fab1a0;
         }
 
-        /* 調整後的主題：降低飽和度，柔和紫色 */
-        body.theme-0 { --cat-main: #8E97C1; --cat-bg: #F0F2F8; --cat-light-pink: #D0D7EE; } /* 1月：冬日冰原 */
-        body.theme-1 { --cat-main: #D98E8E; --cat-bg: #FFF9F9; --cat-light-pink: #FAD7D7; } /* 2月：莓果慕斯 */
-        body.theme-2 { --cat-main: #9BB39B; --cat-bg: #F4F8F4; --cat-light-pink: #D5E4D5; } /* 3月：初綻春芽 */
-        body.theme-3 { --cat-main: #B4A7D6; --cat-bg: #F8F6FC; --cat-light-pink: #E2DBF0; } /* 4月：微光薰衣草 */
-        body.theme-4 { --cat-main: #E9C46A; --cat-bg: #FFFBF0; --cat-light-pink: #F9EBC5; } /* 5月：初夏晨光 */
-        body.theme-5 { --cat-main: #7FB3D5; --cat-bg: #F1F7FA; --cat-light-pink: #C9E1F0; } /* 6月：晨間晴空 */
-        body.theme-6 { --cat-main: #EDBB99; --cat-bg: #FEF5F0; --cat-light-pink: #F9DEC9; } /* 7月：夕陽沙灘 */
-        body.theme-7 { --cat-main: #A3C9C9; --cat-bg: #F2F9F9; --cat-light-pink: #D5E7E7; } /* 8月：薄荷蘇打 */
-        body.theme-9 { --cat-main: #C08575; --cat-bg: #F9F4F2; --cat-light-pink: #E6C8C1; } /* 9月：乾燥玫瑰 */
-        body.theme-10 { --cat-main: #A594A5; --cat-bg: #F6F4F6; --cat-light-pink: #DED6DE; } /* 10月：午後薄霧 */
-        body.theme-11 { --cat-main: #A1887F; --cat-bg: #F7F5F4; --cat-light-pink: #D7CCC8; } /* 11月：熱拿鐵 */
-        body.theme-12 { --cat-main: #BFC9CA; --cat-bg: #F2F4F4; --cat-light-pink: #DEE5E5; } /* 12月：銀裝素裏 */
+        /* --- 依照截圖精確定義 12 個月主題色碼 --- */
+        body.theme-0 { --cat-main: #1A237E; --cat-bg: #E8EAF6; --cat-btn: #5C6BC0; --cat-text: white; }
+        body.theme-1 { --cat-main: #B71C1C; --cat-bg: #FFF5F5; --cat-btn: #EF5350; --cat-text: white; }
+        body.theme-2 { --cat-main: #2E7D32; --cat-bg: #F1F8E9; --cat-btn: #81C784; --cat-text: white; }
+        body.theme-3 { --cat-main: #6A1B9A; --cat-bg: #F3E5F5; --cat-btn: #BA68C8; --cat-text: white; }
+        body.theme-4 { --cat-main: #F9A825; --cat-bg: #FFF9C4; --cat-btn: #FFF176; --cat-text: #5D4037; }
+        body.theme-5 { --cat-main: #01579B; --cat-bg: #E1F5FE; --cat-btn: #64B5F6; --cat-text: white; }
+        body.theme-6 { --cat-main: #AD1457; --cat-bg: #FCE4EC; --cat-btn: #F06292; --cat-text: white; }
+        body.theme-7 { --cat-main: #00838F; --cat-bg: #E0F2F1; --cat-btn: #26C6DA; --cat-text: white; }
+        body.theme-8 { --cat-main: #BF360C; --cat-bg: #FBE9E7; --cat-btn: #FF8A65; --cat-text: white; }
+        body.theme-9 { --cat-main: #37474F; --cat-bg: #ECEFF1; --cat-btn: #90A4AE; --cat-text: white; }
+        body.theme-10 { --cat-main: #6D4C41; --cat-bg: #EFEBE9; --cat-btn: #A1887F; --cat-text: white; }
+        body.theme-11 { --cat-main: #5C6BC0; --cat-bg: #E8EAF6; --cat-btn: #9FA8DA; --cat-text: white; }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, "Noto Sans TC", sans-serif; }
-        body { background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 160px; font-size: 14px; transition: background 0.3s ease; }
-        .container { max-width: 450px; margin: 0 auto; padding: 12px; }
-        .page { display: none; }
-        .page.active { display: block; animation: fadeIn 0.2s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        .cat-card { background: #fff; border: 2.5px solid var(--cat-dark); box-shadow: 4px 4px 0 var(--cat-gray); border-radius: 18px; margin-bottom: 15px; padding: 15px; position: relative; }
-        input, select, textarea { width: 100%; border: 2px solid var(--cat-gray); border-radius: 10px; padding: 10px; margin-top: 5px; font-size: 16px; outline: none; background: #fff; color: var(--cat-dark); }
-        label { font-size: 13px; font-weight: bold; display: block; margin-top: 10px; color: var(--cat-dark); border-left: 4px solid var(--cat-main); padding-left: 8px; }
-        .hint { font-size: 11px; color: #888; margin-top: 3px; line-height: 1.4; font-weight: normal; }
-        #amt { font-size: 24px; height: 45px; text-align: center; color: var(--cat-red); border: 2.5 solid var(--cat-dark); margin-bottom: 8px; font-weight: bold; }
-        .kb-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 5px; }
-        .kb-btn { height: 38px; border: 1.5px solid var(--cat-dark); border-radius: 10px; background: #fff; font-weight: 900; color: var(--cat-dark); cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; }
-        .kb-btn:active { transform: scale(0.92); background: var(--cat-light-pink); }
-        .op-btn { background: var(--cat-bg); }
-        .btn-main { background: var(--cat-main) !important; border: 2.5px solid var(--cat-dark); box-shadow: 0 4px 0 var(--cat-dark); font-weight: bold; color: white; border-radius: 15px; padding: 14px; width: 100%; cursor: pointer; margin-top: 15px; font-size: 17px; letter-spacing: 2px; transition: background 0.3s; }
-        .nav-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: white; border: 3px solid var(--cat-dark); box-shadow: 0 6px 0 var(--cat-gray); display: flex; justify-content: space-around; padding: 10px 5px; z-index: 100; border-radius: 30px; height: 85px; align-items: center; }
-        .nav-item { border: none; background: none; text-align: center; flex: 1; cursor: pointer; opacity: 0.3; }
-        .nav-item.active { opacity: 1; }
-        .nav-icon { font-size: 30px; display: block; margin-bottom: 2px; }
-        .nav-text { font-size: 11px; font-weight: bold; color: var(--cat-dark); }
-        .prog-container { background: #EFEBE9; height: 16px; border-radius: 8px; border: 1.5px solid var(--cat-dark); overflow: hidden; margin: 5px 0; }
-        .prog-fill { height: 100%; transition: width 0.6s; background: var(--cat-main) !important; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
-        .cal-day { padding: 8px 0; border-radius: 6px; font-size: 12px; cursor: pointer; position: relative; min-height: 40px; }
-        .cal-day.today { background: var(--cat-light-pink); font-weight: bold; }
-        .cal-day.selected { background: var(--cat-orange) !important; color: white; font-weight: bold; }
-        .cal-day.has-record::after { content: '•'; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); color: var(--cat-red); font-size: 14px; }
-        .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .cal-btn { background: none; border: none; font-size: 20px; cursor: pointer; padding: 0 15px; }
-        .record-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed var(--cat-gray); }
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-        .modal-content { background: white; width: 88%; max-height: 85vh; overflow-y: auto; padding: 20px; border-radius: 25px; border: 3px solid var(--cat-dark); text-align: center; }
-
-        /* 貓咪金句樣式 */
+        * { box-sizing: border-box; -[span_0](start_span)webkit-tap-highlight-color: transparent; font-family: -apple-system, "Noto Sans TC", sans-serif;[span_0](end_span) }
+        [span_1](start_span)body { background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 160px; font-size: 14px; transition: background 0.3s ease;[span_1](end_span) }
+        [span_2](start_span).container { max-width: 450px; margin: 0 auto; padding: 12px;[span_2](end_span) }
+        [span_3](start_span).page { display: none;[span_3](end_span) }
+        [span_4](start_span).page.active { display: block; animation: fadeIn 0.2s ease-out;[span_4](end_span) }
+        [span_5](start_span)@keyframes fadeIn { from { opacity: 0; transform: translateY(5px);[span_5](end_span) } to { opacity: 1; transform: translateY(0); } }
+        [span_6](start_span).cat-card { background: #fff; border: 2.5px solid var(--cat-dark); box-shadow: 4px 4px 0 var(--cat-gray); border-radius: 18px; margin-bottom: 15px; padding: 15px; position: relative;[span_6](end_span) }
+        [span_7](start_span)input, select, textarea { width: 100%; border: 2px solid var(--cat-gray); border-radius: 10px; padding: 10px; margin-top: 5px; font-size: 16px; outline: none; background: #fff; color: var(--cat-dark);[span_7](end_span) }
+        [span_8](start_span)label { font-size: 13px; font-weight: bold; display: block; margin-top: 10px; color: var(--cat-dark); border-left: 4px solid var(--cat-main); padding-left: 8px;[span_8](end_span) }
+        [span_9](start_span).hint { font-size: 11px; color: #888; margin-top: 3px; line-height: 1.4; font-weight: normal;[span_9](end_span) }
+        [span_10](start_span)#amt { font-size: 24px; height: 45px; text-align: center; color: var(--cat-red); border: 2.5px solid var(--cat-dark); margin-bottom: 8px; font-weight: bold;[span_10](end_span) }
+        [span_11](start_span).kb-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 5px;[span_11](end_span) }
+        [span_12](start_span).kb-btn { height: 38px; border: 1.5px solid var(--cat-dark); border-radius: 10px; background: #fff; font-weight: 900; color: var(--cat-dark); cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center;[span_12](end_span) }
+        [span_13](start_span).kb-btn:active { transform: scale(0.92); background: var(--cat-light-pink);[span_13](end_span) }
+        
+        /* 修正：強制按鈕與文字跟隨主題色 */
+        [span_14](start_span).btn-main { background: var(--cat-main) !important; color: var(--cat-text, white) !important; border: 2.5px solid var(--cat-dark) !important; box-shadow: 0 4px 0 var(--cat-dark) !important; font-weight: bold; border-radius: 15px; padding: 14px; width: 100%; cursor: pointer; margin-top: 15px; font-size: 17px; letter-spacing: 2px;[span_14](end_span) }
+        
+        [span_15](start_span).nav-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: white; border: 3px solid var(--cat-dark); box-shadow: 0 6px 0 var(--cat-gray); display: flex; justify-content: space-around; padding: 10px 5px; z-index: 100; border-radius: 30px; height: 85px; align-items: center;[span_15](end_span) }
+        [span_16](start_span).nav-item { border: none; background: none; text-align: center; flex: 1; cursor: pointer; opacity: 0.3;[span_16](end_span) }
+        [span_17](start_span).nav-item.active { opacity: 1;[span_17](end_span) }
+        [span_18](start_span).nav-icon { font-size: 30px; display: block; margin-bottom: 2px;[span_18](end_span) }
+        [span_19](start_span).nav-text { font-size: 11px; font-weight: bold; color: var(--cat-dark);[span_19](end_span) }
+        [span_20](start_span).prog-container { background: #EFEBE9; height: 16px; border-radius: 8px; border: 1.5px solid var(--cat-dark); overflow: hidden; margin: 5px 0;[span_20](end_span) }
+        [span_21](start_span).prog-fill { height: 100%; transition: width 0.6s; background: var(--cat-main) !important;[span_21](end_span) }
+        [span_22](start_span).calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center;[span_22](end_span) }
+        [span_23](start_span).cal-day { padding: 8px 0; border-radius: 6px; font-size: 12px; cursor: pointer; position: relative; min-height: 40px;[span_23](end_span) }
+        [span_24](start_span).cal-day.today { background: var(--cat-light-pink); font-weight: bold;[span_24](end_span) }
+        [span_25](start_span).cal-day.selected { background: var(--cat-orange) !important; color: white; font-weight: bold;[span_25](end_span) }
+        [span_26](start_span).cal-day.has-record::after { content: '•'; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); color: var(--cat-red); font-size: 14px;[span_26](end_span) }
+        
+        /* 理財貓咪組件樣式 */
         .cat-buddy { position: fixed; bottom: 120px; right: 20px; z-index: 99; cursor: pointer; display: flex; flex-direction: column; align-items: flex-end; }
-        .cat-bubble { background: white; border: 2.5px solid var(--cat-dark); border-radius: 12px; padding: 8px 12px; font-size: 12px; max-width: 150px; margin-bottom: 5px; display: none; box-shadow: 3px 3px 0 var(--cat-gray); position: relative; line-height: 1.4; }
+        .cat-bubble { background: white; border: 2.5px solid var(--cat-dark); border-radius: 12px; padding: 8px 12px; font-size: 12px; max-width: 150px; margin-bottom: 5px; display: none; box-shadow: 3px 3px 0 var(--cat-gray); position: relative; line-height: 1.4; color: var(--cat-dark); }
         .cat-bubble::after { content: ''; position: absolute; bottom: -10px; right: 15px; border-width: 8px 8px 0; border-style: solid; border-color: white transparent; }
-        .cat-icon { font-size: 45px; filter: drop-shadow(2px 2px 0 var(--cat-gray)); }
+        .cat-icon { font-size: 45px; filter: drop-shadow(2px 2px 0 var(--cat-gray)); transition: 0.2s; }
+        
+        [span_27](start_span).modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; backdrop-filter: blur(4px);[span_27](end_span) }
+        [span_28](start_span).modal-content { background: white; width: 88%; max-height: 85vh; overflow-y: auto; padding: 20px; border-radius: 25px; border: 3px solid var(--cat-dark); text-align: center;[span_28](end_span) }
     </style>
 </head>
 <body>
@@ -101,7 +101,7 @@
             <div id="home-budget-list"></div>
         </div>
         <div class="cat-card">
-            <div class="cal-header">
+            <div class="cal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                 <button class="cal-btn" onclick="changeMonth(-1)">❮</button>
                 <h3 id="cal-month-title" style="margin:0; font-size:16px;"></h3>
                 <button class="cal-btn" onclick="changeMonth(1)">❯</button>
@@ -131,16 +131,16 @@
             <label>🎨 介面主題風格</label>
             <select id="theme-select" onchange="applyCurrentTheme()">
                 <option value="auto">🌟 隨月份自動變換</option>
-                <option value="0">1月：冬日冰原</option><option value="1">2月：莓果慕斯</option>
-                <option value="2">3月：初綻春芽</option><option value="3">4月：微光薰衣草</option>
-                <option value="4">5月：初夏晨光</option><option value="5">6月：晨間晴空</option>
-                <option value="6">7月：夕陽沙灘</option><option value="7">8月：薄荷蘇打</option>
-                <option value="8">9月：乾燥玫瑰</option><option value="9">10月：午後薄霧</option>
-                <option value="10">11月：熱拿鐵</option><option value="11">12月：銀裝素裏</option>
+                <option value="0">1月：冰封極光</option><option value="1">2月：慶典緋紅</option>
+                <option value="2">3月：嫩芽春綠</option><option value="3">4月：夢幻紫藤</option>
+                <option value="4">5月：金燦初夏</option><option value="5">6月：蔚藍深海</option>
+                <option value="6">7月：盛夏火鶴</option><option value="7">8月：薄荷蘇打</option>
+                <option value="8">9月：楓糖暖焦</option><option value="9">10月：魅影萬聖</option>
+                <option value="10">11月：拿鐵餘溫</option><option value="11">12月：星夜金輝</option>
             </select>
             <label>🐱 貓咪理財金句 (每行一句)</label>
             <textarea id="quote-editor" rows="4"></textarea>
-            <hr style="margin:20px 0; border:0; border-top:1px dashed var(--cat-gray);">
+            <hr style="margin:20px 0; border:0.5px dashed var(--cat-gray);">
             <button onclick="openManual()" class="btn-main" style="background:var(--cat-blue); margin-top:0; margin-bottom:15px;">📘 查看說明書</button>
             <label>📅 預算起算日 (薪資日)</label><input type="number" id="budget-day-input">
             <label>🔔 預算提醒門檻 (%)</label><input type="number" id="budget-threshold-input">
@@ -176,27 +176,29 @@
 </nav>
 
 <script>
-    /* 核心邏輯完全繼承自 v49 */
-    const DB_KEY = 'cat_dream_ultimate_v49_updated';
+    [span_29](start_span)/* 核心邏輯繼承自 v49 [cite: 201-204] */
+    const DB_KEY = 'cat_dream_ultimate_v49_final';
     let store = JSON.parse(localStorage.getItem(DB_KEY)) || {
         appName: '夢夢記帳', budgetDay: 10, threshold: 80, kbMode: 'calc', 
         theme: 'auto', quotes: ["錢錢沒有不見，只是變成你喜歡的樣子喵！"],
-        accs: { '現金': 0, '銀行': 0 }, cats: { '飲食':['外食','飲料','食材'] }, incCats: { '工作':['薪資','獎金'] },
+        accs: { '現金': 0, '銀行': 0 }, cats: { '飲食':['外食'] }, incCats: { '工作':['月薪'] },
         budgets: { '飲食': 5000 }, history: [], manualContent: "【預算】自訂發薪日，首頁自動切換帳期。",
         jarBalances: {}, jars: {}, lastBackup: Date.now()
     };
-    let pieChartInstance = null, barChartInstance = null, calcBuffer = "", viewDate = new Date();
+    [cite_start]let pieChartInstance = null, barChartInstance = null, calcBuffer = "", viewDate = new Date();[span_29](end_span)
 
     window.onload = () => {
-        applyCurrentTheme();
-        const now = new Date(); document.getElementById('record-date').value = now.toISOString().split('T')[0];
-        updateAppTitles(); checkBackupAlert(); initDaily(); renderKeyboard();
+        applyCurrentTheme(); // 1. 載入立即套用主題
+        [span_30](start_span)const now = new Date(); document.getElementById('record-date').value = now.toISOString().split('T')[0];[span_30](end_span)
+        [span_31](start_span)updateAppTitles(); checkBackupAlert(); initDaily(); renderKeyboard();[span_31](end_span)
     };
 
     function applyCurrentTheme() {
-        let t = document.getElementById('theme-select') ? document.getElementById('theme-select').value : (store.theme || 'auto');
+        const select = document.getElementById('theme-select');
+        let t = select ? select.value : (store.theme || 'auto');
         if (t === 'auto') { t = new Date().getMonth(); }
         document.body.className = 'theme-' + t;
+        if (select) { store.theme = select.value; saveToDB(); }
     }
 
     function catSpeak() {
@@ -207,35 +209,36 @@
         setTimeout(() => { bubble.style.display = 'none'; }, 3000);
     }
 
-    function saveToDB() { localStorage.setItem(DB_KEY, JSON.stringify(store)); }
-    function updateAppTitles() { document.getElementById('web-title').innerText = store.appName; document.getElementById('home-title-display').innerText = '🐾 ' + store.appName; }
+    function saveToDB() { localStorage.setItem(DB_KEY, JSON.stringify(store)); [span_32](start_span)}
+    function updateAppTitles() { document.getElementById('web-title').innerText = store.appName;[span_32](end_span)
+        document.getElementById('home-title-display').innerText = '🐾 ' + store.appName; [span_33](start_span)}
 
     function showPage(pId, el) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById('page-' + pId).classList.add('active');
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));[span_33](end_span)
+        [span_34](start_span)document.getElementById('page-' + pId).classList.add('active');[span_34](end_span)
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         el.classList.add('active');
-        if(pId === 'home') renderHome(); if(pId === 'assets') renderAssetsAndHistory(); if(pId === 'settings') initSettings();
+        [span_35](start_span)if(pId === 'home') renderHome(); if(pId === 'assets') renderAssetsAndHistory(); if(pId === 'settings') initSettings();[span_35](end_span)
     }
 
     function initSettings() {
         document.getElementById('theme-select').value = store.theme || 'auto';
         document.getElementById('quote-editor').value = (store.quotes || []).join('\n');
-        document.getElementById('budget-day-input').value = store.budgetDay;
+        [span_36](start_span)document.getElementById('budget-day-input').value = store.budgetDay;[span_36](end_span)
         document.getElementById('budget-threshold-input').value = store.threshold;
-        document.getElementById('budget-editor').value = Object.entries(store.budgets).map(([k,v])=>`${k}:${v}`).join('\n');
+        [span_37](start_span)document.getElementById('budget-editor').value = Object.entries(store.budgets).map(([k,v])=>`${k}:${v}`).join('\n');[span_37](end_span)
         document.getElementById('cat-editor').value = Object.entries(store.cats).map(([k,v])=>`${k}:${v.join(',')}`).join('\n');
         document.getElementById('inc-cat-editor').value = Object.entries(store.incCats).map(([k,v])=>`${k}:${v.join(',')}`).join('\n');
         document.getElementById('acc-editor').value = Object.entries(store.accs).map(([k,v])=>`${k}:${v}`).join('\n');
         document.getElementById('jar-editor').value = Object.entries(store.jars).map(([k,v])=>`${k}:${v.goal},${v.start},${v.end}`).join('\n');
-        document.getElementById('manual-editor').value = store.manualContent;
+        [span_38](start_span)document.getElementById('manual-editor').value = store.manualContent;[span_38](end_span)
     }
 
     function saveSettings() {
         store.theme = document.getElementById('theme-select').value;
         store.quotes = document.getElementById('quote-editor').value.split('\n').filter(s => s.trim());
-        store.budgetDay = Number(document.getElementById('budget-day-input').value) || 1;
-        store.threshold = Number(document.getElementById('budget-threshold-input').value) || 80;
+        store.budgetDay = Number(document.getElementById('budget-day-input').value) || [span_39](start_span)1;[span_39](end_span)
+        store.threshold = Number(document.getElementById('budget-threshold-input').value) || [span_40](start_span)80;[span_40](end_span)
         store.manualContent = document.getElementById('manual-editor').value;
         const parseLines = (id, isCat=false) => {
             const o = {};
@@ -244,150 +247,164 @@
                     if(isCat) o[k.trim()] = v.split(',').map(s=>s.trim());
                     else o[k.trim()] = Number(v.replace(/,/g,'').trim());
                 }
-            }); return o;
+            [span_41](start_span)}); return o;[span_41](end_span)
         };
         store.cats = parseLines('cat-editor', true); store.incCats = parseLines('inc-cat-editor', true);
-        store.accs = parseLines('acc-editor'); store.budgets = parseLines('budget-editor');
+        [span_42](start_span)store.accs = parseLines('acc-editor'); store.budgets = parseLines('budget-editor');[span_42](end_span)
         const j = {}; document.getElementById('jar-editor').value.split('\n').forEach(l => {
-            const [n, d] = l.split(':'); if(n && d) { const parts = d.split(','); j[n.trim()] = { goal: Number(parts[0]), start: parts[1], end: parts[2] }; }
+            [span_43](start_span)const [n, d] = l.split(':'); if(n && d) { const parts = d.split(','); j[n.trim()] = { goal: Number(parts[0]), start: parts[1], end: parts[2] }; }[span_43](end_span)
         });
-        store.jars = j; saveToDB(); applyCurrentTheme(); alert('設定已成功更新！');
+        [span_44](start_span)store.jars = j;[span_44](end_span)
+        saveToDB(); applyCurrentTheme(); alert('設定已成功更新！'); // 移除 location.reload()
     }
 
+    [span_45](start_span)/* 以下完全保留 v49 複雜功能邏輯 [cite: 215-272] */
     function renderHome() {
         const range = getBudgetDateRange();
-        document.getElementById('period-info').innerText = `目前帳期：${range.start.toLocaleDateString()} ~ ${range.end.toLocaleDateString()}`;
+        [cite_start]document.getElementById('period-info').innerText = `目前帳期：${range.start.toLocaleDateString()} ~ ${range.end.toLocaleDateString()}`;[span_45](end_span)
         const jl = document.getElementById('jarList'); jl.innerHTML = "";
         const now = new Date();
-        for(let n in store.jars) {
-            const p = store.jars[n], cb = store.jarBalances[n]||0;
-            const goal = p.goal, start = new Date(p.start), end = new Date(p.end);
-            let totalMonths = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1;
-            let passedMonths = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth()) + 1;
-            let remainingMonths = Math.max(totalMonths - passedMonths + 1, 1);
+        [span_46](start_span)for(let n in store.jars) {[span_46](end_span)
+            [span_47](start_span)const p = store.jars[n], cb = store.jarBalances[n]||0;[span_47](end_span)
+            [span_48](start_span)const goal = p.goal, start = new Date(p.start), end = new Date(p.end);[span_48](end_span)
+            [span_49](start_span)let totalMonths = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1;[span_49](end_span)
+            [span_50](start_span)let passedMonths = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth()) + 1;[span_50](end_span)
+            [span_51](start_span)let remainingMonths = Math.max(totalMonths - passedMonths + 1, 1);[span_51](end_span)
             let idealPerMonth = goal / totalMonths;
-            let idealTotalNow = idealPerMonth * passedMonths;
+            [span_52](start_span)let idealTotalNow = idealPerMonth * passedMonths;[span_52](end_span)
             let diff = cb - idealTotalNow;
-            let suggestMonthly = Math.max((goal - cb) / remainingMonths, 0);
+            [span_53](start_span)let suggestMonthly = Math.max((goal - cb) / remainingMonths, 0);[span_53](end_span)
             const thisMonthStr = now.toISOString().slice(0,7);
-            const hasSavedThisMonth = store.history.some(h => h.type === 'save' && h.jar === n && h.date.startsWith(thisMonthStr));
+            [span_54](start_span)const hasSavedThisMonth = store.history.some(h => h.type === 'save' && h.jar === n && h.date.startsWith(thisMonthStr));[span_54](end_span)
             const pct = Math.min(Math.round(cb/goal*100), 100);
-            jl.innerHTML += `<div class="cat-card" style="padding:12px; margin-bottom:10px;"><div style="display:flex; justify-content:space-between; align-items:center;"><b>💎 ${n}</b><span style="font-size:10px; background:#eee; padding:2px 6px; border-radius:10px;">${hasSavedThisMonth ? '✅ 本月已存' : '⏳ 本月待存'}</span></div><div style="font-size:12px; line-height:1.6; color:#555; margin-top:5px;">目標：$${goal.toLocaleString()} (已存 $${cb.toLocaleString()})<br>建議月存：<b>$${Math.round(suggestMonthly).toLocaleString()}</b> / 月<br>當前進度：<span style="color:${diff >= 0 ? 'var(--cat-green)' : 'var(--cat-red)'}; font-weight:bold;">${diff >= 0 ? '超前' : '落後'} $${Math.abs(Math.round(diff)).toLocaleString()}</span></div><div class="prog-container"><div class="prog-fill" style="width:${pct}%;"></div></div></div>`;
+            jl.innerHTML += `
+                <div class="cat-card" style="padding:12px; margin-bottom:10px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <b>💎 ${n}</b>
+                        <span style="font-size:10px; background:#eee; padding:2px 6px; border-radius:10px;">${hasSavedThisMonth ? [span_55](start_span)'✅ 本月已存' : '⏳ 本月待存'}</span> [cite: 224-225]
+                    </div>
+                    <div style="font-size:12px; line-height:1.6; color:#555; margin-top:5px;">
+                        目標：$${goal.toLocaleString()} (已存 $${cb.toLocaleString()})<br>
+                        [cite_start]建議月存：<b>$${Math.round(suggestMonthly).toLocaleString()}</b> / 月<br> [cite: 225-226]
+                        當前進度：<span style="color:${diff >= 0 ? 'var(--cat-green)' : 'var(--cat-red)'}; font-weight:bold;">${diff >= 0 ? [cite_start]'超前' : '落後'} $${Math.abs(Math.round(diff)).toLocaleString()}</span> [cite: 226-227]
+                    </div>
+                    <div class="prog-container"><div class="prog-fill" style="width:${pct}%;"></div></div>
+                [cite_start]</div>`;[span_55](end_span)
         }
         const hb = document.getElementById('home-budget-list'); hb.innerHTML = "";
-        for(let b in store.budgets) {
-            const spent = store.history.filter(h=>h.type==='exp' && h.main===b && new Date(h.date)>=range.start && new Date(h.date)<=range.end).reduce((s,x)=>s+x.amt,0);
-            const pct = Math.min(Math.round(spent/store.budgets[b]*100), 100);
-            hb.innerHTML += `<div style="font-size:11px; margin-top:5px;">${b} ($${spent}/$${store.budgets[b]})<div class="prog-container"><div class="prog-fill" style="width:${pct}%; background:${pct>=100?'var(--cat-red)':'var(--cat-green)'}"></div></div></div>`;
+        [span_56](start_span)for(let b in store.budgets) {[span_56](end_span)
+            [span_57](start_span)const spent = store.history.filter(h=>h.type==='exp' && h.main===b && new Date(h.date)>=range.start && new Date(h.date)<=range.end).reduce((s,x)=>s+x.amt,0);[span_57](end_span)
+            [span_58](start_span)const pct = Math.min(Math.round(spent/store.budgets[b]*100), 100);[span_58](end_span)
+            [span_59](start_span)hb.innerHTML += `<div style="font-size:11px; margin-top:5px;">${b} ($${spent}/$${store.budgets[b]})<div class="prog-container"><div class="prog-fill" style="width:${pct}%; background:${pct>=100?'var(--cat-red)':'var(--cat-green)'}"></div></div></div>`;[span_59](end_span)
         }
-        renderCalendar();
+        [span_60](start_span)renderCalendar();[span_60](end_span)
     }
 
     function getBudgetDateRange() {
         const now = new Date();
-        let y=now.getFullYear(), m=now.getMonth(), d=store.budgetDay||10;
+        [span_61](start_span)let y=now.getFullYear(), m=now.getMonth(), d=store.budgetDay||10;[span_61](end_span)
         if(now.getDate()>=d) return { start:new Date(y,m,d), end:new Date(y,m+1,d-1,23,59,59) };
-        return { start:new Date(y,m-1,d), end:new Date(y,m,d-1,23,59,59) };
+        [span_62](start_span)return { start:new Date(y,m-1,d), end:new Date(y,m,d-1,23,59,59) };[span_62](end_span)
     }
 
-    function changeMonth(dir) { viewDate.setMonth(viewDate.getMonth() + dir); renderCalendar(); }
+    function changeMonth(dir) { viewDate.setMonth(viewDate.getMonth()+dir); renderCalendar(); }
     function renderCalendar() {
-        const grid = document.getElementById('calendar-days'); grid.innerHTML = "";
-        const y = viewDate.getFullYear(), m = viewDate.getMonth();
-        document.getElementById('cal-month-title').innerText = `${y}年 ${m+1}月`;
-        const first = new Date(y, m, 1).getDay(), last = new Date(y, m + 1, 0).getDate();
-        for(let i=0; i<first; i++) grid.innerHTML += `<div></div>`;
+        [span_63](start_span)const grid = document.getElementById('calendar-days'); grid.innerHTML = "";[span_63](end_span)
+        const y=viewDate.getFullYear(), m=viewDate.getMonth(); document.getElementById('cal-month-title').innerText = `${y}年 ${m+1}月`;
+        [span_64](start_span)const first = new Date(y,m,1).getDay(), last = new Date(y,m+1,0).getDate();[span_64](end_span)
+        [span_65](start_span)for(let i=0; i<first; i++) grid.innerHTML += `<div></div>`;[span_65](end_span)
         for(let d=1; d<=last; d++) {
             const ds = `${y}-${(m+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`;
-            const isToday = new Date().toISOString().slice(0,10) === ds;
-            const hasRec = store.history.some(h => h.date === ds);
-            grid.innerHTML += `<div class="cal-day ${isToday?'today':''} ${hasRec?'has-record':''}" onclick="selectDate('${ds}', this)">${d}</div>`;
+            [span_66](start_span)grid.innerHTML += `<div class="cal-day ${new Date().toISOString().slice(0,10)===ds?'today':''} ${store.history.some(h=>h.date===ds)?'has-record':''}" onclick="selectDate('${ds}', this)">${d}</div>`;[span_66](end_span)
         }
     }
 
     function selectDate(ds, el) {
-        document.querySelectorAll('.cal-day').forEach(d => d.classList.remove('selected')); el.classList.add('selected');
+        [span_67](start_span)document.querySelectorAll('.cal-day').forEach(d => d.classList.remove('selected')); el.classList.add('selected');[span_67](end_span)
         document.getElementById('day-detail-area').style.display='block';
         document.getElementById('detail-date-title').innerText = `📅 ${ds} 的明細紀錄：`;
-        const recs = store.history.filter(h => h.date === ds);
-        document.getElementById('day-records').innerHTML = recs.map(r => `
+        [span_68](start_span)const recs = store.history.filter(h=>h.date===ds);[span_68](end_span)
+        document.getElementById('day-records').innerHTML = recs.map(r=>`
             <div class="record-item">
-                <div style="flex:1;"><small>[${r.main||'轉帳'}]</small> <strong>${r.note || '無備註'}</strong></div>
-                <div style="text-align:right;">
-                    <span style="color:${r.type==='inc'?'green':'red'}; font-weight:bold;">${r.type==='inc'?'+':'-'}$${r.amt}</span><br>
-                    <button onclick="deleteRecord(${r.id})" style="border:none; background:#eee; padding:2px 6px; border-radius:5px; font-size:10px; color:red; margin-top:2px;">🗑️ 刪除</button>
-                </div>
-            </div>`).join('') || '本日無紀錄喵！';
+                <div style="flex:1;"><small>[${r.main||'轉帳'}]</small> <strong>${r.note||'無備註'}</strong></div>
+                <div style="text-align:right;"><span style="color:${r.type==='inc'?'green':'red'}; font-weight:bold;">$${r.amt}</span><br>
+                <button onclick="deleteRecord(${r.id})" style="border:none; background:#eee; padding:2px 6px; border-radius:5px; font-size:10px; color:red; margin-top:2px;">🗑️ 刪除</button></div>
+            </div>`).join('') || [span_69](start_span)'無紀錄'; [cite: 238-239]
     }
 
     function renderAssetsAndHistory() {
-        const area = document.getElementById('asset-list'); area.innerHTML = "";
-        let tot = 0; for(let k in store.accs){ tot += store.accs[k]; area.innerHTML += `<div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px dashed #eee;"><span>${k}</span><span>$${store.accs[k].toLocaleString()}</span></div>`; }
-        area.innerHTML += `<div style="border-top:2px solid var(--cat-dark); margin-top:5px; font-weight:bold; display:flex; justify-content:space-between; padding-top:5px;"><span>總資產</span><span>$${tot.toLocaleString()}</span></div>`;
+        [cite_start]const area = document.getElementById('asset-list'); area.innerHTML = "";[span_69](end_span)
+        let tot = 0; for(let k in store.accs){ tot += store.accs[k];
+            area.innerHTML += `<div style="display:flex; justify-content:space-between; padding:4px 0;"><span>${k}</span><span>$${store.accs[k].toLocaleString()}</span></div>`; [span_70](start_span)}
+        area.innerHTML += `<div style="border-top:2px solid var(--cat-dark); margin-top:5px; font-weight:bold; display:flex; justify-content:space-between;"><span>總資產</span><span>$${tot.toLocaleString()}</span></div>`;[span_70](end_span)
         const search = document.getElementById('global-search').value.toLowerCase();
-        const filtered = store.history.filter(h => `${h.main||''} ${h.note||''}`.toLowerCase().includes(search));
-        const catT = {}, listA = document.getElementById('full-history-list'); listA.innerHTML = "";
+        [span_71](start_span)const filtered = store.history.filter(h => `${h.main||''} ${h.note||''}`.toLowerCase().includes(search));[span_71](end_span)
+        [span_72](start_span)const catT = {}, listA = document.getElementById('full-history-list'); listA.innerHTML = "";[span_72](end_span)
         filtered.sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,20).forEach(h=>{
             if(h.type==='exp') catT[h.main] = (catT[h.main]||0)+h.amt;
-            listA.innerHTML += `<div class="record-item"><div style="flex:1;"><small>${h.date} [${h.main||'轉帳'}]</small><br><strong>${h.note||'無'}</strong></div><div style="text-align:right;"><span style="color:${h.type==='inc'?'green':'red'}; font-weight:bold;">${h.type==='inc'?'+':'-'}$${h.amt}</span><br><button onclick="deleteRecord(${h.id})" style="border:none; background:#eee; padding:2px 8px; border-radius:5px; font-size:12px; color:red; margin-top:3px;">🗑️ 刪除</button></div></div>`;
+            [span_73](start_span)listA.innerHTML += `<div class="record-item"><div style="flex:1;"><small>${h.date} [${h.main||'轉帳'}]</small><br><strong>${h.note||'無'}</strong></div><div style="text-align:right;"><span style="color:${h.type==='inc'?'green':'red'}; font-weight:bold;">${h.type==='inc'?'+':'-'}$${h.amt}</span><br><button onclick="deleteRecord(${h.id})" style="border:none; background:#eee; padding:2px 8px; border-radius:5px; font-size:12px; color:red; margin-top:3px;">🗑️ 刪除</button></div></div>`;[span_73](end_span)
         });
-        if(pieChartInstance) pieChartInstance.destroy(); if(barChartInstance) barChartInstance.destroy();
-        pieChartInstance = new Chart(document.getElementById('pieChart').getContext('2d'), { type:'pie', data:{ labels:Object.keys(catT), datasets:[{data:Object.values(catT), backgroundColor:['#FFB7B2','#FFDAC1','#E2F0CB','#B5EAD7','#C7CEEA']}] }, options:{ maintainAspectRatio:false } });
-        barChartInstance = new Chart(document.getElementById('barChart').getContext('2d'), { type:'bar', data:{ labels:Object.keys(catT), datasets:[{label:'金額', data:Object.values(catT), backgroundColor:'#74b9ff'}] }, options:{ maintainAspectRatio:false, plugins:{legend:{display:false}} } });
+        [span_74](start_span)if(pieChartInstance) pieChartInstance.destroy(); if(barChartInstance) barChartInstance.destroy();[span_74](end_span)
+        [span_75](start_span)pieChartInstance = new Chart(document.getElementById('pieChart').getContext('2d'), { type:'pie', data:{ labels:Object.keys(catT), datasets:[{data:Object.values(catT), backgroundColor:['#FFB7B2','#FFDAC1','#E2F0CB','#B5EAD7','#C7CEEA']}] }, options:{ maintainAspectRatio:false } });[span_75](end_span)
+        [span_76](start_span)barChartInstance = new Chart(document.getElementById('barChart').getContext('2d'), { type:'bar', data:{ labels:Object.keys(catT), datasets:[{label:'金額', data:Object.values(catT), backgroundColor:'#74b9ff'}] }, options:{ maintainAspectRatio:false, plugins:{legend:{display:false}} } });[span_76](end_span)
     }
 
     function deleteRecord(id) {
-        if(!confirm("確定要刪除這筆紀錄嗎喵？")) return;
-        const h = store.history.find(x => x.id === id); if(!h) return;
-        const adjust = (raw, val) => { const name = raw.split(':')[1]; if(store.accs[name]!==undefined) store.accs[name] += val; };
-        if(h.type==='exp') adjust(h.srcRaw, h.amt); else if(h.type==='inc') adjust(h.srcRaw, -h.amt);
-        else if(h.type==='save'){ adjust(h.srcRaw, h.amt); store.jarBalances[h.jar] -= h.amt; }
-        else if(h.type==='transfer'){ adjust(h.fromRaw, h.amt); adjust(h.toRaw, -h.amt); }
-        store.history = store.history.filter(x => x.id !== id); saveToDB(); location.reload();
+        [span_77](start_span)if(!confirm("確定要刪除這筆紀錄嗎喵？")) return;[span_77](end_span)
+        [span_78](start_span)const h = store.history.find(x=>x.id===id); if(!h) return;[span_78](end_span)
+        const adjust = (raw, val) => { const name = raw.split(':')[1]; if(store.accs[name]!==undefined) store.accs[name]+=val; [span_79](start_span)};[span_79](end_span)
+        [span_80](start_span)if(h.type==='exp') adjust(h.srcRaw, h.amt); else if(h.type==='inc') adjust(h.srcRaw,-h.amt);[span_80](end_span)
+        else if(h.type==='save'){ adjust(h.srcRaw, h.amt); store.jarBalances[h.jar]-=h.amt; [span_81](start_span)}
+        else if(h.type==='transfer'){ adjust(h.fromRaw,h.amt); adjust(h.toRaw,-h.amt); }[span_81](end_span)
+        [span_82](start_span)store.history = store.history.filter(x=>x.id!==id); saveToDB(); location.reload();[span_82](end_span)
     }
 
     function renderKeyboard() {
-        const c = document.getElementById('kb-container'); c.innerHTML = "";
-        const keys = ['7','8','9','/','4','5','6','*','1','2','3','-','0','AC','=','+'];
-        keys.forEach(k => { const btn = document.createElement('button'); btn.className = 'kb-btn'; btn.innerText = (k==='*'?'×':k==='/'?'÷':k); btn.onclick = () => pressCalc(k); c.appendChild(btn); });
+        [span_83](start_span)const c = document.getElementById('kb-container'); c.innerHTML = "";[span_83](end_span)
+        [span_84](start_span)const keys = ['7','8','9','/','4','5','6','*','1','2','3','-','0','AC','=','+'];[span_84](end_span)
+        [span_85](start_span)keys.forEach(k => { c.innerHTML += `<button class="kb-btn" onclick="pressCalc('${k}')">${(k==='*'?'×':k==='/'?'÷':k)}</button>`; });[span_85](end_span)
     }
 
     function pressCalc(val) {
         const el = document.getElementById('amt');
-        if(val==='AC') { el.value = "0"; calcBuffer = ""; }
-        else if(val==='=') { try { el.value = eval(calcBuffer.replace(/[^0-9+\-*/.]/g, '')) || 0; calcBuffer = String(el.value); } catch { el.value="0"; } }
-        else { if(calcBuffer==="0") calcBuffer=""; calcBuffer += val; el.value = calcBuffer; }
+        if(val==='AC') { el.value = "0"; calcBuffer = ""; [span_86](start_span)}
+        else if(val==='=') { try { el.value = eval(calcBuffer.replace(/[^0-9+\-*/.]/g, '')) || 0; calcBuffer = String(el.value); } catch { el.value="錯誤"; } } [cite: 253-254]
+        else { if(calcBuffer==="0") calcBuffer=""; calcBuffer += val; el.value = calcBuffer; [cite_start]} [cite: 254-255]
     }
 
     function saveAll() {
-        const type = document.getElementById('trans-mode').value, amt = Number(document.getElementById('amt').value);
-        const date = document.getElementById('record-date').value, note = document.getElementById('note').value;
-        if(!amt) return alert('金額咧？');
-        const adjust = (raw, val) => { const name = raw.split(':')[1]; store.accs[name] = (store.accs[name]||0) + val; };
-        const srcRaw = document.getElementById('acc-source').value;
-        const rec = { id:Date.now(), date, amt, type, main:document.getElementById('mainCat').value, sub:document.getElementById('subCat').value, srcRaw, note, fromRaw:srcRaw, toRaw:document.getElementById('acc-to').value, jar:document.getElementById('jar-target').value };
-        if(type==='exp') adjust(srcRaw, -amt); else if(type==='inc') adjust(srcRaw, amt);
-        else if(type==='save') { adjust(srcRaw, -amt); store.jarBalances[rec.jar] = (store.jarBalances[rec.jar]||0) + amt; }
-        else if(type==='transfer') { adjust(srcRaw, -amt); adjust(rec.toRaw, amt); }
-        store.history.push(rec); saveToDB(); alert('存好囉！'); location.reload();
+        [cite_start]const m = document.getElementById('trans-mode').value, amt = Number(document.getElementById('amt').value);[span_86](end_span)
+        [span_87](start_span)const date = document.getElementById('record-date').value, note = document.getElementById('note').value, srcRaw = document.getElementById('acc-source').value;[span_87](end_span)
+        [span_88](start_span)if(!amt) return alert('金額咧？');[span_88](end_span)
+        const adj = (r, v) => { const n = r.split(':')[1]; store.accs[n] = (store.accs[n]||0) + v; [span_89](start_span)};[span_89](end_span)
+        [span_90](start_span)if(m==='exp') adj(srcRaw,-amt); else if(m==='inc') adj(srcRaw,amt);[span_90](end_span)
+        else if(m==='save') { adj(srcRaw,-amt); store.jarBalances[document.getElementById('jar-target').value] = (store.jarBalances[document.getElementById('jar-target').value]||0)+amt; [span_91](start_span)}
+        else if(m==='transfer') { adj(srcRaw,-amt); adj(document.getElementById('acc-to').value, amt); }[span_91](end_span)
+        [span_92](start_span)store.history.push({id:Date.now(), date, amt, type:m, main:document.getElementById('mainCat').value, sub:document.getElementById('subCat').value, srcRaw, note, fromRaw:srcRaw, toRaw:document.getElementById('acc-to').value, jar:document.getElementById('jar-target').value });[span_92](end_span)
+        [span_93](start_span)saveToDB(); alert('存好囉！'); location.reload();[span_93](end_span)
     }
 
-    function exportData() { store.lastBackup = Date.now(); saveToDB(); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(store)], {type: "application/json"})); a.download = `夢夢記帳_備份.json`; a.click(); }
-    function exportCSV() { let csv="\uFEFF日期,類型,大類,小類,金額,帳戶,備註\n"; store.history.forEach(h=>{ csv+=`${h.date},${h.type},${h.main||''},${h.sub||''},${h.amt},${h.srcRaw||''},${h.note||''}\n`; }); const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8;'})); a.download=`夢夢記帳_報表.csv`; a.click(); }
-    function importData(e) { const r = new FileReader(); r.onload=(ev)=>{ store=JSON.parse(ev.target.result); saveToDB(); location.reload(); }; r.readAsText(e.target.files[0]); }
-    function fullReset() { if(confirm("⚠️ 確定要清空所有紀錄嗎喵？")) { store.history=[]; store.jarBalances={}; saveToDB(); location.reload(); } }
-    function checkBackupAlert() { if(Date.now() - (store.lastBackup || 0) > 7 * 86400000) document.getElementById('backup-modal').style.display='flex'; }
-    function closeBackupModal() { document.getElementById('backup-modal').style.display='none'; }
-    function goToSettingsForBackup() { closeBackupModal(); showPage('settings', document.querySelectorAll('.nav-item')[3]); }
-    function openManual() { document.getElementById('manual-display').innerText = store.manualContent; document.getElementById('manual-modal').style.display = 'flex'; }
+    [span_94](start_span)function exportCSV() { let csv="\uFEFF日期,類型,大類,金額,備註\n"; store.history.forEach(h=>{ csv+=`${h.date},${h.type},${h.main||''},${h.amt},${h.note||''}\n`; });[span_94](end_span)
+        const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8;'})); a.download=`報表.csv`; a.click(); [span_95](start_span)}
+    
+    function exportData() { store.lastBackup = Date.now(); saveToDB();[span_95](end_span)
+        const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(store)], {type: "application/json"})); a.download = `備份.json`; a.click(); [span_96](start_span)}
+    
+    function importData(e) { const r = new FileReader(); r.onload=(ev)=>{ store=JSON.parse(ev.target.result); saveToDB(); location.reload(); }; r.readAsText(e.target.files[0]); }[span_96](end_span)
+    function fullReset() { if(confirm("⚠️ 確定要清空所有紀錄嗎？")) { store.history=[]; store.jarBalances={}; saveToDB(); location.reload(); [span_97](start_span)} }[span_97](end_span)
+    function openManual() { document.getElementById('manual-display').innerText = store.manualContent; document.getElementById('manual-modal').style.display = 'flex'; [span_98](start_span)}
+    function goToSettingsForBackup() { closeBackupModal(); showPage('settings', document.querySelectorAll('.nav-item')[3]); }[span_98](end_span)
+    function checkBackupAlert() { if(Date.now() - (store.lastBackup || 0) > 7 * 86400000) setTimeout(()=>document.getElementById('backup-modal').style.display='flex', 1000); [span_99](start_span)}
+    function closeBackupModal() { document.getElementById('backup-modal').style.display = 'none'; }
+    
     function initDaily() {
-        const acc_op = Object.keys(store.accs).map(k=>`<option value="ACC:${k}">${k}</option>`).join('');
-        document.getElementById('acc-source').innerHTML = acc_op; document.getElementById('acc-to').innerHTML = acc_op;
+        const acc_op = Object.keys(store.accs).map(k=>`<option value="ACC:${k}">${k}</option>`).join('');[span_99](end_span)
+        [span_100](start_span)document.getElementById('acc-source').innerHTML = acc_op; document.getElementById('acc-to').innerHTML = acc_op;[span_100](end_span)
         document.getElementById('jar-target').innerHTML = Object.keys(store.jars).map(k=>`<option value="${k}">${k}</option>`).join('');
         document.getElementById('mainCat').innerHTML = Object.keys(store.cats).map(k=>`<option value="${k}">${k}</option>`).join('');
-        renderSubCats();
+        [span_101](start_span)renderSubCats();[span_101](end_span)
     }
-    function renderSubCats() { const m = document.getElementById('mainCat').value; if(store.cats[m]) document.getElementById('subCat').innerHTML = store.cats[m].map(s=>`<option value="${s}">${s}</option>`).join(''); }
+    function renderSubCats() { const m = document.getElementById('mainCat').value; if(store.cats[m]) document.getElementById('subCat').innerHTML = store.cats[m].map(s=>`<option value="${s}">${s}</option>`).join(''); [span_102](start_span)}[span_102](end_span)
     function toggleFields() { const m = document.getElementById('trans-mode').value; document.getElementById('transfer-area').style.display = (m==='transfer'?'block':'none'); document.getElementById('jar-area').style.display = (m==='save'?'block':'none'); }
 </script>
 </body>
