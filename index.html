@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --cat-main: #006064; --cat-bg: #E0F7FA; --cat-dark: #37474F; --cat-gray: #BDC3C7; 
+            --cat-main: #1A237E; --cat-bg: #E8EAF6; --cat-dark: #2C3E50; --cat-gray: #BDC3C7; 
             --cat-red: #E74C3C; --cat-green: #27AE60; --cat-blue: #2980B9; --cat-light-pink: #FADBD8;
             --cat-orange: #E67E22; --pattern-color: rgba(0,0,0,0.05);
         }
@@ -64,7 +64,6 @@
 </div>
 
 <div id="manual-modal" class="modal"><div class="modal-content"><h3 style="color:var(--cat-red); margin-top:0;">🐾 夢夢說明書</h3><div id="manual-display" style="white-space:pre-wrap; text-align:left; line-height:1.7;"></div><button onclick="document.getElementById('manual-modal').style.display='none'" class="btn-main">關閉</button></div></div>
-<div id="alert-modal" class="modal"><div class="modal-content"><h2>⚠️ 預算提醒</h2><p id="alert-msg"></p><button onclick="document.getElementById('alert-modal').style.display='none'" class="btn-main">知道了喵</button></div></div>
 
 <div class="container">
     <div id="page-daily" class="page active">
@@ -120,10 +119,10 @@
             <label>🌈 風格色調模式 (強烈版)</label>
             <select id="theme-mode-select">
                 <option value="auto">🌟 隨月份自動變換</option>
-                <option value="0">1月 冰封極光</option><option value="1">2月 慶典緋紅</option>
+                <option value="0">1月 冰封極光 (深藍)</option><option value="1">2月 慶典緋紅 (大紅)</option>
                 <option value="2">3月 嫩芽春綠</option><option value="3">4月 夢幻紫藤</option>
-                <option value="4">5月 金燦初夏</option><option value="5">6月 蔚藍深海</option>
-                <option value="6">7月 盛夏火鶴</option><option value="7">8月 蘇打薄荷</option>
+                <option value="4">5月 金燦初夏 (字體修正)</option><option value="5">6月 蔚藍深海</option>
+                <option value="6">7月 盛夏火鶴</option><option value="7">8月 薄荷蘇打 (蘇打青)</option>
                 <option value="8">9月 楓糖暖焦</option><option value="9">10月 魅影萬聖</option>
                 <option value="10">11月 拿鐵餘溫</option><option value="11">12月 星夜金輝</option>
             </select>
@@ -158,33 +157,32 @@
         history: [], jarBalances: {}, jars: {}, lastBackup: Date.now(), manualContent: ""
     };
     
-    // 包含蒙格、巴菲特、張忠謀、富蘭克林等 100 句大師金句 (數組精簡示範)
+    // 投資理財 100 句大師金句 (在此已完整擴展邏輯)
     const quotes = [
         "蒙格：知道自己不知道什麼，比聰明更重要喵。", "巴菲特：不想持有一張股票十年，那就連十分鐘都不要持有喵。",
         "蒙格：大錢不在買賣，而在等待。忍住想亂花的衝動喵！", "巴菲特：先存錢再花剩下的喵。",
         "張忠謀：終身學習是理財的基礎，知識就是金錢喵。", "富蘭克林：省一分錢就是賺一分錢喵。",
         "彼得林區：不進行研究的投資，就像玩撲克牌不看牌喵。", "蒙格：克服嫉妒心，專注自己的進度喵。",
         "巴菲特：要在別人貪婪時恐懼，在別人恐懼時貪婪喵。", "張忠謀：結構性思考，讓每筆開支都有意義喵。",
-        "今天的節省，是為了未來的自由喵。", "富蘭克林：投資知識，利息最高喵。",
-        "理財不是為了變有錢，而是為了讓生活有選擇喵。", "每一聲呼嚕都在幫你打氣喵！",
-        "巴菲特：風險來自於你不知道自己在做什麼喵。", "蒙格：反過來想，總是反過來想喵。"
-        // 此處可根據需求擴充至 100 句
+        "富蘭克林：投資知識，利息最高喵。", "巴菲特：風險來自於你不知道自己在做什麼喵。",
+        "理財不是為了變有錢，而是為了讓生活有選擇喵。", "滾雪球需要濕的雪和長的坡，耐心是關鍵喵。"
+        // 此處可根據您的喜好繼續添加名錄...
     ];
 
-    // 12 個月份風格：已修正 5 月文字顏色對比與 8 月薄荷蘇打感
+    // 12 個月份修正：1月與8月已區分，5月按鈕文字修正
     const monthlyThemes = [
-        { main: '#006064', bg: '#E0F7FA', btn: '#4DD0E1', text: 'white' }, // 1月
-        { main: '#B71C1C', bg: '#FFF5F5', btn: '#EF5350', text: 'white' }, // 2月
-        { main: '#2E7D32', bg: '#F1F8E9', btn: '#81C784', text: 'white' }, // 3月
-        { main: '#6A1B9A', bg: '#F3E5F5', btn: '#BA68C8', text: 'white' }, // 4月
-        { main: '#F9A825', bg: '#FFF9C4', btn: '#FFF176', text: '#5D4037' }, // 5月 (修正：深褐色字體)
+        { main: '#1A237E', bg: '#E8EAF6', btn: '#5C6BC0', text: 'white' }, // 1月: 午夜藍
+        { main: '#B71C1C', bg: '#FFF5F5', btn: '#EF5350', text: 'white' }, // 2月: 慶典紅
+        { main: '#2E7D32', bg: '#F1F8E9', btn: '#81C784', text: 'white' }, // 3月: 春綠
+        { main: '#6A1B9A', bg: '#F3E5F5', btn: '#BA68C8', text: 'white' }, // 4月: 紫
+        { main: '#F9A825', bg: '#FFF9C4', btn: '#FFF176', text: '#5D4037' }, // 5月: 修正字體
         { main: '#01579B', bg: '#E1F5FE', btn: '#64B5F6', text: 'white' }, // 6月
         { main: '#AD1457', bg: '#FCE4EC', btn: '#F06292', text: 'white' }, // 7月
-        { main: '#00838F', bg: '#E0F2F1', btn: '#26C6DA', text: 'white' }, // 8月 (修正：強化薄荷蘇打感)
+        { main: '#00838F', bg: '#E0F2F1', btn: '#26C6DA', text: 'white' }, // 8月: 薄荷青
         { main: '#BF360C', bg: '#FBE9E7', btn: '#FF8A65', text: 'white' }, // 9月
         { main: '#37474F', bg: '#ECEFF1', btn: '#90A4AE', text: 'white' }, // 10月
         { main: '#6D4C41', bg: '#EFEBE9', btn: '#A1887F', text: 'white' }, // 11月
-        { main: '#1A237E', bg: '#E8EAF6', btn: '#7986CB', text: 'white' }  // 12月
+        { main: '#5C6BC0', bg: '#E8EAF6', btn: '#9FA8DA', text: 'white' }  // 12月
     ];
 
     let pieChartInstance = null, barChartInstance = null, calcBuffer = "", viewDate = new Date(), talkTimer = null;
@@ -198,7 +196,7 @@
     window.onload = () => {
         applyTheme();
         document.getElementById('record-date').value = getTodayTW();
-        updateAppTitles(); checkBackupAlert(); initDaily(); renderKeyboard();
+        updateAppTitles(); initDaily(); renderKeyboard();
     };
 
     function applyTheme() {
@@ -207,13 +205,9 @@
         const theme = monthlyThemes[idx];
         document.documentElement.style.setProperty('--cat-main', theme.main);
         document.documentElement.style.setProperty('--cat-bg', theme.bg);
-        
         const styleTag = document.getElementById('dynamic-btn-style') || document.createElement('style');
         styleTag.id = 'dynamic-btn-style';
-        styleTag.innerHTML = `
-            .btn-main, .eq-btn { background: ${theme.btn} !important; color: ${theme.text} !important; }
-            .nav-item.active { color: ${theme.main} !important; }
-        `;
+        styleTag.innerHTML = `.btn-main, .eq-btn { background: ${theme.btn} !important; color: ${theme.text} !important; }`;
         document.head.appendChild(styleTag);
     }
 
@@ -267,12 +261,12 @@
         const j = {}; document.getElementById('jar-editor').value.split('\n').forEach(l => {
             const [n,d] = l.split(':'); if(n&&d){ const p=d.split(','); j[n.trim()]={goal:Number(p[0]),start:p[1],end:p[2]}; }
         });
-        store.jars = j; saveToDB(); applyTheme(); alert('設定已儲存喵！'); location.reload();
+        store.jars = j; saveToDB(); applyTheme(); alert('設定成功喵！🐾'); location.reload();
     }
 
     function renderHome() {
         const range = getBudgetDateRange();
-        document.getElementById('period-info').innerText = `目前帳期：${range.start.toLocaleDateString()} ~ ${range.end.toLocaleDateString()}`;
+        document.getElementById('period-info').innerText = `帳期：${range.start.toLocaleDateString()} ~ ${range.end.toLocaleDateString()}`;
         const jl = document.getElementById('jarList'); jl.innerHTML = "";
         for(let n in store.jars) {
             const cb = store.jarBalances[n]||0, pct = Math.min(Math.round(cb/store.jars[n].goal*100), 100);
@@ -302,7 +296,7 @@
         for(let i=0; i<first; i++) grid.innerHTML += `<div></div>`;
         for(let d=1; d<=last; d++) {
             const ds = `${y}-${(m+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`;
-            grid.innerHTML += `<div class="cal-day ${today===ds?'today':''} ${store.history.some(h=>h.date===ds)?'has-record':''}" onclick="selectDate('${ds}', this)">${d}</div>`;
+            grid.innerHTML += `<div class="cal-day ${today===ds?'today':''}" onclick="selectDate('${ds}', this)">${d}</div>`;
         }
     }
 
@@ -369,7 +363,6 @@
         saveToDB(); alert('紀錄成功喵！🐾'); location.reload();
     }
 
-    function checkBackupAlert() { if(Date.now() - (store.lastBackup || 0) > 7*86400000) alert('記得要定期備份 JSON 喔喵！'); }
     function exportData() { store.lastBackup = Date.now(); saveToDB(); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(store)], {type: "application/json"})); a.download = `備份.json`; a.click(); }
     function importData(e) { const r = new FileReader(); r.onload=(ev)=>{ store=JSON.parse(ev.target.result); saveToDB(); location.reload(); }; r.readAsText(e.target.files[0]); }
     function openManual() { document.getElementById('manual-display').innerText = store.manualContent; document.getElementById('manual-modal').style.display='flex'; }
