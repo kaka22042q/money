@@ -12,8 +12,23 @@
             --cat-red: #ff7675; --cat-green: #55efc4; --cat-blue: #74b9ff; --cat-light-pink: #FFD9D6;
             --cat-orange: #fab1a0;
         }
+
+        /* 12個月季節主題風格 - 引用您喜愛的色調 */
+        body.theme-0 { --cat-main: #1A237E; --cat-bg: #E8EAF6; --cat-light-pink: #C5CAE9; } /* 1月：冰封極光 */
+        body.theme-1 { --cat-main: #B71C1C; --cat-bg: #FFF5F5; --cat-light-pink: #FFCDD2; } /* 2月：慶典緋紅 */
+        body.theme-2 { --cat-main: #2E7D32; --cat-bg: #F1F8E9; --cat-light-pink: #DCEDC8; } /* 3月：嫩芽春綠 */
+        body.theme-3 { --cat-main: #6A1B9A; --cat-bg: #F3E5F5; --cat-light-pink: #E1BEE7; } /* 4月：夢幻紫藤 */
+        body.theme-4 { --cat-main: #F9A825; --cat-bg: #FFF9C4; --cat-light-pink: #FFF59D; } /* 5月：金燦初夏 */
+        body.theme-5 { --cat-main: #01579B; --cat-bg: #E1F5FE; --cat-light-pink: #B3E5FC; } /* 6月：蔚藍深海 */
+        body.theme-6 { --cat-main: #AD1457; --cat-bg: #FCE4EC; --cat-light-pink: #F8BBD0; } /* 7月：盛夏火鶴 */
+        body.theme-7 { --cat-main: #00838F; --cat-bg: #E0F2F1; --cat-light-pink: #B2DFDB; } /* 8月：薄荷蘇打 */
+        body.theme-8 { --cat-main: #BF360C; --cat-bg: #FBE9E7; --cat-light-pink: #FFCCBC; } /* 9月：楓糖暖焦 */
+        body.theme-9 { --cat-main: #37474F; --cat-bg: #ECEFF1; --cat-light-pink: #CFD8DC; } /* 10月：魅影萬聖 */
+        body.theme-10 { --cat-main: #6D4C41; --cat-bg: #EFEBE9; --cat-light-pink: #D7CCC8; } /* 11月：拿鐵餘溫 */
+        body.theme-11 { --cat-main: #5C6BC0; --cat-bg: #E8EAF6; --cat-light-pink: #C5CAE9; } /* 12月：星夜金輝 */
+
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, "Noto Sans TC", sans-serif; }
-        body { background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 160px; font-size: 14px; }
+        body { background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 160px; font-size: 14px; transition: background 0.3s ease; }
         .container { max-width: 450px; margin: 0 auto; padding: 12px; }
         .page { display: none; }
         .page.active { display: block; animation: fadeIn 0.2s ease-out; }
@@ -45,11 +60,11 @@
         .record-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed var(--cat-gray); }
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; backdrop-filter: blur(4px); }
         .modal-content { background: white; width: 88%; max-height: 85vh; overflow-y: auto; padding: 20px; border-radius: 25px; border: 3px solid var(--cat-dark); text-align: center; }
-        
+
         /* 貓咪金句專屬樣式 */
         .cat-buddy { position: fixed; bottom: 120px; right: 20px; z-index: 99; cursor: pointer; display: flex; flex-direction: column; align-items: flex-end; }
         .cat-bubble { background: white; border: 2.5px solid var(--cat-dark); border-radius: 12px; padding: 8px 12px; font-size: 12px; max-width: 150px; margin-bottom: 5px; display: none; box-shadow: 3px 3px 0 var(--cat-gray); position: relative; line-height: 1.4; }
-        .cat-bubble::after { content: ''; position: absolute; bottom: -10px; right: 15px; border-width: 10px 10px 0; border-style: solid; border-color: white transparent; }
+        .cat-bubble::after { content: ''; position: absolute; bottom: -10px; right: 15px; border-width: 8px 8px 0; border-style: solid; border-color: white transparent; }
         .cat-icon { font-size: 45px; filter: drop-shadow(2px 2px 0 var(--cat-gray)); }
     </style>
 </head>
@@ -113,6 +128,19 @@
     <div id="page-settings" class="page">
         <h2 style="text-align:center; font-size:18px;">⚙️ 設定中心</h2>
         <div class="cat-card">
+            <label>🎨 介面主題風格</label>
+            <select id="theme-select" onchange="applyCurrentTheme()">
+                <option value="auto">🌟 隨月份自動變換</option>
+                <option value="0">1月：冰封極光</option><option value="1">2月：慶典緋紅</option>
+                <option value="2">3月：嫩芽春綠</option><option value="3">4月：夢幻紫藤</option>
+                <option value="4">5月：金燦初夏</option><option value="5">6月：蔚藍深海</option>
+                <option value="6">7月：盛夏火鶴</option><option value="7">8月：薄荷蘇打</option>
+                <option value="8">9月：楓糖暖焦</option><option value="9">10月：魅影萬聖</option>
+                <option value="10">11月：拿鐵餘溫</option><option value="11">12月：星夜金輝</option>
+            </select>
+            <label>🐱 貓咪理財金句 (每行一句)</label>
+            <textarea id="quote-editor" rows="4"></textarea>
+            <hr style="margin:20px 0; border:0; border-top:1px dashed var(--cat-gray);">
             <button onclick="openManual()" class="btn-main" style="background:var(--cat-blue); margin-top:0; margin-bottom:15px;">📘 查看說明書</button>
             <label>📅 預算起算日 (薪資日)</label><input type="number" id="budget-day-input">
             <label>🔔 預算提醒門檻 (%)</label><input type="number" id="budget-threshold-input">
@@ -122,7 +150,6 @@
             <label>💳 帳戶資產</label><textarea id="acc-editor" rows="4"></textarea>
             <label>💎 存錢筒計畫</label><textarea id="jar-editor" rows="4"></textarea>
             <label>📘 說明書編輯</label><textarea id="manual-editor" rows="4"></textarea>
-            <label>🐱 貓咪理財金句 (每行一句)</label><textarea id="quote-editor" rows="4"></textarea>
             <button onclick="saveSettings()" class="btn-main" style="background:var(--cat-green)">儲存變更</button>
         </div>
         <div class="cat-card" style="text-align:center;">
@@ -136,7 +163,7 @@
     </div>
 </div>
 
-<div class="cat-buddy" onclick="catSpeak()">
+<div id="cat-buddy" class="cat-buddy" onclick="catSpeak()">
     <div id="cat-bubble" class="cat-bubble"></div>
     <div class="cat-icon">🐱</div>
 </div>
@@ -149,20 +176,36 @@
 </nav>
 
 <script>
+    /* 核心邏輯繼承自 v49 */
     const DB_KEY = 'cat_dream_ultimate_v49';
     let store = JSON.parse(localStorage.getItem(DB_KEY)) || {
         appName: '夢夢記帳', budgetDay: 10, threshold: 80, kbMode: 'calc',
+        theme: 'auto', quotes: ["錢錢沒有不見，只是變成你喜歡的樣子喵！"],
         accs: { '現金': 0, '銀行': 0 }, cats: { '飲食':['外食','飲料','食材'] }, incCats: { '工作':['薪資','獎金'] },
         budgets: { '飲食': 5000 }, history: [], manualContent: "【預算】自訂發薪日，首頁自動切換帳期。\n【存錢筒】追蹤進度，建議月存金額。",
-        jarBalances: {}, jars: {}, lastBackup: Date.now(),
-        quotes: ["錢錢沒有不見，只是變成你喜歡的樣子喵！", "今天省下一杯奶茶，明天離夢想更近一步！"]
+        jarBalances: {}, jars: {}, lastBackup: Date.now()
     };
     let pieChartInstance = null, barChartInstance = null, calcBuffer = "", viewDate = new Date();
 
     window.onload = () => {
+        applyCurrentTheme();
         const now = new Date(); document.getElementById('record-date').value = now.toISOString().split('T')[0];
         updateAppTitles(); checkBackupAlert(); initDaily(); renderKeyboard();
     };
+
+    function applyCurrentTheme() {
+        let t = document.getElementById('theme-select') ? document.getElementById('theme-select').value : (store.theme || 'auto');
+        if (t === 'auto') t = new Date().getMonth();
+        document.body.className = 'theme-' + t;
+    }
+
+    function catSpeak() {
+        const bubble = document.getElementById('cat-bubble');
+        const list = (store.quotes && store.quotes.length > 0) ? store.quotes : ["喵～"];
+        bubble.innerText = list[Math.floor(Math.random() * list.length)];
+        bubble.style.display = 'block';
+        setTimeout(() => { bubble.style.display = 'none'; }, 3000);
+    }
 
     function saveToDB() { localStorage.setItem(DB_KEY, JSON.stringify(store)); }
     function updateAppTitles() { document.getElementById('web-title').innerText = store.appName; document.getElementById('home-title-display').innerText = '🐾 ' + store.appName; }
@@ -176,6 +219,8 @@
     }
 
     function initSettings() {
+        document.getElementById('theme-select').value = store.theme || 'auto';
+        document.getElementById('quote-editor').value = (store.quotes || []).join('\n');
         document.getElementById('budget-day-input').value = store.budgetDay;
         document.getElementById('budget-threshold-input').value = store.threshold;
         document.getElementById('budget-editor').value = Object.entries(store.budgets).map(([k,v])=>`${k}:${v}`).join('\n');
@@ -184,14 +229,14 @@
         document.getElementById('acc-editor').value = Object.entries(store.accs).map(([k,v])=>`${k}:${v}`).join('\n');
         document.getElementById('jar-editor').value = Object.entries(store.jars).map(([k,v])=>`${k}:${v.goal},${v.start},${v.end}`).join('\n');
         document.getElementById('manual-editor').value = store.manualContent;
-        document.getElementById('quote-editor').value = (store.quotes || []).join('\n');
     }
 
     function saveSettings() {
+        store.theme = document.getElementById('theme-select').value;
+        store.quotes = document.getElementById('quote-editor').value.split('\n').filter(s => s.trim());
         store.budgetDay = Number(document.getElementById('budget-day-input').value) || 1;
         store.threshold = Number(document.getElementById('budget-threshold-input').value) || 80;
         store.manualContent = document.getElementById('manual-editor').value;
-        store.quotes = document.getElementById('quote-editor').value.split('\n').filter(s => s.trim());
         const parseLines = (id, isCat=false) => {
             const o = {};
             document.getElementById(id).value.split('\n').forEach(l => {
@@ -206,15 +251,7 @@
         const j = {}; document.getElementById('jar-editor').value.split('\n').forEach(l => {
             const [n, d] = l.split(':'); if(n && d) { const parts = d.split(','); j[n.trim()] = { goal: Number(parts[0]), start: parts[1], end: parts[2] }; }
         });
-        store.jars = j; saveToDB(); alert('設定已成功更新！'); location.reload();
-    }
-
-    function catSpeak() {
-        const bubble = document.getElementById('cat-bubble');
-        const list = (store.quotes && store.quotes.length > 0) ? store.quotes : ["喵～"];
-        bubble.innerText = list[Math.floor(Math.random() * list.length)];
-        bubble.style.display = 'block';
-        setTimeout(() => { bubble.style.display = 'none'; }, 3000);
+        store.jars = j; saveToDB(); applyCurrentTheme(); alert('設定已成功更新！'); location.reload();
     }
 
     function renderHome() {
@@ -235,7 +272,7 @@
             const thisMonthStr = now.toISOString().slice(0,7);
             const hasSavedThisMonth = store.history.some(h => h.type === 'save' && h.jar === n && h.date.startsWith(thisMonthStr));
             const pct = Math.min(Math.round(cb/goal*100), 100);
-            jl.innerHTML += `<div class="cat-card" style="padding:12px; margin-bottom:10px;"><div style="display:flex; justify-content:space-between; align-items:center;"><b>💎 ${n}</b><span style="font-size:10px; background:#eee; padding:2px 6px; border-radius:10px;">${hasSavedThisMonth ? '✅ 本月已存' : '⏳ 本月待存'}</span></div><div style="font-size:12px; line-height:1.6; color:#555; margin-top:5px;">目標：$${goal.toLocaleString()} (已存 $${cb.toLocaleString()})<br>建議月存：<b>$${Math.round(suggestMonthly).toLocaleString()}</b> / 月<br>當前進度：<span style="color:${diff >= 0 ? 'var(--cat-green)' : 'var(--cat-red)'}; font-weight:bold;">${diff >= 0 ? '超前' : '落後'} $${Math.abs(Math.round(diff)).toLocaleString()}</span></div><div class="prog-container"><div class="prog-fill" style="width:${pct}%; background:var(--cat-blue)"></div></div></div>`;
+            jl.innerHTML += `<div class="cat-card" style="padding:12px; margin-bottom:10px;"><div style="display:flex; justify-content:space-between; align-items:center;"><b>💎 ${n}</b><span style="font-size:10px; background:#eee; padding:2px 6px; border-radius:10px;">${hasSavedThisMonth ? '✅ 本月已存' : '⏳ 本月待存'}</span></div><div style="font-size:12px; line-height:1.6; color:#555; margin-top:5px;">目標：$${goal.toLocaleString()} (已存 $${cb.toLocaleString()})<br>建議月存：<b>$${Math.round(suggestMonthly).toLocaleString()}</b> / 月<br>當前進度：<span style="color:${diff >= 0 ? 'var(--cat-green)' : 'var(--cat-red)'}; font-weight:bold;">${diff >= 0 ? '超前' : '落後'} $${Math.abs(Math.round(diff)).toLocaleString()}</span></div><div class="prog-container"><div class="prog-fill" style="width:${pct}%; background:var(--cat-main)"></div></div></div>`;
         }
         const hb = document.getElementById('home-budget-list'); hb.innerHTML = "";
         for(let b in store.budgets) {
