@@ -23,7 +23,7 @@
         input, select, textarea { width: 100%; border: 2px solid var(--cat-gray); border-radius: 12px; padding: 10px; margin-top: 5px; font-size: 16px; outline: none; background: #fff; color: var(--cat-dark); }
         label { font-size: 13px; font-weight: bold; display: block; margin-top: 12px; color: var(--cat-dark); border-left: 5px solid var(--cat-main); padding-left: 8px; }
         #amt { font-size: 28px; height: 55px; text-align: center; color: var(--cat-red); border: 3px solid var(--cat-dark); margin-bottom: 10px; font-weight: 900; border-radius: 15px; }
-        .kb-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .kb-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 10px; }
         .kb-btn { height: 45px; border: 2px solid var(--cat-dark); border-radius: 12px; background: #fff; font-weight: 900; color: var(--cat-dark); cursor: pointer; font-size: 17px; display: flex; align-items: center; justify-content: center; }
         .kb-btn:active { transform: scale(0.92); background: var(--cat-light-pink); }
         .op-btn { background: #f8f9fa; }
@@ -39,8 +39,6 @@
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
         .cal-day { padding: 10px 0; border-radius: 10px; font-size: 13px; cursor: pointer; position: relative; min-height: 45px; transition: 0.2s; }
         .cal-day.today { border: 2.5px solid var(--cat-main); font-weight: bold; color: var(--cat-main); }
-        .cal-day.selected { background: var(--cat-orange) !important; color: white; font-weight: bold; }
-        .cal-day.has-record::after { content: '●'; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%); color: var(--cat-red); font-size: 10px; }
         #cat-assistant { position: fixed; bottom: 115px; right: 20px; z-index: 999; width: 70px; height: 70px; cursor: pointer; filter: drop-shadow(3px 3px 0px var(--cat-dark)); animation: catFloat 4s infinite ease-in-out; }
         @keyframes catFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px) rotate(5deg); } }
         #cat-bubble { position: fixed; bottom: 195px; right: 25px; background: white; border: 2.5px solid var(--cat-dark); padding: 15px; border-radius: 20px; max-width: 220px; font-size: 14px; display: none; z-index: 1000; box-shadow: 6px 6px 0 var(--cat-gray); line-height: 1.5; font-weight: 500; }
@@ -64,7 +62,7 @@
 
 <div id="manual-modal" class="modal"><div class="modal-content"><h3 style="color:var(--cat-red); margin-top:0;">🐾 夢夢說明書</h3><div id="manual-display" style="white-space:pre-wrap; text-align:left; line-height:1.7;"></div><button onclick="document.getElementById('manual-modal').style.display='none'" class="btn-main">關閉</button></div></div>
 
-<div class="container">
+<div class="container" id="main-content">
     <div id="page-daily" class="page active">
         <h2 style="text-align:center;">✍️ 快速記帳</h2>
         <div class="cat-card">
@@ -97,14 +95,12 @@
                 <button onclick="changeMonth(1)" style="border:none; background:none; font-size:20px;">❯</button>
             </div>
             <div class="calendar-grid" id="calendar-days"></div>
-            <div id="day-detail-area" style="display:none; margin-top:15px; border-top:2px dashed #ccc; padding-top:10px;">
-                <h4 id="detail-date-title" style="margin:0;"></h4><div id="day-records"></div>
-            </div>
+            <div id="day-detail-area" style="display:none; margin-top:15px; border-top:2px dashed #ccc; padding-top:10px;"><h4 id="detail-date-title" style="margin:0;"></h4><div id="day-records"></div></div>
         </div>
     </div>
 
     <div id="page-assets" class="page">
-        <h2 style="text-align:center;">🏦 財務統計</h2>
+        <h2 style="text-align:center;">🏦 財務分析</h2>
         <div class="cat-card"><div id="asset-list"></div></div>
         <div class="cat-card"><div style="height:180px;"><canvas id="pieChart"></canvas></div></div>
         <div class="cat-card"><div style="height:180px;"><canvas id="barChart"></canvas></div></div>
@@ -114,8 +110,8 @@
     <div id="page-settings" class="page">
         <h2 style="text-align:center;">⚙️ 系統設定</h2>
         <div class="cat-card">
-            <button onclick="openManual()" class="btn-main" style="background:var(--cat-blue); margin-top:0; border-color:var(--cat-dark);">📘 查看說明書</button>
-            <label>🌈 風格色調模式 </label>
+            <button onclick="openManual()" class="btn-main" style="background:var(--cat-blue); margin-top:0; margin-bottom:15px; border-color:var(--cat-dark);">📘 查看說明書</button>
+            <label>🌈 風格色調模式</label>
             <select id="theme-mode-select">
                 <option value="auto">🌟 隨月份自動變換</option>
                 <option value="0">1月 冰封極光</option><option value="1">2月 慶典緋紅</option>
@@ -134,9 +130,14 @@
             <button onclick="saveSettings()" class="btn-main" style="background:var(--cat-green); border-color:var(--cat-dark);">儲存變更</button>
         </div>
         <div class="cat-card" style="text-align:center;">
-            <button onclick="exportData()" class="btn-main" style="background:var(--cat-blue); margin-top:0; border-color:var(--cat-dark);">📦 備份 JSON</button>
-            <button onclick="document.getElementById('importFile').click()" class="btn-main" style="background:white; color:var(--cat-dark); border-color:var(--cat-dark);">📥 匯入資料</button>
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
+                <button onclick="exportData()" style="flex:1; padding:12px; border-radius:12px; border:none; background:var(--cat-blue); color:white; font-weight:bold;">📦 備份 JSON</button>
+                <button onclick="document.getElementById('importFile').click()" style="flex:1; padding:12px; border-radius:12px; border:2.5px solid var(--cat-dark); background:white; font-weight:bold;">📥 匯入資料</button>
+            </div>
             <input type="file" id="importFile" style="display:none" onchange="importData(event)">
+            <button onclick="exportCSV()" style="color:var(--cat-dark); opacity:0.6; border:none; background:none; text-decoration:underline; font-size:12px; margin-bottom:15px; display:block; width:100%;">📊 匯出 CSV 報表</button>
+            <hr>
+            <button onclick="resetApp()" style="background:#ff7675; border:none; color:white; width:100%; padding:10px; border-radius:10px; font-weight:bold;">🧨 刪除整本帳本 (不可復原)</button>
         </div>
     </div>
 </div>
@@ -156,7 +157,6 @@
         history: [], jarBalances: {}, jars: {}, lastBackup: Date.now(), manualContent: ""
     };
     
-    // 完整 100 句投資理財名人大師金句
     const quotes = [
         "蒙格：知道自己不知道什麼，比聰明更重要喵。", "巴菲特：不想持有一張股票十年，那就連十分鐘都不要持有喵。",
         "蒙格：大錢不在買賣，而在等待。忍住想亂花的衝動喵！", "巴菲特：先存錢再花剩下的喵。",
@@ -198,7 +198,7 @@
         "生活可以簡單，但夢想一定要豪華喵。", "存錢的過程雖然慢，但結果很甜喵。",
         "保護好你的本金，就像守護你的領地喵。", "理財的基礎是管理慾望喵。",
         "讓今天的自己比昨天更進步一點點喵。", "記帳是與自己內心的對話喵。",
-        "夢想很貴，所以要努力存錢喵。", "耐心是財富最好的朋友喵。",
+        "夢夢：主人的每一分錢我都會盯緊喵！", "耐心是財富最好的朋友喵。",
         "財富自由的秘密在於花得比賺得少喵。", "記帳讓你的未來不再是迷霧喵。",
         "像貓咪守護罐罐一樣守護你的存款喵。", "擁有健康的現金流，才會有健康的睡眠喵。",
         "不要讓負債成為你的枷鎖喵。", "你是金錢的主人，不是奴隸喵。",
@@ -207,27 +207,27 @@
         "富蘭克林：空口袋站不直喵。", "巴菲特：不需要在每個地方都贏，只要不輸掉就好喵。",
         "蒙格：嫉妒是唯一一種沒有樂趣的罪喵。", "張忠謀：人生最重要的是目標喵。",
         "彼得林區：股市跌落時，你應該買進喵。", "投資自己，誰也偷不走喵。",
-        "保持好奇心，但對支出保持警覺喵。", "簡單的生活，就是最高級的奢華喵。"
+        "保持好奇心，但對支出保持警覺喵。", "簡單的生活，就是最高級的奢華喵。",
+        "巴菲特：最好的回報就是與你愛的人共度時光喵。", "夢夢：今天也要一起努力記帳喵！"
     ];
 
     const monthlyThemes = [
-        { main: '#1A237E', bg: '#E8EAF6', btn: '#5C6BC0', text: 'white' }, // 1月: 午夜藍
-        { main: '#B71C1C', bg: '#FFF5F5', btn: '#EF5350', text: 'white' }, // 2月: 慶典紅
-        { main: '#2E7D32', bg: '#F1F8E9', btn: '#81C784', text: 'white' }, // 3月: 春綠
-        { main: '#6A1B9A', bg: '#F3E5F5', btn: '#BA68C8', text: 'white' }, // 4月: 紫
-        { main: '#F9A825', bg: '#FFF9C4', btn: '#FFF176', text: '#5D4037' }, // 5月 (修正字體對比)
-        { main: '#01579B', bg: '#E1F5FE', btn: '#64B5F6', text: 'white' }, // 6月
-        { main: '#AD1457', bg: '#FCE4EC', btn: '#F06292', text: 'white' }, // 7月
-        { main: '#00838F', bg: '#E0F2F1', btn: '#26C6DA', text: 'white' }, // 8月 (修正薄荷青)
-        { main: '#BF360C', bg: '#FBE9E7', btn: '#FF8A65', text: 'white' }, // 9月
-        { main: '#37474F', bg: '#ECEFF1', btn: '#90A4AE', text: 'white' }, // 10月
-        { main: '#6D4C41', bg: '#EFEBE9', btn: '#A1887F', text: 'white' }, // 11月
-        { main: '#5C6BC0', bg: '#E8EAF6', btn: '#9FA8DA', text: 'white' }  // 12月
+        { main: '#1A237E', bg: '#E8EAF6', btn: '#5C6BC0', text: 'white' },
+        { main: '#B71C1C', bg: '#FFF5F5', btn: '#EF5350', text: 'white' },
+        { main: '#2E7D32', bg: '#F1F8E9', btn: '#81C784', text: 'white' },
+        { main: '#6A1B9A', bg: '#F3E5F5', btn: '#BA68C8', text: 'white' },
+        { main: '#F9A825', bg: '#FFF9C4', btn: '#FFF176', text: '#5D4037' },
+        { main: '#01579B', bg: '#E1F5FE', btn: '#64B5F6', text: 'white' },
+        { main: '#AD1457', bg: '#FCE4EC', btn: '#F06292', text: 'white' },
+        { main: '#00838F', bg: '#E0F2F1', btn: '#26C6DA', text: 'white' },
+        { main: '#BF360C', bg: '#FBE9E7', btn: '#FF8A65', text: 'white' },
+        { main: '#37474F', bg: '#ECEFF1', btn: '#90A4AE', text: 'white' },
+        { main: '#6D4C41', bg: '#EFEBE9', btn: '#A1887F', text: 'white' },
+        { main: '#5C6BC0', bg: '#E8EAF6', btn: '#9FA8DA', text: 'white' }
     ];
 
     let pieChartInstance = null, barChartInstance = null, calcBuffer = "", viewDate = new Date(), talkTimer = null;
 
-    // 台灣時區日期校正
     function getTodayTW() {
         const now = new Date();
         const offset = now.getTimezoneOffset() * 60000; 
@@ -405,8 +405,10 @@
     }
 
     function exportData() { store.lastBackup = Date.now(); saveToDB(); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(store)], {type: "application/json"})); a.download = `備份.json`; a.click(); }
+    function exportCSV() { let csv="\uFEFF日期,類型,項目,金額,備註\n"; store.history.forEach(h=>{ csv+=`${h.date},${h.type},${h.main},${h.amt},${h.note||''}\n`; }); const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8;'})); a.download=`財務報表.csv`; a.click(); }
     function importData(e) { const r = new FileReader(); r.onload=(ev)=>{ store=JSON.parse(ev.target.result); saveToDB(); location.reload(); }; r.readAsText(e.target.files[0]); }
     function openManual() { document.getElementById('manual-display').innerText = store.manualContent; document.getElementById('manual-modal').style.display='flex'; }
+    function resetApp() { if(confirm("確定要重置帳本嗎喵？此動作不可復原！")) { localStorage.removeItem(DB_KEY); location.reload(); } }
     function initDaily() {
         const acc_op = Object.keys(store.accs).map(k=>`<option value="ACC:${k}">${k}</option>`).join('');
         document.getElementById('acc-source').innerHTML = acc_op;
