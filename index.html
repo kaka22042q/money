@@ -12,8 +12,22 @@
             --cat-red: #ff7675; --cat-green: #55efc4; --cat-blue: #74b9ff; --cat-light-pink: #FFD9D6;
             --cat-orange: #fab1a0;
         }
+        /* --- 新增：12月份季節主題配色 --- */
+        body.theme-1 { --cat-main: #fab1a0; --cat-light-pink: #ffe0d8; } 
+        body.theme-2 { --cat-main: #ff9ff3; --cat-light-pink: #fecdfa; } 
+        body.theme-3 { --cat-main: #55efc4; --cat-light-pink: #d1f7ed; } 
+        body.theme-4 { --cat-main: #81ecec; --cat-light-pink: #defcfc; } 
+        body.theme-5 { --cat-main: #fdcb6e; --cat-light-pink: #fef1d2; } 
+        body.theme-6 { --cat-main: #74b9ff; --cat-light-pink: #d8ebff; } 
+        body.theme-7 { --cat-main: #ff7675; --cat-light-pink: #ffd2d1; } 
+        body.theme-8 { --cat-main: #00cec9; --cat-light-pink: #cdf7f6; } 
+        body.theme-9 { --cat-main: #e17055; --cat-light-pink: #f8d6ce; } 
+        body.theme-10 { --cat-main: #6c5ce7; --cat-light-pink: #e3e0fa; } 
+        body.theme-11 { --cat-main: #a29bfe; --cat-light-pink: #eceaff; } 
+        body.theme-12 { --cat-main: #dfe6e9; --cat-light-pink: #f1f3f4; } 
+
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, "Noto Sans TC", sans-serif; }
-        body { background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 160px; font-size: 14px; }
+        body { background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 160px; font-size: 14px; transition: 0.3s; }
         .container { max-width: 450px; margin: 0 auto; padding: 12px; }
         .page { display: none; }
         .page.active { display: block; animation: fadeIn 0.2s ease-out; }
@@ -26,9 +40,6 @@
         .kb-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 5px; }
         .kb-btn { height: 38px; border: 1.5px solid var(--cat-dark); border-radius: 10px; background: #fff; font-weight: 900; color: var(--cat-dark); cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; }
         .kb-btn:active { transform: scale(0.92); background: var(--cat-light-pink); }
-        .op-btn { background: var(--cat-bg); }
-        .eq-btn { background: var(--cat-main); color: white; }
-        .ac-btn { background: #f0f0f0; color: #999; }
         .btn-main { background: var(--cat-main); border: 2.5px solid var(--cat-dark); box-shadow: 0 4px 0 var(--cat-dark); font-weight: bold; color: white; border-radius: 15px; padding: 14px; width: 100%; cursor: pointer; margin-top: 15px; font-size: 17px; letter-spacing: 2px; }
         .nav-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: white; border: 3px solid var(--cat-dark); box-shadow: 0 6px 0 var(--cat-gray); display: flex; justify-content: space-around; padding: 10px 5px; z-index: 100; border-radius: 30px; height: 85px; align-items: center; }
         .nav-item { border: none; background: none; text-align: center; flex: 1; cursor: pointer; opacity: 0.3; }
@@ -47,6 +58,12 @@
         .record-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed var(--cat-gray); }
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; backdrop-filter: blur(4px); }
         .modal-content { background: white; width: 88%; max-height: 85vh; overflow-y: auto; padding: 20px; border-radius: 25px; border: 3px solid var(--cat-dark); text-align: center; }
+
+        /* --- 新增：理財貓咪樣式 --- */
+        .cat-buddy { position: fixed; bottom: 120px; right: 20px; z-index: 99; cursor: pointer; display: flex; flex-direction: column; align-items: flex-end; }
+        .cat-bubble { background: white; border: 2.5px solid var(--cat-dark); border-radius: 15px; padding: 10px; font-size: 12px; max-width: 150px; margin-bottom: 8px; position: relative; display: none; box-shadow: 3px 3px 0 var(--cat-gray); line-height: 1.4; animation: fadeIn 0.3s; }
+        .cat-bubble::after { content: ''; position: absolute; bottom: -10px; right: 15px; border-width: 10px 10px 0; border-style: solid; border-color: white transparent; }
+        .cat-char { font-size: 45px; filter: drop-shadow(2px 2px 0 var(--cat-gray)); }
     </style>
 </head>
 <body>
@@ -109,6 +126,20 @@
     <div id="page-settings" class="page">
         <h2 style="text-align:center; font-size:18px;">⚙️ 設定中心</h2>
         <div class="cat-card">
+            <label>🎨 主題風格風格 (季節感色調)</label>
+            <select id="theme-select" onchange="applyTheme()">
+                <option value="auto">✨ 依照月份自動更換</option>
+                <option value="1">1月：元氣橘</option><option value="2">2月：情人粉</option>
+                <option value="3">3月：嫩草綠</option><option value="4">4月：清透藍</option>
+                <option value="5">5月：向日葵</option><option value="6">6月：梅雨藍</option>
+                <option value="7">7月：熱情紅</option><option value="8">8月：冰晶藍</option>
+                <option value="9">9月：楓葉紅</option><option value="10">10月：薰衣紫</option>
+                <option value="11">11月：迷霧紫</option><option value="12">12月：雪花銀</option>
+            </select>
+            <label>🐱 貓咪理財金句 (每行一句)</label>
+            <textarea id="quote-editor" rows="4" placeholder="輸入喜歡的理財格言..."></textarea>
+            <hr style="margin:20px 0; border:0; border-top:1px dashed var(--cat-gray);">
+            
             <button onclick="openManual()" class="btn-main" style="background:var(--cat-blue); margin-top:0; margin-bottom:15px;">📘 查看說明書</button>
             <label>📅 預算起算日 (薪資日)</label><input type="number" id="budget-day-input">
             <label>🔔 預算提醒門檻 (%)</label><input type="number" id="budget-threshold-input">
@@ -131,6 +162,11 @@
     </div>
 </div>
 
+<div class="cat-buddy" onclick="catTalk()">
+    <div id="cat-bubble" class="cat-bubble">喵！今天也要記帳喔！</div>
+    <div class="cat-char">🐱</div>
+</div>
+
 <nav class="nav-bar">
     <button class="nav-item active" onclick="showPage('daily', this)"><div class="nav-icon">✍️</div><div class="nav-text">記帳</div></button>
     <button class="nav-item" onclick="showPage('home', this)"><div class="nav-icon">📅</div><div class="nav-text">首頁</div></button>
@@ -139,9 +175,10 @@
 </nav>
 
 <script>
-    const DB_KEY = 'cat_dream_ultimate_v48_mod';
+    const DB_KEY = 'cat_dream_ultimate_v49_mod';
     let store = JSON.parse(localStorage.getItem(DB_KEY)) || {
         appName: '夢夢記帳', budgetDay: 10, threshold: 80, kbMode: 'calc', 
+        theme: 'auto', quotes: ["錢錢沒有不見，只是變成你喜歡的樣子喵！"], // 新增欄位
         accs: { '現金': 0, '銀行': 0 }, cats: { '飲食':['外食'] }, incCats: { '工作':['月薪'] },
         budgets: { '飲食': 5000 }, history: [], manualContent: "【預算】自訂發薪日，首頁自動切換帳期。",
         jarBalances: {}, jars: {}, lastBackup: Date.now()
@@ -149,9 +186,25 @@
     let pieChartInstance = null, barChartInstance = null, calcBuffer = "", viewDate = new Date();
 
     window.onload = () => {
+        applyTheme(); // 初始化主題
         const now = new Date(); document.getElementById('record-date').value = now.toISOString().split('T')[0];
         updateAppTitles(); checkBackupAlert(); initDaily(); renderKeyboard();
     };
+
+    // --- 新增功能函式 ---
+    function applyTheme() {
+        let t = document.getElementById('theme-select') ? document.getElementById('theme-select').value : store.theme;
+        if(t === 'auto') t = new Date().getMonth() + 1;
+        document.body.className = 'theme-' + t;
+    }
+
+    function catTalk() {
+        const b = document.getElementById('cat-bubble');
+        const q = store.quotes[Math.floor(Math.random() * store.quotes.length)] || "喵～";
+        b.innerText = q;
+        b.style.display = 'block';
+        setTimeout(() => b.style.display = 'none', 3500);
+    }
 
     function saveToDB() { localStorage.setItem(DB_KEY, JSON.stringify(store)); }
     function updateAppTitles() { document.getElementById('web-title').innerText = store.appName; document.getElementById('home-title-display').innerText = '🐾 ' + store.appName; }
@@ -167,6 +220,8 @@
     function initSettings() {
         document.getElementById('budget-day-input').value = store.budgetDay;
         document.getElementById('budget-threshold-input').value = store.threshold;
+        document.getElementById('theme-select').value = store.theme || 'auto';
+        document.getElementById('quote-editor').value = (store.quotes || []).join('\n');
         document.getElementById('budget-editor').value = Object.entries(store.budgets).map(([k,v])=>`${k}:${v}`).join('\n');
         document.getElementById('cat-editor').value = Object.entries(store.cats).map(([k,v])=>`${k}:${v.join(',')}`).join('\n');
         document.getElementById('inc-cat-editor').value = Object.entries(store.incCats).map(([k,v])=>`${k}:${v.join(',')}`).join('\n');
@@ -178,6 +233,8 @@
     function saveSettings() {
         store.budgetDay = Number(document.getElementById('budget-day-input').value) || 1;
         store.threshold = Number(document.getElementById('budget-threshold-input').value) || 80;
+        store.theme = document.getElementById('theme-select').value;
+        store.quotes = document.getElementById('quote-editor').value.split('\n').filter(s=>s.trim());
         store.manualContent = document.getElementById('manual-editor').value;
         const parseLines = (id, isCat=false) => {
             const o = {};
@@ -197,6 +254,7 @@
         saveToDB(); alert('設定已成功更新！'); location.reload();
     }
 
+    // --- 以下為 v49 原有核心邏輯，完整保留 ---
     function renderHome() {
         const range = getBudgetDateRange();
         document.getElementById('period-info').innerText = `目前帳期：${range.start.toLocaleDateString()} ~ ${range.end.toLocaleDateString()}`;
@@ -215,19 +273,7 @@
             const thisMonthStr = now.toISOString().slice(0,7);
             const hasSavedThisMonth = store.history.some(h => h.type === 'save' && h.jar === n && h.date.startsWith(thisMonthStr));
             const pct = Math.min(Math.round(cb/goal*100), 100);
-            jl.innerHTML += `
-                <div class="cat-card" style="padding:12px; margin-bottom:10px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <b>💎 ${n}</b>
-                        <span style="font-size:10px; background:#eee; padding:2px 6px; border-radius:10px;">${hasSavedThisMonth ? '✅ 本月已存' : '⏳ 本月待存'}</span>
-                    </div>
-                    <div style="font-size:12px; line-height:1.6; color:#555; margin-top:5px;">
-                        目標：$${goal.toLocaleString()} (已存 $${cb.toLocaleString()})<br>
-                        建議月存：<b>$${Math.round(suggestMonthly).toLocaleString()}</b> / 月<br>
-                        當前進度：<span style="color:${diff >= 0 ? 'var(--cat-green)' : 'var(--cat-red)'}; font-weight:bold;">${diff >= 0 ? '超前' : '落後'} $${Math.abs(Math.round(diff)).toLocaleString()}</span>
-                    </div>
-                    <div class="prog-container"><div class="prog-fill" style="width:${pct}%; background:var(--cat-blue)"></div></div>
-                </div>`;
+            jl.innerHTML += `<div class="cat-card" style="padding:12px; margin-bottom:10px;"><div style="display:flex; justify-content:space-between; align-items:center;"><b>💎 ${n}</b><span style="font-size:10px; background:#eee; padding:2px 6px; border-radius:10px;">${hasSavedThisMonth ? '✅ 本月已存' : '⏳ 本月待存'}</span></div><div style="font-size:12px; line-height:1.6; color:#555; margin-top:5px;">目標：$${goal.toLocaleString()} (已存 $${cb.toLocaleString()})<br>建議月存：<b>$${Math.round(suggestMonthly).toLocaleString()}</b> / 月<br>當前進度：<span style="color:${diff >= 0 ? 'var(--cat-green)' : 'var(--cat-red)'}; font-weight:bold;">${diff >= 0 ? '超前' : '落後'} $${Math.abs(Math.round(diff)).toLocaleString()}</span></div><div class="prog-container"><div class="prog-fill" style="width:${pct}%; background:var(--cat-blue)"></div></div></div>`;
         }
         const hb = document.getElementById('home-budget-list'); hb.innerHTML = "";
         for(let b in store.budgets) {
@@ -239,7 +285,8 @@
     }
 
     function getBudgetDateRange() {
-        const now = new Date(); let y=now.getFullYear(), m=now.getMonth(), d=store.budgetDay||10;
+        const now = new Date();
+        let y=now.getFullYear(), m=now.getMonth(), d=store.budgetDay||10;
         if(now.getDate()>=d) return { start:new Date(y,m,d), end:new Date(y,m+1,d-1,23,59,59) };
         return { start:new Date(y,m-1,d), end:new Date(y,m,d-1,23,59,59) };
     }
@@ -257,17 +304,11 @@
     }
 
     function selectDate(ds, el) {
-        document.querySelectorAll('.cal-day').forEach(d => d.classList.remove('selected'));
-        el.classList.add('selected');
+        document.querySelectorAll('.cal-day').forEach(d => d.classList.remove('selected')); el.classList.add('selected');
         document.getElementById('day-detail-area').style.display='block';
         document.getElementById('detail-date-title').innerText = `📅 ${ds} 的明細紀錄：`;
         const recs = store.history.filter(h=>h.date===ds);
-        document.getElementById('day-records').innerHTML = recs.map(r=>`
-            <div class="record-item">
-                <div style="flex:1;"><small>[${r.main||'轉帳'}]</small> <strong>${r.note||'無備註'}</strong></div>
-                <div style="text-align:right;"><span style="color:${r.type==='inc'?'green':'red'}; font-weight:bold;">$${r.amt}</span><br>
-                <button onclick="deleteRecord(${r.id})" style="border:none; background:#eee; padding:2px 6px; border-radius:5px; font-size:10px; color:red; margin-top:2px;">🗑️ 刪除</button></div>
-            </div>`).join('') || '無紀錄';
+        document.getElementById('day-records').innerHTML = recs.map(r=>`<div class="record-item"><div style="flex:1;"><small>[${r.main||'轉帳'}]</small> <strong>${r.note||'無備註'}</strong></div><div style="text-align:right;"><span style="color:${r.type==='inc'?'green':'red'}; font-weight:bold;">$${r.amt}</span><br><button onclick="deleteRecord(${r.id})" style="border:none; background:#eee; padding:2px 6px; border-radius:5px; font-size:10px; color:red; margin-top:2px;">🗑️ 刪除</button></div></div>`).join('') || '無紀錄';
     }
 
     function renderAssetsAndHistory() {
@@ -299,10 +340,9 @@
     function renderKeyboard() {
         const c = document.getElementById('kb-container'); c.innerHTML = "";
         const keys = ['7','8','9','/','4','5','6','*','1','2','3','-','0','AC','=','+'];
-        keys.forEach(k => {
-            c.innerHTML += `<button class="kb-btn" onclick="pressCalc('${k}')">${(k==='*'?'×':k==='/'?'÷':k)}</button>`;
-        });
+        keys.forEach(k => { c.innerHTML += `<button class="kb-btn" onclick="pressCalc('${k}')">${(k==='*'?'×':k==='/'?'÷':k)}</button>`; });
     }
+
     function pressCalc(val) {
         const el = document.getElementById('amt');
         if(val==='AC') { el.value = "0"; calcBuffer = ""; }
