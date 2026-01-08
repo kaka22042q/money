@@ -8,7 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            /* 基礎變數，會由 JS 根據主題動態更新 */
             --cat-main: #FFB7B2; --cat-bg: #fffaf0; --cat-dark: #5D4037; --cat-gray: #D7CCC8; 
             --cat-red: #ff7675; --cat-green: #55efc4; --cat-blue: #74b9ff; --cat-light-pink: #FFD9D6;
             --cat-orange: #fab1a0;
@@ -36,8 +35,8 @@
 
         input, select, textarea { width: 100%; border: 2px solid var(--cat-gray); border-radius: 10px; padding: 10px; margin-top: 5px; font-size: 16px; outline: none; background: #fff; color: var(--cat-dark); }
         label { font-size: 13px; font-weight: bold; display: block; margin-top: 10px; color: var(--cat-dark); border-left: 4px solid var(--cat-main); padding-left: 8px; }
-        
         #amt { font-size: 24px; height: 45px; text-align: center; color: var(--cat-red); border: 2.5px solid var(--cat-dark); margin-bottom: 8px; font-weight: bold; }
+        
         .kb-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 5px; }
         .kb-btn { height: 38px; border: 1.5px solid var(--cat-dark); border-radius: 10px; background: #fff; font-weight: 900; color: var(--cat-dark); cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; }
         .kb-btn:active { transform: scale(0.92); background: var(--cat-light-pink); }
@@ -61,7 +60,7 @@
         .cal-day.selected { background: var(--cat-orange) !important; color: white; font-weight: bold; }
         .cal-day.has-record::after { content: '●'; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); color: var(--cat-red); font-size: 8px; }
 
-        /* 貓咪助手懸浮 */
+        /* 貓咪助手 */
         #cat-assistant {
             position: fixed; bottom: 110px; right: 20px; z-index: 999;
             width: 65px; height: 65px; cursor: pointer;
@@ -88,10 +87,10 @@
         .modal-content { background: white; width: 88%; max-height: 85vh; overflow-y: auto; padding: 20px; border-radius: 25px; border: 3px solid var(--cat-dark); text-align: center; }
     </style>
 </head>
-<body>
+<body onclick="closeBubble(event)">
 
 <div id="cat-bubble"></div>
-<div id="cat-assistant" onclick="talkCat()">
+<div id="cat-assistant" onclick="talkCat(event)">
     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <circle cx="50" cy="55" r="35" fill="#fff" stroke="#5D4037" stroke-width="3"/>
         <path d="M25 35 L15 10 L40 25 Z" fill="#fff" stroke="#5D4037" stroke-width="3"/>
@@ -102,6 +101,10 @@
         <path d="M30 65 L10 60 M30 70 L10 75 M70 65 L90 60 M70 70 L90 75" stroke="#5D4037" stroke-width="1.5"/>
     </svg>
 </div>
+
+<div id="manual-modal" class="modal"><div class="modal-content"><h3 style="text-align:center; color:var(--cat-red); margin-top:0;">🐾 說明書</h3><div id="manual-display" style="white-space:pre-wrap; text-align:left; line-height:1.6; font-size:13px; color:#555;"></div><button onclick="document.getElementById('manual-modal').style.display='none'" class="btn-main">關閉</button></div></div>
+<div id="alert-modal" class="modal"><div class="modal-content"><h2>⚠️ 預算提醒</h2><p id="alert-msg"></p><button onclick="document.getElementById('alert-modal').style.display='none'" class="btn-main">知道了喵</button></div></div>
+<div id="backup-modal" class="modal"><div class="modal-content"><h3>📦 該備份囉</h3><p>超過 7 天沒備份了喵！建議備份資料避免遺失。</p><button onclick="goToSettingsForBackup()" class="btn-main">去備份</button><button onclick="document.getElementById('backup-modal').style.display='none'" style="background:none; border:none; color:#aaa; margin-top:10px;">下次</button></div></div>
 
 <div class="container" id="main-content">
     <div id="page-daily" class="page active">
@@ -158,8 +161,7 @@
         <h2 style="text-align:center; font-size:18px;">⚙️ 設定中心</h2>
         <div class="cat-card">
             <button onclick="openManual()" class="btn-main" style="background:var(--cat-blue); margin-top:0; margin-bottom:15px;">📘 查看說明書</button>
-            
-            <label>🌈 風格色調 (v50)</label>
+            <label>🌈 風格色調選擇</label>
             <select id="theme-mode-select" onchange="applyTheme(); saveToDB();">
                 <option value="auto">🌟 隨月份變換 (系統自動)</option>
                 <option value="0">1月 初雪銀裝</option><option value="1">2月 暖冬紅梅</option>
@@ -169,7 +171,6 @@
                 <option value="8">9月 楓紅秋意</option><option value="9">10月 金木犀香</option>
                 <option value="10">11月 焦糖拿鐵</option><option value="11">12月 聖誕星夜</option>
             </select>
-
             <label>📅 預算起算日 (薪資日)</label><input type="number" id="budget-day-input">
             <label>📊 月預算 (大類:金額)</label><textarea id="budget-editor" rows="4"></textarea>
             <label>📂 支出分類</label><textarea id="cat-editor" rows="5"></textarea>
@@ -179,11 +180,12 @@
             <button onclick="saveSettings()" class="btn-main" style="background:var(--cat-green)">儲存變更</button>
         </div>
         <div class="cat-card" style="text-align:center;">
-            <div style="display:flex; gap:10px;">
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
                 <button onclick="exportData()" style="flex:1; padding:10px; border-radius:10px; border:none; background:var(--cat-blue); color:white;">📦 備份 JSON</button>
                 <button onclick="document.getElementById('importFile').click()" style="flex:1; padding:10px; border-radius:10px; border:1.5px solid #333; background:white;">📥 匯入資料</button>
             </div>
             <input type="file" id="importFile" style="display:none" onchange="importData(event)">
+            <button onclick="exportCSV()" style="color:var(--cat-dark); border:none; background:none; text-decoration:underline; font-size:12px;">📊 匯出 CSV 報表</button>
         </div>
     </div>
 </div>
@@ -195,24 +197,22 @@
     <button class="nav-item" onclick="showPage('settings', this)"><div class="nav-icon">⚙️</div><div class="nav-text">設定</div></button>
 </nav>
 
-<div id="backup-modal" class="modal"><div class="modal-content"><h3>📦 該備份囉</h3><p>超過 7 天沒備份了喵！</p><button onclick="goToSettingsForBackup()" class="btn-main">去備份</button></div></div>
-
 <script>
-    const DB_KEY = 'cat_dream_v50_stable';
+    const DB_KEY = 'cat_dream_v50_final';
     let store = JSON.parse(localStorage.getItem(DB_KEY)) || {
         appName: '夢夢記帳', budgetDay: 10, themeMode: 'auto',
-        accs: { '現金': 0 }, cats: { '飲食':['外食'] }, incCats: { '工作':['薪資'] },
-        budgets: { '飲食': 5000 }, history: [], jarBalances: {}, jars: {}, lastBackup: Date.now()
+        accs: { '現金': 0, '銀行': 0 }, cats: { '飲食':['外食'] }, incCats: { '工作':['薪資'] },
+        budgets: { '飲食': 5000 }, history: [], jarBalances: {}, jars: {}, lastBackup: Date.now(),
+        manualContent: "【預算】自訂發薪日，首頁自動切換帳期。"
     };
     
     const quotes = [
-        "蒙格：知道自己不知道什麼，比聰明更重要喵。", "巴菲特：如果你不想持有一張股票十年，那就連十分鐘都不要持有喵喵。",
-        "張忠謀：終身學習是理財的基礎喵。", "蒙格：大錢不在買賣，而在等待。忍住想亂花的衝動喵！",
-        "巴菲特：先存錢再花剩下的喵。", "理性投資本質上都是價值投資喵。",
-        "存錢就像拼圖，每一塊錢都是達成夢想的一塊喵。", "忍住這杯珍奶，存錢筒的進度又跳了一格喵！",
-        "主子在看著你喔，別讓帳目亂掉喵！", "今天的節省，是為了給未來的你一份禮物喵。",
-        "存錢最開心的事，是擁有選擇人生的權利喵。", "90%的煩補，看著存款增加就會好一半了喵。"
-        /* ...可自行在 array 中補足 30 條 */
+        "蒙格：知道自己不知道什麼，比聰明更重要喵。", "巴菲特：不想持有一張股票十年，那就連十分鐘都不要持有喵。",
+        "蒙格：大錢不在買賣，而在等待。忍住亂花的衝動喵！", "巴菲特：先存錢再花剩下的喵。",
+        "張忠謀：終身學習是理財的基礎喵。", "記帳是理財的開始，你做得很好喵！",
+        "今天的節省，是為了給未來的你一份溫柔的禮物喵。", "忍住這杯飲品，存錢筒進度又跳了一格喵！",
+        "存錢最開心的事，是擁有選擇人生的權利喵。", "雖然我很傲嬌，但我很在意你的存錢進度喵！",
+        "每一次消費都是在投票給你想要的世界喵。", "90%的煩惱，看著存款增加就會好一半了喵。"
     ];
 
     const monthlyThemes = [
@@ -222,7 +222,7 @@
         { main: '#FFD9D6', bg: '#FFFDFB' }, { main: '#D7CCC8', bg: '#FBF9F8' }, { main: '#5D4037', bg: '#FAFAFA' }
     ];
 
-    let pieChartInstance = null, barChartInstance = null, calcBuffer = "", viewDate = new Date();
+    let pieChartInstance = null, barChartInstance = null, calcBuffer = "", viewDate = new Date(), bubbleTimer = null;
 
     window.onload = () => {
         applyTheme();
@@ -231,24 +231,31 @@
     };
 
     function applyTheme() {
-        let themeIdx;
-        const mode = document.getElementById('theme-mode-select').value || store.themeMode;
-        if(mode === 'auto') themeIdx = new Date().getMonth();
-        else themeIdx = parseInt(mode);
-        
-        const theme = monthlyThemes[themeIdx];
+        let idx; const mode = document.getElementById('theme-mode-select').value || store.themeMode;
+        if(mode === 'auto') idx = new Date().getMonth(); else idx = parseInt(mode);
+        const theme = monthlyThemes[idx];
         document.documentElement.style.setProperty('--cat-main', theme.main);
         document.documentElement.style.setProperty('--cat-bg', theme.bg);
         document.documentElement.style.setProperty('--cat-light-pink', theme.main + '44');
         store.themeMode = mode;
     }
 
-    function talkCat() {
+    function talkCat(e) {
+        if(e) e.stopPropagation();
         const bubble = document.getElementById('cat-bubble');
         bubble.innerText = quotes[Math.floor(Math.random() * quotes.length)];
         bubble.style.display = 'block';
-        // 延長停留時間至 6 秒
-        setTimeout(() => bubble.style.display = 'none', 6000);
+        if(bubbleTimer) clearTimeout(bubbleTimer);
+        bubbleTimer = setTimeout(() => bubble.style.display = 'none', 6000);
+    }
+
+    function closeBubble(e) {
+        const bubble = document.getElementById('cat-bubble');
+        const assistant = document.getElementById('cat-assistant');
+        if (bubble.style.display === 'block' && !assistant.contains(e.target) && !bubble.contains(e.target)) {
+            bubble.style.display = 'none';
+            if(bubbleTimer) clearTimeout(bubbleTimer);
+        }
     }
 
     function saveToDB() { localStorage.setItem(DB_KEY, JSON.stringify(store)); }
@@ -276,40 +283,29 @@
         store.themeMode = document.getElementById('theme-mode-select').value;
         store.budgetDay = Number(document.getElementById('budget-day-input').value) || 1;
         store.manualContent = document.getElementById('manual-editor').value;
-        const parseLines = (id, isCat=false) => {
-            const o = {};
-            document.getElementById(id).value.split('\n').forEach(l => {
-                const [k, v] = l.split(':'); if(k && v) {
-                    if(isCat) o[k.trim()] = v.split(',').map(s=>s.trim());
-                    else o[k.trim()] = Number(v.replace(/,/g,'').trim());
-                }
+        const parse = (id, cat=false) => {
+            const o = {}; document.getElementById(id).value.split('\n').forEach(l => {
+                const [k,v] = l.split(':'); if(k&&v){ if(cat) o[k.trim()]=v.split(',').map(s=>s.trim()); else o[k.trim()]=Number(v.replace(/,/g,'').trim()); }
             }); return o;
         };
-        store.cats = parseLines('cat-editor', true); store.accs = parseLines('acc-editor'); store.budgets = parseLines('budget-editor');
+        store.cats = parse('cat-editor', true); store.accs = parse('acc-editor'); store.budgets = parse('budget-editor');
         const j = {}; document.getElementById('jar-editor').value.split('\n').forEach(l => {
-            const [n, d] = l.split(':'); if(n && d) { const p = d.split(','); j[n.trim()] = { goal: Number(p[0]), start: p[1], end: p[2] }; }
+            const [n,d] = l.split(':'); if(n&&d){ const p=d.split(','); j[n.trim()]={goal:Number(p[0]),start:p[1],end:p[2]}; }
         });
-        store.jars = j;
-        saveToDB(); applyTheme(); alert('設定已儲存喵！🐾'); location.reload();
+        store.jars = j; saveToDB(); applyTheme(); alert('設定已儲存喵！🐾'); location.reload();
     }
 
     function renderHome() {
         const range = getBudgetDateRange();
-        document.getElementById('period-info').innerText = `帳期：${range.start.toLocaleDateString()} ~ ${range.end.toLocaleDateString()}`;
+        document.getElementById('period-info').innerText = `目前帳期：${range.start.toLocaleDateString()} ~ ${range.end.toLocaleDateString()}`;
         const jl = document.getElementById('jarList'); jl.innerHTML = "";
-        const now = new Date();
         for(let n in store.jars) {
             const p = store.jars[n], cb = store.jarBalances[n]||0, pct = Math.min(Math.round(cb/p.goal*100), 100);
-            jl.innerHTML += `
-                <div class="cat-card">
-                    ${pct >= 100 ? '<span class="medal">🥇</span>' : ''}
-                    <div style="display:flex; justify-content:space-between;"><b>💎 ${n}</b> <small>$${cb.toLocaleString()}/$${p.goal.toLocaleString()}</small></div>
-                    <div class="prog-container"><div class="prog-fill" style="width:${pct}%; background:var(--cat-blue)"></div></div>
-                </div>`;
+            jl.innerHTML += `<div class="cat-card">${pct>=100?'<span class="medal">🥇</span>':''}<b>💎 ${n}</b> <small>$${cb.toLocaleString()}/$${p.goal.toLocaleString()}</small><div class="prog-container"><div class="prog-fill" style="width:${pct}%; background:var(--cat-blue)"></div></div></div>`;
         }
         const hb = document.getElementById('home-budget-list'); hb.innerHTML = "";
         for(let b in store.budgets) {
-            const spent = store.history.filter(h=>h.type==='exp' && h.main===b && new Date(h.date)>=range.start && new Date(h.date)<=range.end).reduce((s,x)=>s+x.amt,0);
+            const spent = store.history.filter(h=>h.type==='exp'&&h.main===b&&new Date(h.date)>=range.start&&new Date(h.date)<=range.end).reduce((s,x)=>s+x.amt,0);
             const pct = Math.min(Math.round(spent/store.budgets[b]*100), 100);
             hb.innerHTML += `<div style="font-size:11px; margin-top:5px;">${b} ($${spent}/$${store.budgets[b]})<div class="prog-container"><div class="prog-fill" style="width:${pct}%; background:${pct>=100?'var(--cat-red)':'var(--cat-green)'}"></div></div></div>`;
         }
@@ -340,22 +336,20 @@
         document.getElementById('detail-date-title').innerText = `📅 ${ds} 明細：`;
         const recs = store.history.filter(h=>h.date===ds);
         document.getElementById('day-records').innerHTML = recs.map(r=>`
-            <div class="record-item">
-                <div style="flex:1;"><small>[${r.main}]</small> <strong>${r.note||'無'}</strong></div>
-                <div style="text-align:right;"><span style="color:${r.type==='inc'?'green':'red'}; font-weight:bold;">$${r.amt}</span><br>
-                <button onclick="deleteRecord(${r.id})" style="border:none; background:#eee; padding:2px 6px; border-radius:5px; font-size:10px; color:red;">🗑️ 刪除</button></div>
-            </div>`).join('') || '無紀錄';
+            <div class="record-item"><div style="flex:1;"><small>[${r.main}]</small> <strong>${r.note||'無'}</strong></div>
+            <div style="text-align:right;"><span style="color:${r.type==='inc'?'green':'red'}; font-weight:bold;">$${r.amt}</span><br>
+            <button onclick="deleteRecord(${r.id})" style="border:none; background:#eee; padding:2px 6px; border-radius:5px; font-size:10px; color:red;">🗑️ 刪除</button></div></div>`).join('') || '無紀錄';
     }
 
     function renderAssetsAndHistory() {
-        const area = document.getElementById('asset-list'); area.innerHTML = "";
-        let tot = 0; for(let k in store.accs){ tot += store.accs[k]; area.innerHTML += `<div style="display:flex; justify-content:space-between; padding:4px 0;"><span>${k}</span><span>$${store.accs[k].toLocaleString()}</span></div>`; }
-        area.innerHTML += `<div style="border-top:2px solid var(--cat-dark); margin-top:5px; font-weight:bold; display:flex; justify-content:space-between;"><span>總資產</span><span>$${tot.toLocaleString()}</span></div>`;
+        const area = document.getElementById('asset-list'); area.innerHTML = ""; let tot = 0;
+        for(let k in store.accs){ tot += store.accs[k]; area.innerHTML += `<div style="display:flex; justify-content:space-between; padding:4px 0;"><span>${k}</span><span>$${store.accs[k].toLocaleString()}</span></div>`; }
+        area.innerHTML += `<div style="border-top:2.2px solid var(--cat-dark); margin-top:5px; font-weight:bold; display:flex; justify-content:space-between;"><span>總資產</span><span>$${tot.toLocaleString()}</span></div>`;
         const search = document.getElementById('global-search').value.toLowerCase();
         const filtered = store.history.filter(h => `${h.main||''} ${h.note||''}`.toLowerCase().includes(search));
         const catT = {}, listA = document.getElementById('full-history-list'); listA.innerHTML = "";
         filtered.sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,25).forEach(h=>{
-            if(h.type==='exp') catT[h.main] = (catT[h.main]||0)+h.amt;
+            if(h.type==='exp') catT[h.main]=(catT[h.main]||0)+h.amt;
             listA.innerHTML += `<div class="record-item"><div style="flex:1;"><small>${h.date} [${h.main}]</small><br><strong>${h.note||'無'}</strong></div><div style="text-align:right;"><span style="color:${h.type==='inc'?'green':'red'}; font-weight:bold;">${h.type==='inc'?'+':'-'}$${h.amt}</span><br><button onclick="deleteRecord(${h.id})" style="border:none; background:#eee; padding:2px 8px; border-radius:5px; font-size:12px; color:red; margin-top:3px;">🗑️ 刪除</button></div></div>`;
         });
         if(pieChartInstance) pieChartInstance.destroy(); if(barChartInstance) barChartInstance.destroy();
@@ -400,6 +394,7 @@
 
     function checkBackupAlert() { if(Date.now() - (store.lastBackup || 0) > 7*86400000) setTimeout(()=>document.getElementById('backup-modal').style.display='flex', 1000); }
     function exportData() { store.lastBackup = Date.now(); saveToDB(); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(store)], {type: "application/json"})); a.download = `夢想備份_v50.json`; a.click(); }
+    function exportCSV() { let csv="\uFEFF日期,類型,大類,金額,備註\n"; store.history.forEach(h=>{ csv+=`${h.date},${h.type},${h.main},${h.amt},${h.note||''}\n`; }); const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8;'})); a.download=`財務報表.csv`; a.click(); }
     function importData(e) { const r = new FileReader(); r.onload=(ev)=>{ store=JSON.parse(ev.target.result); saveToDB(); location.reload(); }; r.readAsText(e.target.files[0]); }
     function openManual() { document.getElementById('manual-display').innerText = store.manualContent; document.getElementById('manual-modal').style.display='flex'; }
     function goToSettingsForBackup() { document.getElementById('backup-modal').style.display='none'; showPage('settings', document.querySelectorAll('.nav-item')[3]); }
