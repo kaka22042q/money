@@ -84,7 +84,7 @@
             <div id="home-budget-list"></div>
         </div>
         <div class="cat-card">
-            <div class="cal-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <div class="cal-header" style="display:flex; justify-content:space-between; align-items:center;">
                 <button onclick="changeMonth(-1)" style="background:none; border:none; font-size:20px;">❮</button>
                 <h3 id="cal-month-title" style="margin:0; font-size:16px;"></h3>
                 <button onclick="changeMonth(1)" style="background:none; border:none; font-size:20px;">❯</button>
@@ -132,12 +132,12 @@
 
             <label>📅 預算起算日 (薪資日)</label><input type="number" id="budget-day-input">
             <label>📊 月預算 (大類:金額)</label><textarea id="budget-editor" rows="4"></textarea>
-            <label>📂 支出分類 (大類:小類,小類...)</label><textarea id="cat-editor" rows="5"></textarea>
+            <label>📂 支出分類</label><textarea id="cat-editor" rows="5"></textarea>
             <label>💰 收入分類</label><textarea id="inc-cat-editor" rows="3"></textarea>
             <label>💳 帳戶資產</label><textarea id="acc-editor" rows="4"></textarea>
-            <label>💎 存錢筒計畫 (名:目標,起,迄)</label><textarea id="jar-editor" rows="4"></textarea>
+            <label>💎 存錢筒計畫</label><textarea id="jar-editor" rows="4"></textarea>
             <label>📘 說明書編輯</label><textarea id="manual-editor" rows="4"></textarea>
-            <label>🐱 貓咪金句 (每行一句)</label><textarea id="quote-editor" rows="4"></textarea>
+            <label>🐱 貓咪理財金句 (每行一句)</label><textarea id="quote-editor" rows="4"></textarea>
             <button onclick="saveSettings()" class="btn-main" style="background:var(--cat-green)">儲存變更</button>
         </div>
         <div class="cat-card" style="text-align:center;">
@@ -172,11 +172,11 @@
 
     const DB_KEY = 'cat_dream_ultimate_v50.2_themed';
     let store = JSON.parse(localStorage.getItem(DB_KEY)) || {
-        appName: '夢夢記帳', budgetDay: 10, threshold: 80, kbMode: 'calc',
+        appName: '夢夢記帳', budgetDay: 10, threshold: 80, kbMode: 'currency',
         themeChoice: 'auto', accs: { '現金': 0, '銀行': 0 }, cats: { '飲食':['外食','飲料','食材'] }, incCats: { '工作':['薪資','獎金'] },
-        budgets: { '飲食': 5000 }, history: [], manualContent: "【預算】自訂發薪日...\n【存錢筒】追蹤進度...",
+        budgets: { '飲食': 5000 }, history: [], manualContent: "說明的內容...",
         jarBalances: {}, jars: {}, lastBackup: Date.now(),
-        quotes: ["錢錢沒有不見，只是變成你喜歡的樣子喵！"]
+        quotes: ["錢錢沒有不見喵！"]
     };
 
     let pieChartInstance = null, barChartInstance = null, calcBuffer = "", viewDate = new Date();
@@ -189,6 +189,7 @@
 
     function applyTheme() {
         let idx = store.themeChoice === 'auto' ? new Date().getMonth() : parseInt(store.themeChoice);
+        if (isNaN(idx)) idx = new Date().getMonth();
         const t = monthlyThemes[idx];
         const root = document.documentElement;
         root.style.setProperty('--cat-main', t.main); root.style.setProperty('--cat-bg', t.bg);
@@ -243,7 +244,7 @@
 
     function initSettings() {
         document.getElementById('theme-select').value = store.themeChoice || 'auto';
-        document.getElementById('kb-mode-select').value = store.kbMode || 'calc';
+        document.getElementById('kb-mode-select').value = store.kbMode || 'currency';
         document.getElementById('budget-day-input').value = store.budgetDay;
         document.getElementById('budget-editor').value = Object.entries(store.budgets).map(([k,v])=>`${k}:${v}`).join('\n');
         document.getElementById('cat-editor').value = Object.entries(store.cats).map(([k,v])=>`${k}:${v.join(',')}`).join('\n');
@@ -276,14 +277,6 @@
         });
         store.jars = j; saveToDB(); applyTheme(); renderKeyboard();
         alert('設定已儲存喵！');
-    }
-
-    function catSpeak() {
-        const bubble = document.getElementById('cat-bubble');
-        const list = (store.quotes && store.quotes.length > 0) ? store.quotes : ["喵～"];
-        bubble.innerText = list[Math.floor(Math.random() * list.length)];
-        bubble.style.display = 'block';
-        setTimeout(() => { bubble.style.display = 'none'; }, 3000);
     }
 
     function renderHome() {
@@ -392,11 +385,32 @@
 
     function exportData() { saveToDB(); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(store)], {type: "application/json"})); a.download = `夢夢記帳_${new Date().toISOString().slice(0,10)}.json`; a.click(); }
     function exportCSV() { let csv="\uFEFF日期,類型,大類,小類,金額,帳戶,備註\n"; store.history.forEach(h=>{ csv+=`${h.date},${h.type},${h.main||''},${h.sub||''},${h.amt},${h.srcRaw||''},${h.note||''}\n`; }); const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8;'})); a.download=`夢夢記帳_${new Date().toISOString().slice(0,10)}.csv`; a.click(); }
-    function importData(e) { const r = new FileReader(); r.onload=(ev)=>{ store=JSON.parse(ev.target.result); saveToDB(); location.reload(); }; r.readAsText(e.target.files[0]); }
+    
+    function importData(e) { 
+        const r = new FileReader(); 
+        r.onload=(ev)=>{ 
+            let imported = JSON.parse(ev.target.result);
+            // 保護機制：如果匯入的資料少了新版的設定，則補足預設值
+            if (!imported.kbMode) imported.kbMode = 'currency';
+            if (!imported.themeChoice) imported.themeChoice = 'auto';
+            store = imported;
+            saveToDB(); 
+            location.reload(); 
+        }; 
+        r.readAsText(e.target.files[0]); 
+    }
+
     function fullReset() { if(confirm("確定要清空嗎喵？")) { store.history=[]; store.jarBalances={}; saveToDB(); location.reload(); } }
     function checkBackupAlert() { if(Date.now() - (store.lastBackup || 0) > 7 * 86400000) document.getElementById('backup-modal').style.display='flex'; }
     function goToSettingsForBackup() { document.getElementById('backup-modal').style.display='none'; showPage('settings', document.querySelectorAll('.nav-item')[3]); }
     function openManual() { document.getElementById('manual-display').innerText = store.manualContent; document.getElementById('manual-modal').style.display = 'flex'; }
+    function catSpeak() {
+        const bubble = document.getElementById('cat-bubble');
+        const list = (store.quotes && store.quotes.length > 0) ? store.quotes : ["喵～"];
+        bubble.innerText = list[Math.floor(Math.random() * list.length)];
+        bubble.style.display = 'block';
+        setTimeout(() => { bubble.style.display = 'none'; }, 3000);
+    }
     function initDaily() {
         const acc_op = Object.keys(store.accs).map(k=>`<option value="ACC:${k}">${k}</option>`).join('');
         document.getElementById('acc-source').innerHTML = acc_op; document.getElementById('acc-to').innerHTML = acc_op;
@@ -406,6 +420,7 @@
     }
     function renderSubCats() { const m = document.getElementById('mainCat').value; if(store.cats[m]) document.getElementById('subCat').innerHTML = store.cats[m].map(s=>`<option value="${s}">${s}</option>`).join(''); }
     function toggleFields() { const m = document.getElementById('trans-mode').value; document.getElementById('transfer-area').style.display = (m==='transfer'?'block':'none'); document.getElementById('jar-area').style.display = (m==='save'?'block':'none'); }
+    function updateAppTitles() { document.getElementById('web-title').innerText = store.appName; document.getElementById('home-title-display').innerText = '🐾 ' + store.appName; }
 </script>
 </body>
 </html>
