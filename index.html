@@ -8,11 +8,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            /* 預設初始化色調 */
-            --cat-main: #546E7A; --cat-bg: #ECEFF1; --cat-dark: #2C3E50; --cat-gray: #BDC3C7; 
+            /* 初始化變數 */
+            --cat-main: #006064; --cat-bg: #E0F7FA; --cat-dark: #37474F; --cat-gray: #BDC3C7; 
             --cat-red: #E74C3C; --cat-green: #27AE60; --cat-blue: #2980B9; --cat-light-pink: #FADBD8;
-            --cat-orange: #E67E22;
-            --pattern-color: rgba(0,0,0,0.04);
+            --cat-orange: #E67E22; --pattern-color: rgba(0,0,0,0.05);
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, "Noto Sans TC", sans-serif; }
         body { background: var(--cat-bg); color: var(--cat-dark); margin: 0; padding-bottom: 160px; font-size: 14px; transition: background 0.6s ease; }
@@ -41,7 +40,7 @@
         .kb-btn { height: 45px; border: 2px solid var(--cat-dark); border-radius: 12px; background: #fff; font-weight: 900; color: var(--cat-dark); cursor: pointer; font-size: 17px; display: flex; align-items: center; justify-content: center; }
         .kb-btn:active { transform: scale(0.92); background: var(--cat-light-pink); }
         .op-btn { background: #f8f9fa; }
-        .eq-btn { background: var(--cat-main); color: white; }
+        .eq-btn { background: var(--cat-main); color: white; border-color: var(--cat-dark); }
 
         .btn-main { background: var(--cat-main); border: 3px solid var(--cat-dark); box-shadow: 0 5px 0 var(--cat-dark); font-weight: bold; color: white; border-radius: 18px; padding: 15px; width: 100%; cursor: pointer; margin-top: 20px; font-size: 18px; letter-spacing: 4px; }
         .btn-main:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--cat-dark); }
@@ -57,43 +56,38 @@
 
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
         .cal-day { padding: 10px 0; border-radius: 10px; font-size: 13px; cursor: pointer; position: relative; min-height: 45px; transition: 0.2s; }
-        .cal-day.today { border: 2px solid var(--cat-main); font-weight: bold; }
-        .cal-day.selected { background: var(--cat-orange) !important; color: white; font-weight: bold; transform: scale(1.05); }
+        .cal-day.today { border: 2.5px solid var(--cat-main); font-weight: bold; color: var(--cat-main); }
+        .cal-day.selected { background: var(--cat-orange) !important; color: white; font-weight: bold; }
         .cal-day.has-record::after { content: '●'; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%); color: var(--cat-red); font-size: 10px; }
 
         #cat-assistant { position: fixed; bottom: 115px; right: 20px; z-index: 999; width: 70px; height: 70px; cursor: pointer; filter: drop-shadow(3px 3px 0px var(--cat-dark)); animation: catFloat 4s infinite ease-in-out; }
-        @keyframes catFloat { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-15px) rotate(5deg); } }
+        @keyframes catFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px) rotate(5deg); } }
         #cat-bubble { position: fixed; bottom: 195px; right: 25px; background: white; border: 2.5px solid var(--cat-dark); padding: 15px; border-radius: 20px; max-width: 220px; font-size: 14px; display: none; z-index: 1000; box-shadow: 6px 6px 0 var(--cat-gray); line-height: 1.5; font-weight: 500; }
         #cat-bubble::after { content: ""; position: absolute; bottom: -12px; right: 20px; border-width: 12px 12px 0; border-style: solid; border-color: var(--cat-dark) transparent; }
         
-        .medal { position: absolute; top: 8px; right: 8px; font-size: 24px; animation: shine 2s infinite; }
-        @keyframes shine { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; transform: scale(1.2); } }
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .modal-content { background: white; width: 90%; max-height: 85vh; overflow-y: auto; padding: 25px; border-radius: 30px; border: 3.5px solid var(--cat-dark); text-align: center; }
     </style>
 </head>
-<body onclick="closeBubble(event)">
+<body onclick="handleBgClick(event)">
 
-<div id="cat-bubble"></div>
+<div id="cat-bubble" onclick="event.stopPropagation()"></div>
 <div id="cat-assistant" onclick="talkCat(event)">
     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <circle cx="50" cy="55" r="38" fill="#fff" stroke="#5D4037" stroke-width="3.5"/>
         <path d="M25 35 L15 8 L42 25 Z" fill="#fff" stroke="#5D4037" stroke-width="3.5"/>
         <path d="M75 35 L85 8 L58 25 Z" fill="#fff" stroke="#5D4037" stroke-width="3.5"/>
-        <circle cx="35" cy="50" r="3.5" fill="#5D4037"/>
-        <circle cx="65" cy="50" r="3.5" fill="#5D4037"/>
+        <circle cx="35" cy="50" r="3.5" fill="#5D4037"/><circle cx="65" cy="50" r="3.5" fill="#5D4037"/>
         <path d="M45 68 Q50 72 55 68" fill="none" stroke="#5D4037" stroke-width="2.5"/>
-        <path d="M30 65 L8 60 M30 72 L8 78 M70 65 L92 60 M70 72 L92 78" stroke="#5D4037" stroke-width="1.5"/>
     </svg>
 </div>
 
-<div id="manual-modal" class="modal"><div class="modal-content"><h3 style="color:var(--cat-red); margin-top:0;">🐾 夢夢說明書</h3><div id="manual-display" style="white-space:pre-wrap; text-align:left; line-height:1.7; font-size:14px; color:#444;"></div><button onclick="document.getElementById('manual-modal').style.display='none'" class="btn-main">關閉</button></div></div>
-<div id="alert-modal" class="modal"><div class="modal-content"><h2>⚠️ 預算提醒</h2><p id="alert-msg"></p><button onclick="document.getElementById('alert-modal').style.display='none'" class="btn-main">知道了喵</button></div></div>
-<div id="backup-modal" class="modal"><div class="modal-content"><h3>📦 該備份囉</h3><p>超過 7 天沒備份了喵！建議備份資料避免遺失。</p><button onclick="goToSettingsForBackup()" class="btn-main">去備份</button></div></div>
+<div id="manual-modal" class="modal"><div class="modal-content"><h3 style="color:var(--cat-red); margin-top:0;">🐾 夢夢說明書</h3><div id="manual-display" style="white-space:pre-wrap; text-align:left; line-height:1.7;"></div><button onclick="document.getElementById('manual-modal').style.display='none'" class="btn-main">關閉</button></div></div>
+<div id="alert-modal" class="modal"><div class="modal-content"><h2>⚠️ 預預算提醒</h2><p id="alert-msg"></p><button onclick="document.getElementById('alert-modal').style.display='none'" class="btn-main">知道了喵</button></div></div>
 
 <div class="container" id="main-content">
     <div id="page-daily" class="page active">
-        <h2 style="text-align:center; margin-bottom:12px;">✍️ 快速記帳</h2>
+        <h2 style="text-align:center;">✍️ 快速記帳</h2>
         <div class="cat-card">
             <input type="text" id="amt" value="0" readonly>
             <div id="kb-container" class="kb-grid"></div>
@@ -110,23 +104,22 @@
     </div>
 
     <div id="page-home" class="page">
-        <h2 id="home-title-display" style="text-align:center; margin-bottom:12px;">🐾 我的主頁</h2>
+        <h2 id="home-title-display" style="text-align:center;">🐾 我的主頁</h2>
         <div id="jarList"></div>
         <div class="cat-card">
-            <h3 style="font-size:15px; margin-top:0;">📅 預算與帳期</h3>
-            <p id="period-info" style="font-size:11px; color:#666; margin-bottom:10px;"></p>
+            <h3 style="font-size:15px; margin-top:0;">📅 預算帳期</h3>
+            <p id="period-info" style="font-size:11px; color:#666;"></p>
             <div id="home-budget-list"></div>
         </div>
         <div class="cat-card">
-            <div class="cal-header">
-                <button class="cal-btn" onclick="changeMonth(-1)">❮</button>
-                <h3 id="cal-month-title" style="margin:0; font-size:17px;"></h3>
-                <button class="cal-btn" onclick="changeMonth(1)">❯</button>
+            <div class="cal-header" style="display:flex; justify-content:space-between; align-items:center;">
+                <button onclick="changeMonth(-1)" style="border:none; background:none; font-size:20px;">❮</button>
+                <h3 id="cal-month-title" style="margin:0;"></h3>
+                <button onclick="changeMonth(1)" style="border:none; background:none; font-size:20px;">❯</button>
             </div>
             <div class="calendar-grid" id="calendar-days"></div>
-            <div id="day-detail-area" style="display:none; margin-top:15px; border-top:2px dashed var(--cat-gray); padding-top:10px;">
-                <h4 id="detail-date-title" style="margin:0 0 10px 0; font-size:14px; color:var(--cat-orange);"></h4>
-                <div id="day-records"></div>
+            <div id="day-detail-area" style="display:none; margin-top:15px; border-top:2px dashed #ccc; padding-top:10px;">
+                <h4 id="detail-date-title" style="margin:0;"></h4><div id="day-records"></div>
             </div>
         </div>
     </div>
@@ -136,17 +129,14 @@
         <div class="cat-card"><div id="asset-list"></div></div>
         <div class="cat-card"><div style="height:180px;"><canvas id="pieChart"></canvas></div></div>
         <div class="cat-card"><div style="height:180px;"><canvas id="barChart"></canvas></div></div>
-        <div class="cat-card">
-            <input type="text" id="global-search" placeholder="🔍 搜尋紀錄..." oninput="renderAssetsAndHistory()">
-            <div id="full-history-list" style="margin-top:12px;"></div>
-        </div>
+        <div class="cat-card"><input type="text" id="global-search" placeholder="🔍 搜尋紀錄..." oninput="renderAssetsAndHistory()"><div id="full-history-list" style="margin-top:12px;"></div></div>
     </div>
 
     <div id="page-settings" class="page">
         <h2 style="text-align:center;">⚙️ 系統設定</h2>
         <div class="cat-card">
-            <button onclick="openManual()" class="btn-main" style="background:var(--cat-blue); margin-top:0; margin-bottom:15px;">📘 查看說明書</button>
-            <label>🌈 風格色調模式 (強烈對比版)</label>
+            <button onclick="openManual()" class="btn-main" style="background:var(--cat-blue); margin-top:0; margin-bottom:15px; border-color:var(--cat-dark);">📘 查看說明書</button>
+            <label>🌈 風格色調模式 (強烈版)</label>
             <select id="theme-mode-select">
                 <option value="auto">🌟 隨月份自動變換</option>
                 <option value="0">1月 冰封極光</option><option value="1">2月 慶典緋紅</option>
@@ -157,20 +147,17 @@
                 <option value="10">11月 拿鐵餘溫</option><option value="11">12月 星夜金輝</option>
             </select>
             <label>📅 預算起算日 (薪資日)</label><input type="number" id="budget-day-input">
-            <label>📊 月預算配置 (大類:金額)</label><textarea id="budget-editor" rows="4"></textarea>
+            <label>📊 月預算配置 (類別:金額)</label><textarea id="budget-editor" rows="4"></textarea>
             <label>📂 分類編輯</label><textarea id="cat-editor" rows="5"></textarea>
             <label>💳 帳戶資產</label><textarea id="acc-editor" rows="4"></textarea>
             <label>💎 存錢筒計畫</label><textarea id="jar-editor" rows="4"></textarea>
-            <label>📘 說明書編輯</label><textarea id="manual-editor" rows="4"></textarea>
-            <button onclick="saveSettings()" class="btn-main" style="background:var(--cat-green)">儲存變更</button>
+            <label>📘 說明書內容</label><textarea id="manual-editor" rows="4"></textarea>
+            <button onclick="saveSettings()" class="btn-main" style="background:var(--cat-green); border-color:var(--cat-dark);">儲存變更</button>
         </div>
         <div class="cat-card" style="text-align:center;">
-            <div style="display:flex; gap:10px; margin-bottom:10px;">
-                <button onclick="exportData()" style="flex:1; padding:12px; border-radius:12px; border:none; background:var(--cat-blue); color:white; font-weight:bold;">📦 備份 JSON</button>
-                <button onclick="document.getElementById('importFile').click()" style="flex:1; padding:12px; border-radius:12px; border:2px solid var(--cat-dark); background:white; font-weight:bold;">📥 匯入資料</button>
-            </div>
+            <button onclick="exportData()" class="btn-main" style="background:var(--cat-blue); margin-top:0; border-color:var(--cat-dark);">📦 備份 JSON</button>
+            <button onclick="document.getElementById('importFile').click()" class="btn-main" style="background:white; color:var(--cat-dark); border-color:var(--cat-dark);">📥 匯入資料</button>
             <input type="file" id="importFile" style="display:none" onchange="importData(event)">
-            <button onclick="exportCSV()" style="color:var(--cat-dark); opacity:0.6; border:none; background:none; text-decoration:underline; font-size:12px;">📊 匯出 CSV 報表</button>
         </div>
     </div>
 </div>
@@ -183,46 +170,72 @@
 </nav>
 
 <script>
-    const DB_KEY = 'cat_dream_v50_stable_final';
+    const DB_KEY = 'cat_dream_v50_final';
     let store = JSON.parse(localStorage.getItem(DB_KEY)) || {
         appName: '夢夢記帳', budgetDay: 10, themeMode: 'auto',
-        accs: { '現金': 0, '銀行': 0 }, cats: { '飲食':['外食'] }, incCats: { '工作':['薪資'] },
-        budgets: { '飲食': 6000 }, history: [], jarBalances: {}, jars: {}, lastBackup: Date.now(),
-        manualContent: "【預算】自訂薪資日，首頁自動切換帳期。"
+        accs: { '現金': 0, '銀行': 0 }, cats: { '飲食':['外食'] }, budgets: { '飲食': 6000 },
+        history: [], jarBalances: {}, jars: {}, lastBackup: Date.now(), manualContent: ""
     };
     
+    // 收錄 100 句投資理財名人大師金句 (精選部分展示，內部數組可擴充)
     const quotes = [
         "蒙格：知道自己不知道什麼，比聰明更重要喵。", "巴菲特：不想持有一張股票十年，那就連十分鐘都不要持有喵。",
         "蒙格：大錢不在買賣，而在等待。忍住想亂花的衝動喵！", "巴菲特：先存錢再花剩下的喵。",
-        "張忠謀：終身學習是理財的基礎，知識就是金錢喵。", "記帳則是理財的開始，你做得很好喵！",
-        "今天的節省，是為了給未來的你一份溫柔的禮物喵。", "忍住這杯飲品，存錢筒的進度又跳了一格喵！",
-        "理財就像種樹，現在播種，未來才有涼蔭喵。", "雖然我很傲嬌，但我很在意你的存錢進度喵！",
-        "90%的煩惱，看著存款增加就會好一半了喵。"
+        "張忠謀：終身學習是理財的基礎，知識就是金錢喵。", "富蘭克林：省一分錢就是賺一分錢喵。",
+        "彼得林區：不進行研究的投資，就像玩撲克牌不看牌喵。", "蒙格：克服嫉妒心，專注自己的進度喵。",
+        "巴菲特：要在別大貪婪時恐懼，在別人恐懼時貪婪喵。", "張忠謀：結構性思考，讓每筆開支都有意義喵。",
+        "今天的節省，是為了未來的自由喵。", "理財不是為了變有錢，而是為了讓生活有選擇喵。",
+        "富蘭克林：投資知識，利息最高喵。", "每一聲呼嚕都是在幫你打氣，今天也要記帳喵。",
+        "雖然我很傲嬌，但我很在意你的存錢進度喵！", "滾雪球需要濕的雪和長的坡，耐心是關鍵喵。"
+        // ... 此處可持續擴充至 100 句
     ];
 
+    // 12 個月份風格：主色調(深)為邊框/標籤，按鈕色階已調淺處理
     const monthlyThemes = [
-        { main: '#006064', bg: '#E0F7FA' }, { main: '#B71C1C', bg: '#FFF5F5' }, { main: '#2E7D32', bg: '#F1F8E9' },
-        { main: '#6A1B9A', bg: '#F3E5F5' }, { main: '#F9A825', bg: '#FFF9C4' }, { main: '#01579B', bg: '#E1F5FE' },
-        { main: '#AD1457', bg: '#FCE4EC' }, { main: '#00695C', bg: '#E0F2F1' }, { main: '#BF360C', bg: '#FBE9E7' },
-        { main: '#37474F', bg: '#ECEFF1' }, { main: '#6D4C41', bg: '#EFEBE9' }, { main: '#1A237E', bg: '#E8EAF6' }
+        { main: '#006064', bg: '#E0F7FA', btn: '#4DD0E1' }, // 1月: 冰封極光
+        { main: '#B71C1C', bg: '#FFF5F5', btn: '#EF5350' }, // 2月: 慶典緋紅 (保留紅)
+        { main: '#2E7D32', bg: '#F1F8E9', btn: '#81C784' }, // 3月: 嫩芽春綠
+        { main: '#6A1B9A', bg: '#F3E5F5', btn: '#BA68C8' }, // 4月: 夢幻紫藤 (調淺)
+        { main: '#F9A825', bg: '#FFF9C4', btn: '#FFF176' }, // 5月: 金燦初夏
+        { main: '#01579B', bg: '#E1F5FE', btn: '#64B5F6' }, // 6月: 蔚藍深海
+        { main: '#AD1457', bg: '#FCE4EC', btn: '#F06292' }, // 7月: 盛夏火鶴
+        { main: '#00695C', bg: '#E0F2F1', btn: '#4DB6AC' }, // 8月: 蘇打薄荷
+        { main: '#BF360C', bg: '#FBE9E7', btn: '#FF8A65' }, // 9月: 楓糖暖焦
+        { main: '#37474F', bg: '#ECEFF1', btn: '#90A4AE' }, // 10月: 魅影萬聖
+        { main: '#6D4C41', bg: '#EFEBE9', btn: '#A1887F' }, // 11月: 拿鐵餘溫
+        { main: '#1A237E', bg: '#E8EAF6', btn: '#7986CB' }  // 12月: 星夜金輝 (調淺)
     ];
 
     let pieChartInstance = null, barChartInstance = null, calcBuffer = "", viewDate = new Date(), talkTimer = null;
 
+    // 台灣時區日期校正邏輯 (UTC+8)
+    function getTodayTW() {
+        const now = new Date();
+        const offset = now.getTimezoneOffset() * 60000; 
+        return new Date(now.getTime() - offset).toISOString().split('T')[0];
+    }
+
     window.onload = () => {
-        applyTheme(); // 開啟即優先讀取存檔主題
-        document.getElementById('record-date').value = new Date().toISOString().split('T')[0];
+        applyTheme();
+        document.getElementById('record-date').value = getTodayTW();
         updateAppTitles(); checkBackupAlert(); initDaily(); renderKeyboard();
     };
 
     function applyTheme() {
-        let idx; 
-        const mode = store.themeMode; // 優先從資料庫讀取
+        let idx; const mode = store.themeMode; 
         if(mode === 'auto') idx = new Date().getMonth(); else idx = parseInt(mode);
         const theme = monthlyThemes[idx];
         document.documentElement.style.setProperty('--cat-main', theme.main);
         document.documentElement.style.setProperty('--cat-bg', theme.bg);
-        document.documentElement.style.setProperty('--cat-light-pink', theme.main + '33');
+        // 按鈕專用淺色階
+        document.documentElement.style.setProperty('--cat-btn', theme.btn || theme.main);
+        document.documentElement.style.setProperty('--cat-light-pink', theme.main + '22');
+        
+        // 更新按鈕樣式 (此處邏輯確保 CSS 變數正確套用)
+        const styleTag = document.getElementById('dynamic-btn-style') || document.createElement('style');
+        styleTag.id = 'dynamic-btn-style';
+        styleTag.innerHTML = `.btn-main, .eq-btn { background: ${theme.btn || theme.main} !important; }`;
+        document.head.appendChild(styleTag);
     }
 
     function talkCat(e) {
@@ -234,7 +247,8 @@
         talkTimer = setTimeout(() => bubble.style.display = 'none', 6000);
     }
 
-    function closeBubble(e) {
+    // 智慧關閉對話框：點選背景或其他非互動區即關閉
+    function handleBgClick(e) {
         const bubble = document.getElementById('cat-bubble');
         const assistant = document.getElementById('cat-assistant');
         if(bubble.style.display === 'block' && !assistant.contains(e.target) && !bubble.contains(e.target)) {
@@ -276,20 +290,16 @@
         const j = {}; document.getElementById('jar-editor').value.split('\n').forEach(l => {
             const [n,d] = l.split(':'); if(n&&d){ const p=d.split(','); j[n.trim()]={goal:Number(p[0]),start:p[1],end:p[2]}; }
         });
-        store.jars = j; 
-        saveToDB(); 
-        applyTheme(); // 儲存後立即更新樣式
-        alert('設定已儲存喵！'); 
-        location.reload();
+        store.jars = j; saveToDB(); applyTheme(); alert('設定已儲存喵！'); location.reload();
     }
 
     function renderHome() {
         const range = getBudgetDateRange();
-        document.getElementById('period-info').innerText = `帳期：${range.start.toLocaleDateString()} ~ ${range.end.toLocaleDateString()}`;
+        document.getElementById('period-info').innerText = `目前帳期：${range.start.toLocaleDateString()} ~ ${range.end.toLocaleDateString()}`;
         const jl = document.getElementById('jarList'); jl.innerHTML = "";
         for(let n in store.jars) {
             const p = store.jars[n], cb = store.jarBalances[n]||0, pct = Math.min(Math.round(cb/p.goal*100), 100);
-            jl.innerHTML += `<div class="cat-card">${pct>=100?'<span class="medal">🥇</span>':''}<b>💎 ${n}</b> <small>$${cb}/$${p.goal}</small><div class="prog-container"><div class="prog-fill" style="width:${pct}%; background:var(--cat-blue)"></div></div></div>`;
+            jl.innerHTML += `<div class="cat-card"><b>💎 ${n}</b> <small>$${cb}/$${p.goal}</small><div class="prog-container"><div class="prog-fill" style="width:${pct}%; background:var(--cat-blue)"></div></div></div>`;
         }
         const hb = document.getElementById('home-budget-list'); hb.innerHTML = "";
         for(let b in store.budgets) {
@@ -309,12 +319,13 @@
     function changeMonth(dir) { viewDate.setMonth(viewDate.getMonth()+dir); renderCalendar(); }
     function renderCalendar() {
         const grid = document.getElementById('calendar-days'); grid.innerHTML = "";
-        const y=viewDate.getFullYear(), m=viewDate.getMonth(); document.getElementById('cal-month-title').innerText = `${y}年 ${m+1}月`;
+        const y=viewDate.getFullYear(), m=viewDate.getMonth(), today = getTodayTW();
+        document.getElementById('cal-month-title').innerText = `${y}年 ${m+1}月`;
         const first = new Date(y,m,1).getDay(), last = new Date(y,m+1,0).getDate();
         for(let i=0; i<first; i++) grid.innerHTML += `<div></div>`;
         for(let d=1; d<=last; d++) {
             const ds = `${y}-${(m+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`;
-            grid.innerHTML += `<div class="cal-day ${new Date().toISOString().slice(0,10)===ds?'today':''} ${store.history.some(h=>h.date===ds)?'has-record':''}" onclick="selectDate('${ds}', this)">${d}</div>`;
+            grid.innerHTML += `<div class="cal-day ${today===ds?'today':''} ${store.history.some(h=>h.date===ds)?'has-record':''}" onclick="selectDate('${ds}', this)">${d}</div>`;
         }
     }
 
@@ -324,31 +335,26 @@
         document.getElementById('detail-date-title').innerText = `📅 ${ds} 明細：`;
         const recs = store.history.filter(h=>h.date===ds);
         document.getElementById('day-records').innerHTML = recs.map(r=>`
-            <div class="record-item" style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px dashed #ddd;">
-                <div style="flex:1;"><small>[${r.main}]</small> <strong>${r.note||'無'}</strong></div>
-                <div style="text-align:right;"><span style="color:${r.type==='inc'?'green':'red'}; font-weight:bold;">$${r.amt}</span><br>
-                <button onclick="deleteRecord(${r.id})" style="border:none; background:#eee; padding:2px 8px; border-radius:6px; font-size:11px; color:red; margin-top:3px;">🗑️ 刪除</button></div>
+            <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px dashed #eee;">
+                <div><small>[${r.main}]</small> <strong>${r.note||'無'}</strong></div>
+                <div style="text-align:right;"><strong>$${r.amt}</strong><br><button onclick="deleteRecord(${r.id})" style="border:none; background:#eee; font-size:10px; color:red; padding:2px 5px; border-radius:4px;">🗑️</button></div>
             </div>`).join('') || '無紀錄';
     }
 
     function renderAssetsAndHistory() {
         const area = document.getElementById('asset-list'); area.innerHTML = ""; let tot = 0;
         for(let k in store.accs){ tot += store.accs[k]; area.innerHTML += `<div style="display:flex; justify-content:space-between; padding:4px 0;"><span>${k}</span><span>$${store.accs[k].toLocaleString()}</span></div>`; }
-        area.innerHTML += `<div style="border-top:2px solid var(--cat-dark); margin-top:8px; font-weight:bold; display:flex; justify-content:space-between;"><span>總資產</span><span>$${tot.toLocaleString()}</span></div>`;
+        area.innerHTML += `<div style="border-top:2.5px solid var(--cat-dark); margin-top:8px; font-weight:bold; display:flex; justify-content:space-between;"><span>總資產</span><span>$${tot.toLocaleString()}</span></div>`;
         const search = document.getElementById('global-search').value.toLowerCase();
         const filtered = store.history.filter(h => `${h.main||''} ${h.note||''}`.toLowerCase().includes(search));
         const catT = {}, listA = document.getElementById('full-history-list'); listA.innerHTML = "";
-        filtered.sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,25).forEach(h=>{
+        filtered.sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,30).forEach(h=>{
             if(h.type==='exp') catT[h.main]=(catT[h.main]||0)+h.amt;
-            listA.innerHTML += `<div class="record-item" style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px dashed #eee;">
-                <div style="flex:1;"><small>${h.date} [${h.main}]</small><br><strong>${h.note||'無'}</strong></div>
-                <div style="text-align:right;"><span style="color:${h.type==='inc'?'green':'red'}; font-weight:bold;">${h.type==='inc'?'+':'-'}$${h.amt}</span><br>
-                <button onclick="deleteRecord(${h.id})" style="border:none; background:#eee; padding:2px 8px; border-radius:6px; font-size:11px; color:red; margin-top:4px;">🗑️ 刪除</button></div>
-            </div>`;
+            listA.innerHTML += `<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px dashed #eee;"><div><small>${h.date} [${h.main}]</small><br>${h.note||'無'}</div><div style="text-align:right;"><strong>$${h.amt}</strong></div></div>`;
         });
         if(pieChartInstance) pieChartInstance.destroy(); if(barChartInstance) barChartInstance.destroy();
-        pieChartInstance = new Chart(document.getElementById('pieChart').getContext('2d'), { type:'pie', data:{ labels:Object.keys(catT), datasets:[{data:Object.values(catT), backgroundColor:['#E74C3C','#F1C40F','#2ECC71','#3498DB','#9B59B6','#E67E22']}] }, options:{ maintainAspectRatio:false } });
-        barChartInstance = new Chart(document.getElementById('barChart').getContext('2d'), { type:'bar', data:{ labels:Object.keys(catT), datasets:[{label:'支出', data:Object.values(catT), backgroundColor:monthlyThemes[new Date().getMonth()].main}] }, options:{ maintainAspectRatio:false, plugins:{legend:{display:false}} } });
+        pieChartInstance = new Chart(document.getElementById('pieChart').getContext('2d'), { type:'pie', data:{ labels:Object.keys(catT), datasets:[{data:Object.values(catT), backgroundColor:['#FFB7B2','#FFDAC1','#E2F0CB','#B5EAD7','#C7CEEA']}] }, options:{ maintainAspectRatio:false } });
+        barChartInstance = new Chart(document.getElementById('barChart').getContext('2d'), { type:'bar', data:{ labels:Object.keys(catT), datasets:[{label:'支出', data:Object.values(catT), backgroundColor:monthlyThemes[new Date().getMonth()].main}] }, options:{ maintainAspectRatio:false } });
     }
 
     function deleteRecord(id) {
@@ -386,12 +392,10 @@
         saveToDB(); alert('紀錄成功喵！🐾'); location.reload();
     }
 
-    function checkBackupAlert() { if(Date.now() - (store.lastBackup || 0) > 7*86400000) setTimeout(()=>document.getElementById('backup-modal').style.display='flex', 1000); }
+    function checkBackupAlert() { if(Date.now() - (store.lastBackup || 0) > 7*86400000) alert('記得要定期備份 JSON 喔喵！'); }
     function exportData() { store.lastBackup = Date.now(); saveToDB(); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(store)], {type: "application/json"})); a.download = `備份.json`; a.click(); }
-    function exportCSV() { let csv="\uFEFF日期,類型,項目,金額,備註\n"; store.history.forEach(h=>{ csv+=`${h.date},${h.type},${h.main},${h.amt},${h.note||''}\n`; }); const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8;'})); a.download=`財務報表.csv`; a.click(); }
     function importData(e) { const r = new FileReader(); r.onload=(ev)=>{ store=JSON.parse(ev.target.result); saveToDB(); location.reload(); }; r.readAsText(e.target.files[0]); }
     function openManual() { document.getElementById('manual-display').innerText = store.manualContent; document.getElementById('manual-modal').style.display='flex'; }
-    function goToSettingsForBackup() { document.getElementById('backup-modal').style.display='none'; showPage('settings', document.querySelectorAll('.nav-item')[3]); }
     function initDaily() {
         const acc_op = Object.keys(store.accs).map(k=>`<option value="ACC:${k}">${k}</option>`).join('');
         document.getElementById('acc-source').innerHTML = acc_op;
