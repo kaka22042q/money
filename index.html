@@ -120,6 +120,16 @@ gap:5px;"><select id="mainCat" onchange="renderSubCats()"></select><select id="s
         </div>
     </div>
 
+/* 新增：選取日期的特別標示 */
+.cal-day.selected {
+    background: var(--cat-main); /* 使用主題主色 */
+    color: white;               /* 文字改為白色 */
+    border-radius: 50%;         /* 變成圓形 */
+    font-weight: bold;          /* 加粗 */
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+
     <div id="page-home" class="page">
         <h2 id="home-title-display" style="text-align:center;
 margin-bottom:10px;">🐾 首頁</h2>
